@@ -20,10 +20,29 @@ const Hero = () => {
                         <HeroButtons />
                     </div>
                 </div>
-                {/* tablet/laptop/desktop */}
-                <div className='hidden tablet:grid grid-cols-2 grid-rows-1 gap-x-6 max-w-[1280px] mb-16'>
+                {/* tablet */}
+                <div className='hidden tablet:flex flex-col laptop:hidden justify-center mb-12'>
+                    <div className='grid grid-cols-[3fr_4fr] gap-5'>
+                        <h1 className={`${jua.className} text-5xl leading-[1.15] flex items-center justify-center`}>
+                            santa barbara<br></br>helping hearts
+                        </h1>
+                        <div className='flex justify-center items-center'>
+                            <CarouselDemo />
+                        </div>
+                    </div>
+                    <div className='flex flex-col justify-start items-center'>
+                        <p className={`${nunitoLight.className} text-md my-4 flex text-center`}>
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate, soluta. Eum architecto enim mollitia soluta
+                        </p>
+                        <div className='flex justify-center tablet:justify-start gap-3'>
+                            <HeroButtons />
+                        </div>
+                    </div>
+                </div>
+                {/* laptop/desktop */}
+                <div className='hidden laptop:grid grid-cols-[2.5fr_3fr] grid-rows-1 gap-x-6 max-w-[1280px] mb-16'>
                     <div className='flex flex-col items-right'>
-                        <h1 className={`${jua.className} text-[3vw] leading-[1.15] flex justify-right`}>
+                        <h1 className={`${jua.className} text-4xl leading-[1.15] text-center`}>
                             santa barbara<br></br>helping hearts
                         </h1>
                         <p className={`${nunitoLight.className} text-md my-4 flex`}>

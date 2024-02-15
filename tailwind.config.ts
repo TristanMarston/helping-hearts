@@ -38,6 +38,7 @@ const config = {
                 primary: '#ed3a5f',
                 'primary-light': '#f16985',
                 'primary-dark': '#e0143e',
+                'primary-pink': '#FF96AC',
 
                 background: '#FFFDF5',
                 'background-secondary': '#FAF8EF',
