@@ -3,6 +3,7 @@ import Footer from '@/_components/Footer';
 import Hero from '@/_components/Hero';
 import Navbar from '@/_components/Navbar';
 import Testimonial from '@/_components/Testimonial';
+import { Toaster } from 'react-hot-toast';
 
 const page = () => {
     // const [users, setUsers] = useState<User[]>([]);
@@ -19,6 +20,7 @@ const page = () => {
     return (
         <>
             <div className='min-h-full flex flex-col'>
+                <Toaster />
                 <Navbar />
                 <Hero />
                 <AboutUs />

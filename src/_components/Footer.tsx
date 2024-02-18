@@ -24,7 +24,7 @@ const Footer = () => {
                 </div>
             </div>
             <img src='/helping-hearts-wave-footer.svg' className='w-full h-full relative top-1 -z-40' />
-            <div className='bg-primary h-56 w-full flex flex-col flex-start items-start pt-10 px-5'>
+            <div className='bg-primary h-full w-full flex flex-col flex-start items-start pt-10 px-5'>
                 <ContactUs />
                 <div className='flex items-center justify-center gap-[5px]'>
                     <Image src='/helping-hearts-logo-default-white.png' className='hidden tablet:block' alt='logo' width={54} height={34} />
