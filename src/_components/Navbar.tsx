@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { Jua, Nunito } from 'next/font/google';
 import DropDownMenu from './DropDownMenu';
@@ -21,7 +23,18 @@ const Navbar = () => {
                 <button className={linkClasses}>Donate</button>
                 <button className={linkClasses}>Volunteer</button>
                 <button className={linkClasses}>About Us</button>
-                <button className={linkClasses}>Our Mission</button>
+                <button
+                    className={linkClasses}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        const targetElement = document.getElementById('contact-us');
+                        if (targetElement) {
+                            targetElement.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }}
+                >
+                    Contact
+                </button>
                 <button
                     className={`${nunito.className} tablet:px-5 mablet:px-4 py-1.5 bg-primary text-white rounded-[10px] tablet:text-base hover:bg-primary-light transition-all tracking-wide`}
                 >

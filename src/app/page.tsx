@@ -25,7 +25,7 @@ const page = () => {
                 <Hero />
                 <AboutUs />
                 <Testimonial />
-                <Footer />
+                <Footer showVolunteerAd={true} />
             </div>
         </>
     );

@@ -16,7 +16,6 @@ const DropDownMenu = (props: Props) => {
                 {props.title}
                 <ChevronDown className={`h-5 w-5 flex-none text-gray-400`} aria-hidden='true' />
             </Popover.Button>
-
             <Transition
                 as={Fragment}
                 enter='transition ease-out duration-200'

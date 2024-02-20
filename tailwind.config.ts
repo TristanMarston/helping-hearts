@@ -16,6 +16,7 @@ const config = {
             mobile: '350px',
             mablet: '500px',
             tablet: '650px',
+            taptop: '820px',
             laptop: '960px',
             desktop: '1280px',
         },
