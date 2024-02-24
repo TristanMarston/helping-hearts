@@ -1,6 +1,7 @@
 import { Jua, Nunito } from 'next/font/google';
 import Image from 'next/image';
 import ContactUs from './ContactUs';
+import Link from 'next/link';
 
 const jua = Jua({ weight: '400', subsets: ['latin'] });
 const nunito = Nunito({ weight: '800', subsets: ['latin'] });
@@ -35,11 +36,11 @@ const Footer = (props: Props) => {
             <div className='bg-primary h-full w-full flex flex-col items-center pt-10 px-5'>
                 <ContactUs />
                 <div className='w-full max-w-[1280px] flex'>
-                    <div className='flex items-center justify-center gap-[5px]'>
+                    <Link className='flex items-center justify-center gap-[5px]' href='/'>
                         <Image src='/helping-hearts-logo-default-white.png' className='hidden tablet:block' alt='logo' width={54} height={34} />
                         <Image src='/helping-hearts-logo-default-white.png' className='mablet:block tablet:hidden' alt='logo' width={38} height={24} />
                         <h1 className={`${jua.className} tablet:text-4xl text-[1.625rem] text-background`}>helping hearts</h1>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </div>
