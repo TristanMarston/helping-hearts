@@ -40,6 +40,7 @@ const config = {
                 'primary-light': '#f16985',
                 'primary-dark': '#e0143e',
                 'primary-pink': '#FF96AC',
+                'primary-pink-light': '#FFA4B7',
 
                 background: '#FFFDF5',
                 'background-secondary': '#FAF8EF',

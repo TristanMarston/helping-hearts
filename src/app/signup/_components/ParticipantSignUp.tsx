@@ -242,7 +242,7 @@ const ParticipantSignUp = () => {
             <Button
                 type='submit'
                 onClick={() => setUpdateState(5)}
-                className={`${nunitoBold.className} w-56 h-10 text-lg border resize-none overflow-y-hidden min-h-10 border-background bg-primary hover:bg-primary-light text-white rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.1)]`}
+                className={`${nunitoBold.className} w-56 h-10 self-center text-lg border resize-none overflow-y-hidden min-h-10 border-background bg-primary hover:bg-primary-light text-white rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.1)]`}
             >
                 Submit
             </Button>

@@ -22,9 +22,13 @@ const Signup = () => {
                 <h1 className={`${jua.className} text-4xl`}>Register Today!</h1>
                 <div className={`${nunitoLight.className} flex flex-col gap-1 mt-1`}>
                     <p>
-                        You are currently signing up for a <b>{showVolunteer ? 'volunteer' : 'participant'}</b>.
+                        You are currently signing up {showVolunteer ? 'as a' : 'for a'} <b>{showVolunteer ? 'volunteer' : 'participant'}</b>.
                     </p>
-                    <p>Please enter the following information for the child participant(s) and corresponding emergency contact information (parent or guardian).</p>
+                    <p>
+                        {showVolunteer
+                            ? 'Please enter the following information about yourself to volunteer.'
+                            : 'Please enter the following information for the child participant(s) and corresponding emergency contact information (parent or guardian).'}
+                    </p>
                 </div>
                 <div className='w-full h-10 rounded-full grid grid-cols-2 mt-4 bg-background shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]'>
                     <Link
