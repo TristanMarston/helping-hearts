@@ -106,7 +106,7 @@ const ContactUs = () => {
             }
 
             try {
-                const response = await fetch('http://localhost:8000/messages', {
+                const response = await fetch('https://helping-hearts-backend.onrender.com/messages', {
                     body: JSON.stringify(values),
                     method: 'POST',
                     headers: {

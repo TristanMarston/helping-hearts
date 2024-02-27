@@ -114,7 +114,7 @@ const ParticipantSignUp = () => {
 
             if (parentIsValid && participantIsValid) {
                 try {
-                    const response = await fetch('http://localhost:8000/participants', {
+                    const response = await fetch('https://helping-hearts-backend.onrender.com/participants', {
                         body: JSON.stringify(parentInfo),
                         method: 'POST',
                         headers: {
@@ -132,7 +132,7 @@ const ParticipantSignUp = () => {
                             const athlete = participant;
                             athlete.parentId = createdObjectId;
                             try {
-                                const response = await fetch('http://localhost:8000/participants', {
+                                const response = await fetch('https://helping-hearts-backend.onrender.com/participants', {
                                     body: JSON.stringify(athlete),
                                     method: 'POST',
                                     headers: {
