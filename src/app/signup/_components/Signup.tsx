@@ -15,7 +15,7 @@ function Fallback() {
     return <div>placeholder</div>;
 }
 
-const Signup = () => {
+function SignupContent() {
     const searchParams = useSearchParams();
     const isVolunteer = searchParams.get('isVolunteer');
     const [showVolunteer, setShowVolunteer] = useState(isVolunteer == 'true');
@@ -57,6 +57,19 @@ const Signup = () => {
                         </Link>
                     </div>
                     {!showVolunteer ? <ParticipantSignUp /> : <VolunteerSignUp />}
+                </Suspense>
+            </div>
+        </div>
+    );
+}
+
+const Signup = () => {
+    return (
+        <div className='w-full flex justify-center'>
+            <div className='w-full max-w-[1280px] flex flex-col mx-6 my-8'>
+                <h1 className={`${jua.className} text-4xl`}>Register Today!</h1>
+                <Suspense fallback={<Fallback />}>
+                    <SignupContent />
                 </Suspense>
             </div>
         </div>
