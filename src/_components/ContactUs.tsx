@@ -226,7 +226,7 @@ const ContactUs = () => {
                                 </DialogTrigger>
                                 <DialogContent className='bg-background rounded-md gap-2.5' key={dialogKey}>
                                     <DialogHeader className='flex flex-col items-start'>
-                                        <DialogTitle className='text-2xl'>Ready to submit?</DialogTitle>
+                                        <DialogTitle className={`${nunitoBold.className} text-2xl`}>Ready to submit?</DialogTitle>
                                         <DialogDescription className='flex flex-col items-start text-left w-full gap-2'>
                                             <p>Please confirm your message. Our team will try our best to respond via email within 24 hours.</p>
                                             {disabledInputs.map((data, index) => (
@@ -261,11 +261,11 @@ const ContactUs = () => {
                                     </DialogHeader>
                                     <DialogClose
                                         onClick={form.handleSubmit(onSubmit)}
-                                        className='bg-primary transition-all mt-2 hover:bg-primary-light text-white h-10 rounded-md text-sm'
+                                        className={`${nunitoBold.className} bg-primary transition-all mt-2 hover:bg-primary-light text-white h-10 rounded-md text-sm`}
                                     >
                                         Submit
                                     </DialogClose>
-                                    <DialogClose className='bg-background hover:bg-background-dark h-10 transition-all rounded-md text-sm'>Cancel</DialogClose>
+                                    <DialogClose className={`${nunitoBold.className} bg-background hover:bg-background-dark h-10 transition-all rounded-md text-sm`}>Cancel</DialogClose>
                                 </DialogContent>
                             </Dialog>
                         </div>

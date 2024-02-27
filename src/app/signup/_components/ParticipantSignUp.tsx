@@ -72,6 +72,8 @@ type ParticipantFormProps = {
     handleSubmit?: () => void;
     updateState?: number;
     setUpdateState?: React.Dispatch<React.SetStateAction<number>>;
+    deleteInfoUpdate?: number;
+    setDeleteInfoUpdate?: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const ParticipantSignUp = () => {
@@ -79,12 +81,12 @@ const ParticipantSignUp = () => {
     const [participantInfo, setParticipantInfo] = useState<ParticipantFields[]>([]);
     const [parentInfo, setParentInfo] = useState<ParentFields>({ firstName: '', lastName: '', email: '', phoneNumber: '', birthYear: '', birthMonth: '', birthDay: '', isParent: true });
     const [updateState, setUpdateState] = useState<number>(0);
+    const [deleteInfoUpdate, setDeleteInfoUpdate] = useState<number>(0);
     let blockSubmitHandle: number = 0;
 
     async function handleSubmit() {
         if (blockSubmitHandle == 0) {
-            console.log(participantInfo);
-            console.log(parentInfo);
+            blockSubmitHandle++;
 
             let participantIsValid;
             participantInfo.forEach((participant) => {
@@ -102,14 +104,15 @@ const ParticipantSignUp = () => {
                 parentInfo.firstName.trim() != '' &&
                 parentInfo.lastName.trim() != '' &&
                 parentInfo.email.trim() != '' &&
+                /\S+@\S+\.\S+/.test(parentInfo.email != undefined ? parentInfo.email : '') &&
                 parentInfo.phoneNumber.trim() != '' &&
                 parentInfo.birthYear.trim() != '' &&
+                parentInfo.birthYear.trim() != '2027' &&
                 parentInfo.birthMonth.trim() != '' &&
                 parentInfo.birthDay.trim() != '' &&
                 parentInfo.isParent == true;
 
             if (parentIsValid && participantIsValid) {
-                blockSubmitHandle++;
                 try {
                     const response = await fetch('http://localhost:8000/participants', {
                         body: JSON.stringify(parentInfo),
@@ -125,7 +128,6 @@ const ParticipantSignUp = () => {
                     } else {
                         const responseData = await response.json();
                         const createdObjectId = responseData.insertedId;
-                        createToast(`Successfully signed up parent with ID ${createdObjectId}`, true, 4000);
                         participantInfo.forEach(async (participant, index) => {
                             const athlete = participant;
                             athlete.parentId = createdObjectId;
@@ -141,6 +143,9 @@ const ParticipantSignUp = () => {
                                 if (!response.ok) {
                                     createToast('Unable to send data.', false, 4000);
                                     throw new Error('Failed to send data.');
+                                } else {
+                                    createToast("You're signed up!", true, 4000);
+                                    setDeleteInfoUpdate((prev) => prev + 1);
                                 }
                             } catch (error) {
                                 createToast('Unable to send data.', false, 4000);
@@ -153,7 +158,11 @@ const ParticipantSignUp = () => {
                     console.error('Error sending data: ', error);
                 }
             } else {
-                createToast('Invalid parent/guardian info.', false, 4000);
+                createToast(
+                    `${!parentIsValid && !participantIsValid ? 'Invalid form info.' : !parentIsValid ? 'Invalid parent/guardian info' : 'Invalid participant info.'}`,
+                    false,
+                    4000
+                );
             }
         }
     }
@@ -220,6 +229,8 @@ const ParticipantSignUp = () => {
                             isParent={false}
                             updateState={updateState}
                             setUpdateState={setUpdateState}
+                            deleteInfoUpdate={deleteInfoUpdate}
+                            setDeleteInfoUpdate={setDeleteInfoUpdate}
                         />
                     </div>
                 ))}
@@ -236,6 +247,8 @@ const ParticipantSignUp = () => {
                         isParent={true}
                         updateState={updateState}
                         setUpdateState={setUpdateState}
+                        deleteInfoUpdate={deleteInfoUpdate}
+                        setDeleteInfoUpdate={setDeleteInfoUpdate}
                     />
                 </div>
             </div>
@@ -250,7 +263,7 @@ const ParticipantSignUp = () => {
     );
 };
 
-const ParticipantForm = ({ isParent, updateState, setUpdateState, ...props }: ParticipantFormProps) => {
+const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpdate, setDeleteInfoUpdate, ...props }: ParticipantFormProps) => {
     const [date, setDate] = useState<Date>();
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
@@ -268,7 +281,7 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, ...props }: Pa
 
     const currentYear = new Date().getFullYear();
     const yearsArray: string[] = [];
-    for (let year = currentYear; year >= 2000; year--) yearsArray.push(year.toString());
+    for (let year = currentYear; year >= (isParent ? 1960 : 2000); year--) yearsArray.push(year.toString());
     const monthsArray: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const gradeLevelsArray: string[] = ['8th Grade', '7th Grade', '6th Grade', '5th Grade', '4th Grade', '3rd Grade', '2nd Grade', '1st Grade', 'Kindergarten'];
 
@@ -331,6 +344,14 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, ...props }: Pa
         }
     }, [updateState]);
 
+    useEffect(() => {
+        nameInputMapArray.forEach((data) => (data.ref.current.value = ''));
+        setBirthYear('2027');
+        setBirthMonth('August');
+        setBirthDay('');
+        setGradeLevel('');
+    }, [deleteInfoUpdate]);
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='my-4 w-full h-full flex flex-col gap-4'>
@@ -384,7 +405,12 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, ...props }: Pa
                                                         className={`${nunitoLight.className} px-4 py-3 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                                     >
                                                         <SelectValue {...field} placeholder={data.label} className='text-black overflow-ellipsis'>
-                                                            {data.state}
+                                                            {data.name == 'birthYear' && data.state != '2027' ? data.state : data.name == 'birthYear' ? 'Year' : ''}
+                                                            {data.name == 'birthMonth' && data.state != 'August' && birthYear != '2027'
+                                                                ? data.state
+                                                                : data.name == 'birthMonth'
+                                                                ? 'Month'
+                                                                : ''}
                                                         </SelectValue>
                                                     </SelectTrigger>
                                                     <SelectContent className='bg-background'>
@@ -410,7 +436,11 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, ...props }: Pa
                                                                 )}
                                                             >
                                                                 <CalendarIcon className='mr-2 h-4 w-4 text-gray-500' />
-                                                                {date ? format(date, 'do') : <span className='text-gray-500 overflow-ellipsis'>Day</span>}
+                                                                {date && birthDay != '' ? (
+                                                                    format(new Date(0, 0, parseInt(birthDay), 0, 0, 0), 'do')
+                                                                ) : (
+                                                                    <span className='text-gray-500 overflow-ellipsis'>Day</span>
+                                                                )}
                                                             </Button>
                                                         </PopoverTrigger>
                                                         <PopoverContent className='w-auto p-0'>
@@ -449,7 +479,7 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, ...props }: Pa
                                                 className={`${nunitoLight.className} px-4 py-3 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                             >
                                                 <SelectValue {...field} placeholder='Grade Level' className='text-black overflow-ellipsis'>
-                                                    {gradeLevel}
+                                                    {gradeLevel != '' ? gradeLevel : <span>Grade Level</span>}
                                                 </SelectValue>
                                             </SelectTrigger>
                                             <SelectContent className='bg-background'>

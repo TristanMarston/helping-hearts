@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { Jua, Nunito } from 'next/font/google';
 import ParticipantSignUp from './ParticipantSignUp';
 import VolunteerSignUp from './VolunteerSignUp';
@@ -15,6 +15,11 @@ const Signup = () => {
     const searchParams = useSearchParams();
     const isVolunteer = searchParams.get('isVolunteer');
     const [showVolunteer, setShowVolunteer] = useState(isVolunteer == 'true');
+
+    useEffect(() => {
+        const isVolunteer = searchParams.get('isVolunteer');
+        setShowVolunteer(isVolunteer == 'true');
+    }, [searchParams]);
 
     return (
         <div className='w-full flex justify-center'>
