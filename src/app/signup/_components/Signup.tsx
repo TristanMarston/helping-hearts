@@ -11,6 +11,10 @@ const jua = Jua({ weight: '400', subsets: ['latin'] });
 const nunitoLight = Nunito({ weight: '400', subsets: ['latin'] });
 const nunitoBold = Nunito({ weight: '800', subsets: ['latin'] });
 
+function Fallback() {
+    return <div>placeholder</div>;
+}
+
 const Signup = () => {
     const searchParams = useSearchParams();
     const isVolunteer = searchParams.get('isVolunteer');
@@ -22,7 +26,7 @@ const Signup = () => {
     }, [searchParams]);
 
     return (
-        <Suspense>
+        <Suspense fallback={<Fallback />}>
             <div className='w-full flex justify-center'>
                 <div className='w-full max-w-[1280px] flex flex-col mx-6 my-8'>
                     <h1 className={`${jua.className} text-4xl`}>Register Today!</h1>
