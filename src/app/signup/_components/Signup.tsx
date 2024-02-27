@@ -26,10 +26,10 @@ const Signup = () => {
     }, [searchParams]);
 
     return (
-        <Suspense fallback={<Fallback />}>
-            <div className='w-full flex justify-center'>
-                <div className='w-full max-w-[1280px] flex flex-col mx-6 my-8'>
-                    <h1 className={`${jua.className} text-4xl`}>Register Today!</h1>
+        <div className='w-full flex justify-center'>
+            <div className='w-full max-w-[1280px] flex flex-col mx-6 my-8'>
+                <h1 className={`${jua.className} text-4xl`}>Register Today!</h1>
+                <Suspense fallback={<Fallback />}>
                     <div className={`${nunitoLight.className} flex flex-col gap-1 mt-1`}>
                         <p>
                             You are currently signing up {showVolunteer ? 'as a' : 'for a'} <b>{showVolunteer ? 'volunteer' : 'participant'}</b>.
@@ -57,9 +57,9 @@ const Signup = () => {
                         </Link>
                     </div>
                     {!showVolunteer ? <ParticipantSignUp /> : <VolunteerSignUp />}
-                </div>
+                </Suspense>
             </div>
-        </Suspense>
+        </div>
     );
 };
 
