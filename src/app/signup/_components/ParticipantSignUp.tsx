@@ -69,11 +69,11 @@ type ParticipantFormProps = {
     setInfo: React.Dispatch<React.SetStateAction<ParticipantFields[]>> | React.Dispatch<React.SetStateAction<ParentFields>>;
     onChange: (data: any) => void;
     isParent: boolean;
-    handleSubmit?: () => void;
-    updateState?: number;
-    setUpdateState?: React.Dispatch<React.SetStateAction<number>>;
-    deleteInfoUpdate?: number;
-    setDeleteInfoUpdate?: React.Dispatch<React.SetStateAction<number>>;
+    handleSubmit: () => void;
+    updateState: number;
+    setUpdateState: React.Dispatch<React.SetStateAction<number>>;
+    deleteInfoUpdate: number;
+    setDeleteInfoUpdate: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const ParticipantSignUp = () => {
