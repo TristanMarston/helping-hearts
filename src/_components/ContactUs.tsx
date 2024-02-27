@@ -242,7 +242,7 @@ const ContactUs = () => {
                                                             value={data.value}
                                                             className={`${
                                                                 data.value.length > 0 ? 'border-gray-100' : 'border-red-500'
-                                                            } hover:cursor-not-allowed text-ellipsis overflow-hidden opacity-50 bg-background rounded-md min-h-[4.25rem] h-full w-full max-w-[390px] px-2 py-2 border-gray-100 border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                                                            } hover:cursor-not-allowed text-ellipsis overflow-hidden opacity-50 bg-background min-h-[4.25rem] h-full w-full max-w-[390px] px-2 py-2 border-gray-100 border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                                             style={{ lineHeight: 'normal' }}
                                                         ></textarea>
                                                     ) : (
@@ -252,7 +252,7 @@ const ContactUs = () => {
                                                             value={data.value}
                                                             className={`${
                                                                 data.label == 'email' && !/\S+@\S+\.\S+/.test(data.value) ? 'border-red-500' : 'border-gray-100'
-                                                            } bg-background rounded-md h-8 w-full px-2 py-2 border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                                                            } bg-background h-8 w-full px-2 py-2 border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                                         />
                                                     )}
                                                 </div>

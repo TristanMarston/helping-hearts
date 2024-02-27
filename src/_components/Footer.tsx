@@ -56,7 +56,7 @@ const Footer = (props: Props) => {
                     </div>
                 </div>
             )}
-            <div className='max-h-16 w-full'>
+            <div className='max-h-16 w-full bg-primary laptop:bg-transparent'>
                 <img src='/helping-hearts-wave-footer.svg' className={`${!props.showVolunteerAd ? 'top-10' : 'top-1'} w-full max-h-[15rem] relative -z-40 object-contain`} />
             </div>
             <div className='bg-primary h-full w-full flex flex-col items-center pt-10 px-5 pb-3 gap-10'>
