@@ -20,8 +20,8 @@ const Hero = () => {
                     <div className='flex tablet:hidden flex-col gap-2'>
                         <h1 className={`${nunitoBlack.className} text-3xl min-[379px]:text-4xl mablet:text-[40px] text-center w-full`}>help a heart today!</h1>
                         <p className={`${nunitoLight.className} text-sm min-[379px]:text-base mablet:text-[17px] text-center mt-2`}>
-                            Helping Hearts is a nonprofit committed to spreading joy and supporting children's healthcare. Join us in making a difference through our upcoming track &
-                            field event.
+                            Helping Hearts is a nonprofit committed to spreading joy and supporting children&#39;s healthcare. Join us in making a difference through our upcoming track
+                            & field event.
                         </p>
                         <div className='flex justify-center gap-3 mt-3 mb-5'>
                             <HeroButtons />
@@ -33,12 +33,12 @@ const Hero = () => {
                         <div className='grid grid-cols-[3fr_4fr] gap-5'>
                             <div>
                                 <h1 className={`${nunitoBlack.className} text-3xl mablet:text-4xl text-center w-full`}>
-                                    let's make a <br />
+                                    let&#39;s make a <br />
                                     heart happy!
                                 </h1>
                                 <div className='flex flex-col justify-start items-center'>
                                     <p className={`${nunitoLight.className} text-md my-4 flex text-center`}>
-                                        Helping Hearts is a nonprofit committed to spreading joy and supporting children's healthcare. Join us in making a difference through our
+                                        Helping Hearts is a nonprofit committed to spreading joy and supporting children&#39;s healthcare. Join us in making a difference through our
                                         upcoming track & field event.
                                     </p>
                                     <div className='flex justify-center tablet:justify-start gap-3'>
@@ -55,16 +55,16 @@ const Hero = () => {
                     <div className='hidden laptop:grid grid-cols-[6fr_7fr] desktop:grid-cols-[5fr_6fr] gap-5'>
                         <div>
                             <h1 className={`${nunitoBlack.className} text-[44px] leading-none text-center w-full block desktop:hidden`}>
-                                let's make a <br />
+                                let&#39;s make a <br />
                                 heart happy!
                             </h1>
                             <h1 className={`${nunitoBlack.className} text-[44px] leading-none text-center w-full hidden desktop:block`}>
-                                let's make a heart <br /> happy today!
+                                let&#39;s make a heart <br /> happy today!
                             </h1>
                             <div className='flex flex-col justify-start items-center'>
                                 <p className={`${nunitoLight.className} text-md my-4 flex text-center`}>
-                                    Helping Hearts is a nonprofit dedicated to spreading joy by supporting children's healthcare. Join us in our mission to make a difference through our
-                                    upcoming track & field event, where every step counts towards brighter futures.
+                                    Helping Hearts is a nonprofit dedicated to spreading joy by supporting children&#39;s healthcare. Join us in our mission to make a difference through
+                                    our upcoming track & field event, where every step counts towards brighter futures.
                                 </p>
                                 <div className='flex justify-center tablet:justify-start gap-3'>
                                     <HeroButtons />
