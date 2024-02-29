@@ -16,7 +16,7 @@ const Navbar = () => {
         <div className='z-50 bg-background sticky top-0 flex items-center w-full tablet:h-[3.75rem] h-[3.125rem] shadow-md justify-between px-3.5'>
             <Link className='flex items-center justify-center gap-[5px]' href='/'>
                 <Image src='/helping-hearts-logo-default.png' className='hidden tablet:block' alt='logo' width={54} height={34} />
-                <Image src='/helping-hearts-logo-default.png' className='mablet:block tablet:hidden' alt='logo' width={38} height={24} />
+                <Image src='/helping-hearts-logo-default.png' className='max-tablet:block tablet:hidden' alt='logo' width={38} height={24} />
                 <h1 className={`${jua.className} tablet:text-4xl text-[1.625rem] text-primary font-black`}>helping hearts</h1>
             </Link>
             {/* laptop/desktop view */}

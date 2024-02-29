@@ -11,13 +11,15 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, PlusCircle } from 'lucide-react';
+import { Calendar as CalendarIcon, Check, PlusCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import toast from 'react-hot-toast';
 
 const nunitoLight = Nunito({ weight: '400', subsets: ['latin'] });
+const nunitoMedium = Nunito({ weight: '600', subsets: ['latin'] });
 const nunitoBold = Nunito({ weight: '800', subsets: ['latin'] });
 
 const ParticipantSchema = z.object({
@@ -28,6 +30,7 @@ const ParticipantSchema = z.object({
     birthYear: z.string().optional(),
     birthMonth: z.string().optional(),
     birthDay: z.string().optional(),
+    events: z.string().array().optional(),
     gradeLevel: z.string().optional(),
     isParent: z.boolean().optional(),
 });
@@ -40,6 +43,7 @@ type ParticipantFields = {
     birthMonth: string;
     birthDay: string;
     gradeLevel: string;
+    events: Events[];
     parentId: string;
     isParent: boolean;
 };
@@ -56,12 +60,17 @@ type ParentFields = {
 };
 
 type FormMapArray = {
-    name: 'firstName' | 'lastName' | 'email' | 'phoneNumber' | 'birthYear' | 'birthMonth' | 'birthDay' | 'gradeLevel';
+    name: 'firstName' | 'lastName' | 'email' | 'phoneNumber' | 'birthYear' | 'birthMonth' | 'birthDay' | 'events' | 'gradeLevel';
     label?: string;
     selections?: string[];
     state?: string;
     setState?: React.Dispatch<React.SetStateAction<string>>;
     ref?: any;
+};
+
+type Events = {
+    name: string;
+    isSelected: boolean;
 };
 
 type ParticipantFormProps = {
@@ -85,6 +94,7 @@ const ParticipantSignUp = () => {
     let blockSubmitHandle: number = 0;
 
     async function handleSubmit() {
+        console.log('on submit fn');
         if (blockSubmitHandle == 0) {
             blockSubmitHandle++;
 
@@ -106,6 +116,7 @@ const ParticipantSignUp = () => {
                 parentInfo.email.trim() != '' &&
                 /\S+@\S+\.\S+/.test(parentInfo.email != undefined ? parentInfo.email : '') &&
                 parentInfo.phoneNumber.trim() != '' &&
+                /^\(\d{3}\) \d{3}-\d{4}$/.test(parentInfo.phoneNumber != undefined ? parentInfo.phoneNumber : '') &&
                 parentInfo.birthYear.trim() != '' &&
                 parentInfo.birthYear.trim() != '2027' &&
                 parentInfo.birthMonth.trim() != '' &&
@@ -252,13 +263,32 @@ const ParticipantSignUp = () => {
                     />
                 </div>
             </div>
-            <Button
-                type='submit'
-                onClick={() => setUpdateState(5)}
-                className={`${nunitoBold.className} w-56 h-10 self-center text-lg border resize-none overflow-y-hidden min-h-10 border-background bg-primary hover:bg-primary-light text-white rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.1)]`}
-            >
-                Submit
-            </Button>
+            <Dialog>
+                <DialogTrigger
+                    className={`${nunitoBold.className} w-56 h-10 self-center text-lg border resize-none overflow-y-hidden min-h-10 border-background bg-primary hover:bg-primary-light text-white rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.1)]`}
+                >
+                    Submit
+                </DialogTrigger>
+                <DialogContent className='bg-background rounded-md gap-2.5'>
+                    <DialogHeader className='flex flex-col items-start'>
+                        <DialogTitle className={`${nunitoBold.className} text-2xl`}>Ready to submit?</DialogTitle>
+                        <DialogDescription className='flex flex-col items-start text-left w-full gap-2'>
+                            <p className={`${nunitoLight.className} text-base`}>
+                                ***Each participant <b>costs $10</b> to run. You're signing up {participants} {participants == 1 ? 'participant' : 'participants'}, so please bring{' '}
+                                <b>${participants * 10}.</b>
+                            </p>
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogClose
+                        type='submit'
+                        onClick={() => setUpdateState(5)}
+                        className={`${nunitoBold.className} bg-primary transition-all mt-2 hover:bg-primary-light text-white h-10 rounded-md text-sm`}
+                    >
+                        Submit
+                    </DialogClose>
+                    <DialogClose className={`${nunitoBold.className} bg-background hover:bg-background-dark h-10 transition-all rounded-md text-sm`}>Cancel</DialogClose>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };
@@ -269,6 +299,14 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
     const [lastName, setLastName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [phoneNumber, setPhoneNumber] = useState<string>('');
+    const [events, setEvents] = useState<Events[]>([
+        { name: '5 kilometers', isSelected: false },
+        { name: '1600 meters', isSelected: false },
+        { name: '400 meters', isSelected: false },
+        { name: '100 meters', isSelected: false },
+        { name: 'high jump', isSelected: false },
+        { name: 'long jump', isSelected: false },
+    ]);
     const [birthYear, setBirthYear] = useState<string>('2027');
     const [birthMonth, setBirthMonth] = useState<string>('August');
     const [birthDay, setBirthDay] = useState<string>('');
@@ -291,13 +329,15 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
         { name: 'email', label: `${isParent ? 'Email' : 'Email (not required)'}`, state: email, setState: setEmail, ref: emailRef },
     ];
 
-    if (isParent) nameInputMapArray.push({ name: 'phoneNumber', label: 'Phone Number -> 123-456-7890', state: phoneNumber, setState: setPhoneNumber, ref: phoneNumberRef });
+    if (isParent) nameInputMapArray.push({ name: 'phoneNumber', label: 'Phone Number -> (123) 456-7890', state: phoneNumber, setState: setPhoneNumber, ref: phoneNumberRef });
 
     const birthDateInputMapArray: FormMapArray[] = [
         { name: 'birthYear', label: 'Year', selections: yearsArray, state: birthYear, setState: setBirthYear },
         { name: 'birthMonth', label: 'Month', selections: monthsArray, state: birthMonth, setState: setBirthMonth },
         { name: 'birthDay', label: 'Day' },
     ];
+
+    const eventsMapArray: string[] = ['5 kilometers', '1600 meters', '400 meters', '100 meters', 'high jump', 'long jump'];
 
     const onSubmit = (values: z.infer<typeof ParticipantSchema>) => {};
 
@@ -325,6 +365,7 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                     birthMonth: birthMonth,
                     birthDay: birthDay,
                     gradeLevel: gradeLevel,
+                    events: events,
                     parentId: '',
                     isParent: isParent,
                 };
@@ -349,6 +390,11 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
         setBirthYear('2027');
         setBirthMonth('August');
         setBirthDay('');
+        setEvents((prev) => {
+            const events = [...prev];
+            events.forEach((event) => (event.isSelected = false));
+            return events;
+        });
         setGradeLevel('');
     }, [deleteInfoUpdate]);
 
@@ -388,7 +434,7 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                         />
                     ))}
                 </div>
-                <div className='grid grid-rows-2 grid-cols-[1fr_2fr_1fr] gap-x-2'>
+                <div className='grid grid-rows-2 grid-cols-[2fr_3fr_2fr] mablet:grid-cols-[1fr_2fr_1fr] gap-x-2'>
                     <h2 className={`${nunitoBold.className} text-xl row-span-1 col-span-3`}>Date of Birth</h2>
                     {birthDateInputMapArray.map((data, index) => (
                         <FormField
@@ -396,7 +442,7 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                             control={form.control}
                             name={data.name}
                             render={({ field }) => (
-                                <FormItem className='relative'>
+                                <FormItem className='relative min-w-[80px]'>
                                     <>
                                         <FormControl>
                                             {data.name != 'birthDay' ? (
@@ -405,12 +451,17 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                                                         className={`${nunitoLight.className} px-4 py-3 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                                     >
                                                         <SelectValue {...field} placeholder={data.label} className='text-black overflow-ellipsis'>
-                                                            {data.name == 'birthYear' && data.state != '2027' ? data.state : data.name == 'birthYear' ? 'Year' : ''}
-                                                            {data.name == 'birthMonth' && data.state != 'August' && birthYear != '2027'
-                                                                ? data.state
-                                                                : data.name == 'birthMonth'
-                                                                ? 'Month'
-                                                                : ''}
+                                                            <span className='min-w-[50px] truncate overflow-ellipsis'>
+                                                                {data.name == 'birthYear' && birthYear != '2027'
+                                                                    ? data.state
+                                                                    : data.name == 'birthYear'
+                                                                    ? 'Year'
+                                                                    : data.name == 'birthMonth' && birthMonth != ''
+                                                                    ? data.state
+                                                                    : data.name == 'birthMonth'
+                                                                    ? 'Month'
+                                                                    : ''}
+                                                            </span>
                                                         </SelectValue>
                                                     </SelectTrigger>
                                                     <SelectContent className='bg-background'>
@@ -431,15 +482,15 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                                                             <Button
                                                                 variant={'outline'}
                                                                 className={cn(
-                                                                    `${nunitoLight.className} px-4 py-3 w-full h-11 text-base flex justify-start bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`,
+                                                                    `${nunitoLight.className} px-4 py-3 w-full min-w-[87px] truncate h-11 text-base flex justify-start bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`,
                                                                     !date && 'text-muted-foreground'
                                                                 )}
                                                             >
-                                                                <CalendarIcon className='mr-2 h-4 w-4 text-gray-500' />
+                                                                <CalendarIcon className='mr-2 h-4 w-4 min-h-4 min-w-4 text-gray-500' />
                                                                 {date && birthDay != '' ? (
                                                                     format(new Date(0, 0, parseInt(birthDay), 0, 0, 0), 'do')
                                                                 ) : (
-                                                                    <span className='text-gray-500 overflow-ellipsis'>Day</span>
+                                                                    <span className='text-gray-500 truncate'>Day</span>
                                                                 )}
                                                             </Button>
                                                         </PopoverTrigger>
@@ -466,37 +517,87 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                     ))}
                 </div>
                 {!isParent && (
-                    <div className='flex flex-col gap-4'>
-                        <h2 className={`${nunitoBold.className} text-xl`}>Grade Level</h2>
-                        <FormField
-                            control={form.control}
-                            name='gradeLevel'
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Select onValueChange={(value) => setGradeLevel(value)}>
-                                            <SelectTrigger
-                                                className={`${nunitoLight.className} px-4 py-3 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
-                                            >
-                                                <SelectValue {...field} placeholder='Grade Level' className='text-black overflow-ellipsis'>
-                                                    {gradeLevel != '' ? gradeLevel : <span>Grade Level</span>}
-                                                </SelectValue>
-                                            </SelectTrigger>
-                                            <SelectContent className='bg-background'>
-                                                <SelectGroup>
-                                                    {gradeLevelsArray.map((gradeLevel, index) => (
-                                                        <SelectItem key={gradeLevel + index} value={gradeLevel} className='hover:bg-background-dark'>
-                                                            {gradeLevel}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                    </div>
+                    <>
+                        <div className='flex flex-col gap-4'>
+                            <h2 className={`${nunitoBold.className} text-xl`}>Event(s)</h2>
+                            {eventsMapArray.map((event, index) => (
+                                <FormField
+                                    key={event + index}
+                                    control={form.control}
+                                    name={'events'}
+                                    render={({ field }) => (
+                                        <FormItem className='flex gap-2 items-center'>
+                                            <>
+                                                <FormControl>
+                                                    <div
+                                                        className={`${
+                                                            events[index].isSelected
+                                                                ? 'bg-primary border-none shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]'
+                                                                : 'bg-background border-2'
+                                                        } w-5 h-5 flex justify-center items-center rounded-md cursor-pointer transition-all`}
+                                                        onClick={(e) => {
+                                                            let count = 0;
+                                                            e.stopPropagation();
+                                                            setEvents((prev) => {
+                                                                if (count > 0) {
+                                                                    return [...prev];
+                                                                }
+                                                                let events = [...prev];
+                                                                events[index].isSelected = !events[index].isSelected;
+                                                                count++;
+                                                                return events;
+                                                            });
+                                                        }}
+                                                        id={event}
+                                                    >
+                                                        {events[index].isSelected && <Check color='white' strokeWidth={3} width={14} height={14} />}
+                                                    </div>
+                                                </FormControl>
+                                                <FormLabel
+                                                    className={`${
+                                                        events[index].isSelected ? nunitoMedium.className + ' text-black' : nunitoLight.className + ' text-gray-500'
+                                                    }  margin-top-0 text-md transition-all select-none`}
+                                                >
+                                                    {event}
+                                                </FormLabel>
+                                            </>
+                                        </FormItem>
+                                    )}
+                                />
+                            ))}
+                        </div>
+                        <div className='flex flex-col gap-4'>
+                            <h2 className={`${nunitoBold.className} text-xl`}>Grade Level</h2>
+                            <FormField
+                                control={form.control}
+                                name='gradeLevel'
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Select onValueChange={(value) => setGradeLevel(value)}>
+                                                <SelectTrigger
+                                                    className={`${nunitoLight.className} px-4 py-3 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                                                >
+                                                    <SelectValue {...field} placeholder='Grade Level' className='text-black overflow-ellipsis'>
+                                                        {gradeLevel != '' ? gradeLevel : <span>Grade Level</span>}
+                                                    </SelectValue>
+                                                </SelectTrigger>
+                                                <SelectContent className='bg-background'>
+                                                    <SelectGroup>
+                                                        {gradeLevelsArray.map((gradeLevel, index) => (
+                                                            <SelectItem key={gradeLevel + index} value={gradeLevel} className='hover:bg-background-dark'>
+                                                                {gradeLevel}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    </>
                 )}
             </form>
         </Form>

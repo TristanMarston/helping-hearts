@@ -39,7 +39,7 @@ type VolunteerMapArray = {
 const VolunteerSignUp = () => {
     const [date, setDate] = useState<Date>();
     const [birthYear, setBirthYear] = useState<string>('2027');
-    const [birthMonth, setBirthMonth] = useState<string>('August');
+    const [birthMonth, setBirthMonth] = useState<string>('');
     const [birthDay, setBirthDay] = useState<string>('');
 
     const firstNameRef = useRef(null);
@@ -141,6 +141,10 @@ const VolunteerSignUp = () => {
         }
     }, [date]);
 
+    useEffect(() => {
+        console.log(birthMonth);
+    }, [birthMonth]);
+
     return (
         <>
             <div>
@@ -179,7 +183,7 @@ const VolunteerSignUp = () => {
                                     )}
                                 />
                             ))}
-                            <div className='grid grid-rows-2 grid-cols-[1fr_2fr_1fr] gap-x-2'>
+                            <div className='grid grid-rows-2 grid-cols-[2fr_3fr_2fr] mablet:grid-cols-[1fr_2fr_1fr] gap-x-2'>
                                 <h2 className={`${nunitoBold.className} text-xl row-span-1 col-span-3`}>Birth Date</h2>
                                 {birthDateInputMapArray.map((data, index) => (
                                     <FormField
@@ -187,7 +191,7 @@ const VolunteerSignUp = () => {
                                         control={form.control}
                                         name={data.name}
                                         render={({ field }) => (
-                                            <FormItem className='relative'>
+                                            <FormItem className='relative min-w-[80px]'>
                                                 <>
                                                     <FormControl>
                                                         {data.name != 'birthDay' ? (
@@ -195,9 +199,12 @@ const VolunteerSignUp = () => {
                                                                 <SelectTrigger
                                                                     className={`${nunitoLight.className} px-4 py-3 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                                                 >
-                                                                    <SelectValue {...field} placeholder={data.label} className='text-black overflow-ellipsis'>
-                                                                        {data.name == 'birthYear' && data.state != '2027' ? data.state : data.name == 'birthYear' ? 'Year' : ''}
-                                                                        {data.name == 'birthMonth' && data.state != 'August' && birthYear != '2027'
+                                                                    <SelectValue placeholder={data.label} className='text-black overflow-ellipsis'>
+                                                                        {data.name == 'birthYear' && birthYear != '2027'
+                                                                            ? data.state
+                                                                            : data.name == 'birthYear'
+                                                                            ? 'Year'
+                                                                            : data.name == 'birthMonth' && birthMonth != ''
                                                                             ? data.state
                                                                             : data.name == 'birthMonth'
                                                                             ? 'Month'
@@ -222,15 +229,15 @@ const VolunteerSignUp = () => {
                                                                         <Button
                                                                             variant={'outline'}
                                                                             className={cn(
-                                                                                `${nunitoLight.className} px-4 py-3 w-full h-11 text-base flex justify-start bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`,
+                                                                                `${nunitoLight.className} px-4 py-3 w-full h-11 min-w-[87px] text-base flex justify-start bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`,
                                                                                 !date && 'text-muted-foreground'
                                                                             )}
                                                                         >
-                                                                            <CalendarIcon className='mr-2 h-4 w-4 text-gray-500' />
+                                                                            <CalendarIcon className='mr-2 h-4 w-4 min-h-4 min-w-4 text-gray-500' />
                                                                             {date && birthDay != '' ? (
                                                                                 format(new Date(0, 0, parseInt(birthDay), 0, 0, 0), 'do')
                                                                             ) : (
-                                                                                <span className='text-gray-500 overflow-ellipsis'>Day</span>
+                                                                                <span className='text-gray-500 truncate'>Day</span>
                                                                             )}
                                                                         </Button>
                                                                     </PopoverTrigger>

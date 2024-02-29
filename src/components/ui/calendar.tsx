@@ -16,6 +16,7 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
 function Calendar({ className, classNames, showOutsideDays = true, showYear, showMonth, showArrows, ...props }: CalendarProps) {
     const monthsArray: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const customDisplay = showYear == '2027';
+    showMonth = showYear == '2027' ? 'August' : showMonth;
 
     return (
         <DayPicker

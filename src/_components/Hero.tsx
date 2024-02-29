@@ -8,14 +8,12 @@ import Link from 'next/link';
 const nunitoBold = Nunito({ weight: '800', subsets: ['latin'] });
 const nunitoBlack = Nunito({ weight: '900', subsets: ['latin'] });
 const nunitoLight = Nunito({ weight: '400', subsets: ['latin'] });
-const inter = Inter({ weight: '700', subsets: ['latin'] });
-const jua = Jua({ weight: '400', subsets: ['latin'] });
 
 const Hero = () => {
     return (
         <>
             <div className='w-full flex justify-center'>
-                <div className='mt-6 tablet:mt-8 mx-6 flex justify-center mb-12 max-w-[1280px]'>
+                <div className='mt-6 tablet:mt-8 mx-6 flex justify-center flex-col mb-12 max-w-[1280px]'>
                     {/* mobile/mablet */}
                     <div className='flex tablet:hidden flex-col gap-2'>
                         <h1 className={`${nunitoBlack.className} text-3xl min-[379px]:text-4xl mablet:text-[40px] text-center w-full`}>help a heart today!</h1>

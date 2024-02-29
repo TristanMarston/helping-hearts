@@ -12,7 +12,7 @@ const page = () => {
                 <Toaster />
                 <Navbar />
                 <Hero />
-                {/* <AboutUs /> */}
+                <AboutUs />
                 {/* <Testimonial /> */}
                 <Footer showVolunteerAd={true} />
             </div>

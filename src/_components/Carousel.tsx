@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 
-const images = [{ src: '/helping-hearts-hero1.png' }, { src: '/helping-hearts-hero2.png' }, { src: '/helping-hearts-hero3.png' }];
+const images = [{ src: '/helping-hearts-hero2.png' }, { src: '/helping-hearts-hero1.png' }, { src: '/helping-hearts-hero3.png' }];
 
 export function CarouselDemo() {
     return (
