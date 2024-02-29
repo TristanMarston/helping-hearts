@@ -141,10 +141,6 @@ const VolunteerSignUp = () => {
         }
     }, [date]);
 
-    useEffect(() => {
-        console.log(birthMonth);
-    }, [birthMonth]);
-
     return (
         <>
             <div>

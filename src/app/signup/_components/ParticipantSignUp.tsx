@@ -94,7 +94,6 @@ const ParticipantSignUp = () => {
     let blockSubmitHandle: number = 0;
 
     async function handleSubmit() {
-        console.log('on submit fn');
         if (blockSubmitHandle == 0) {
             blockSubmitHandle++;
 
@@ -106,6 +105,7 @@ const ParticipantSignUp = () => {
                     participant.birthYear.trim() != '' &&
                     participant.birthMonth.trim() != '' &&
                     participant.birthDay.trim() != '' &&
+                    participant.events.some((event) => event.isSelected) &&
                     participant.gradeLevel.trim() != '' &&
                     participant.isParent == false;
             });
@@ -300,7 +300,7 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
     const [email, setEmail] = useState<string>('');
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [events, setEvents] = useState<Events[]>([
-        { name: '5 kilometers', isSelected: false },
+        { name: '5k', isSelected: false },
         { name: '1600 meters', isSelected: false },
         { name: '400 meters', isSelected: false },
         { name: '100 meters', isSelected: false },
@@ -337,7 +337,7 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
         { name: 'birthDay', label: 'Day' },
     ];
 
-    const eventsMapArray: string[] = ['5 kilometers', '1600 meters', '400 meters', '100 meters', 'high jump', 'long jump'];
+    const eventsMapArray: string[] = ['5k', '1600 meters', '400 meters', '100 meters', 'high jump', 'long jump'];
 
     const onSubmit = (values: z.infer<typeof ParticipantSchema>) => {};
 
@@ -353,8 +353,6 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
 
     useEffect(() => {
         if (updateState == 5) {
-            console.log('updated state');
-
             let data: ParticipantFields | ParentFields;
             if (!isParent) {
                 data = {

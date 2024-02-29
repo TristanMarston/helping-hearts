@@ -23,7 +23,6 @@ const links: LinksArray[] = [
 export default function DrawerMenu() {
     const scrollToContactUs = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setTimeout(() => {
-            console.log('scroll down');
             e.preventDefault();
             const targetElement = document.getElementById('contact-us');
             if (targetElement) {

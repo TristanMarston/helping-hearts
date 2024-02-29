@@ -33,7 +33,6 @@ const callsToAction: ActionsArray[] = [
 
 const LinkOptions = () => {
     const scrollToContactUs = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        console.log('scroll down');
         e.preventDefault();
         const targetElement = document.getElementById('contact-us');
         if (targetElement) {
