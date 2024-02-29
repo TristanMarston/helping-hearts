@@ -274,7 +274,7 @@ const ParticipantSignUp = () => {
                         <DialogTitle className={`${nunitoBold.className} text-2xl`}>Ready to submit?</DialogTitle>
                         <DialogDescription className='flex flex-col items-start text-left w-full gap-2'>
                             <p className={`${nunitoLight.className} text-base`}>
-                                ***Each participant <b>costs $10</b> to run. You're signing up {participants} {participants == 1 ? 'participant' : 'participants'}, so please bring{' '}
+                                ***Each participant <b>costs $10</b> to run. You&#39;re signing up {participants} {participants == 1 ? 'participant' : 'participants'}, so please bring{' '}
                                 <b>${participants * 10}.</b>
                             </p>
                         </DialogDescription>
