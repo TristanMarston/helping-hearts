@@ -25,12 +25,12 @@ type IconLinks = {
 const links: Links[] = [
     { text: 'Register', href: '/signup?isVolunteer=false' },
     { text: 'Volunteer', href: '/signup?isVolunteer=true' },
-    { text: 'Donate', href: '/signup?isVolunteer=false' },
-    { text: 'About', href: '/signup?isVolunteer=false' },
+    { text: 'DPHS', href: 'https://dphs.sbunified.org/' },
+    // { text: 'About', href: '/signup?isVolunteer=false' },
 ];
 
 const iconLinks: IconLinks[] = [
-    { icon: Instagram, href: '#' },
+    { icon: Instagram, href: 'https://www.instagram.com/sbhelpinghearts/' },
     { icon: Github, href: 'https://github.com/TristanMarston/helping-hearts' },
 ];
 
@@ -59,16 +59,16 @@ const Footer = (props: Props) => {
             <div className='max-h-16 w-full bg-primary laptop:bg-transparent'>
                 <img src='/helping-hearts-wave-footer.svg' className={`${!props.showVolunteerAd ? 'top-10' : 'top-1'} w-full max-h-[15rem] relative -z-40 object-contain`} />
             </div>
-            <div className='bg-primary h-full w-full flex flex-col items-center pt-10 px-5 pb-3 gap-10'>
+            <div className='bg-primary h-full w-full flex flex-col items-center pt-10 px-5 pb-3 tablet:gap-10 gap-5'>
                 <ContactUs />
                 <div className='w-full max-w-[1280px] rounded-full bg-primary-dark h-[1px]' />
-                <div className='w-full max-w-[1280px] flex flex-col items-start gap-5'>
+                <div className='w-full max-w-[1280px] flex flex-col items-center gap-5'>
                     <Link className='flex items-center justify-center gap-[5px]' href='/'>
                         <Image src='/helping-hearts-logo-default-white.png' className='hidden tablet:block' alt='logo' width={54} height={34} />
                         <Image src='/helping-hearts-logo-default-white.png' className='mablet:block tablet:hidden' alt='logo' width={38} height={24} />
                         <h1 className={`${jua.className} tablet:text-4xl text-[1.625rem] text-background`}>helping hearts</h1>
                     </Link>
-                    {/* <div className='flex gap-10'>
+                    <div className='flex gap-10'>
                         {links.map((data, index) => (
                             <Link key={data.text + index} href={data.href} className={`${nunitoLight.className} text-background hover:text-background-light transition-all`}>
                                 {data.text}
@@ -77,11 +77,11 @@ const Footer = (props: Props) => {
                     </div>
                     <div className='flex gap-10'>
                         {iconLinks.map((data, index) => (
-                            <Link key={index} href={data.href}>
-                                <data.icon className='h-6 w-6 flex-none text-background hover:text-background-light transition-all' aria-hidden='true' />
+                            <Link key={index} href={data.href} target='_blank'>
+                                <data.icon className='h-6 w-6 flex-none text-background hover:text-background-light hover:scale-105 transition-all' aria-hidden='true' />
                             </Link>
                         ))}
-                    </div> */}
+                    </div>
                 </div>
             </div>
         </div>

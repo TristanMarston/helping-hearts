@@ -5,18 +5,17 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
-import { Jua, Nunito } from 'next/font/google';
+import { Nunito } from 'next/font/google';
 import { useState, useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, Check, PlusCircle } from 'lucide-react';
+import { Calendar as CalendarIcon, Check, HelpCircle, PlusCircle } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-import { cn } from '@/lib/utils';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import toast from 'react-hot-toast';
+import BirthDateSelector from './BirthDateSelector';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const nunitoLight = Nunito({ weight: '400', subsets: ['latin'] });
 const nunitoMedium = Nunito({ weight: '600', subsets: ['latin'] });
@@ -66,6 +65,11 @@ type FormMapArray = {
     state?: string;
     setState?: React.Dispatch<React.SetStateAction<string>>;
     ref?: any;
+};
+
+type EventsMapArray = {
+    event: string;
+    conversion: string;
 };
 
 type Events = {
@@ -123,9 +127,17 @@ const ParticipantSignUp = () => {
                 parentInfo.birthDay.trim() != '' &&
                 parentInfo.isParent == true;
 
+            const toastId = toast.loading('Processing...', {
+                position: 'top-center',
+                className: `${nunitoBold.className} text-white`,
+                style: {
+                    background: '#FFFDF5',
+                },
+            });
+
             if (parentIsValid && participantIsValid) {
                 try {
-                    const response = await fetch('https://helping-hearts-backend.onrender.com/participants', {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_DB_HOST}/participants`, {
                         body: JSON.stringify(parentInfo),
                         method: 'POST',
                         headers: {
@@ -134,7 +146,7 @@ const ParticipantSignUp = () => {
                     });
 
                     if (!response.ok) {
-                        createToast('Unable to send data.', false, 4000);
+                        createToast('Unable to send data.', false, 4000, toastId);
                         throw new Error('Failed to send data.');
                     } else {
                         const responseData = await response.json();
@@ -143,7 +155,7 @@ const ParticipantSignUp = () => {
                             const athlete = participant;
                             athlete.parentId = createdObjectId;
                             try {
-                                const response = await fetch('https://helping-hearts-backend.onrender.com/participants', {
+                                const response = await fetch(`${process.env.NEXT_PUBLIC_DB_HOST}/participants`, {
                                     body: JSON.stringify(athlete),
                                     method: 'POST',
                                     headers: {
@@ -152,33 +164,34 @@ const ParticipantSignUp = () => {
                                 });
 
                                 if (!response.ok) {
-                                    createToast('Unable to send data.', false, 4000);
+                                    createToast('Unable to send data.', false, 4000, toastId);
                                     throw new Error('Failed to send data.');
                                 } else {
-                                    createToast("You're signed up!", true, 4000);
+                                    createToast("You're signed up!", true, 4000, toastId);
                                     setDeleteInfoUpdate((prev) => prev + 1);
                                 }
                             } catch (error) {
-                                createToast('Unable to send data.', false, 4000);
+                                createToast('Unable to send data.', false, 4000, toastId);
                                 console.error('Error sending data: ', error);
                             }
                         });
                     }
                 } catch (error) {
-                    createToast('Unable to send data.', false, 4000);
+                    createToast('Unable to send data.', false, 4000, toastId);
                     console.error('Error sending data: ', error);
                 }
             } else {
                 createToast(
                     `${!parentIsValid && !participantIsValid ? 'Invalid form info.' : !parentIsValid ? 'Invalid parent/guardian info' : 'Invalid participant info.'}`,
                     false,
-                    4000
+                    4000,
+                    toastId
                 );
             }
         }
     }
 
-    const createToast = (text: string, status: boolean, duration: number) => {
+    const createToast = (text: string, status: boolean, duration: number, toastId: any) => {
         if (status) {
             toast.success(text, {
                 duration: duration,
@@ -187,6 +200,7 @@ const ParticipantSignUp = () => {
                 style: {
                     background: '#FFFDF5',
                 },
+                id: toastId,
             });
         } else {
             toast.error(text, {
@@ -196,6 +210,7 @@ const ParticipantSignUp = () => {
                 style: {
                     background: '#FFFDF5',
                 },
+                id: toastId,
             });
         }
     };
@@ -300,7 +315,6 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
     const [email, setEmail] = useState<string>('');
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [events, setEvents] = useState<Events[]>([
-        { name: '5k', isSelected: false },
         { name: '1600 meters', isSelected: false },
         { name: '400 meters', isSelected: false },
         { name: '100 meters', isSelected: false },
@@ -337,7 +351,13 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
         { name: 'birthDay', label: 'Day' },
     ];
 
-    const eventsMapArray: string[] = ['5k', '1600 meters', '400 meters', '100 meters', 'high jump', 'long jump'];
+    const eventsMapArray: EventsMapArray[] = [
+        { event: '1600 meters', conversion: 'b' },
+        { event: '400 meters', conversion: 'b' },
+        { event: '100 meters', conversion: 'b' },
+        { event: 'high jump', conversion: '' },
+        { event: 'long jump', conversion: '' },
+    ];
 
     const onSubmit = (values: z.infer<typeof ParticipantSchema>) => {};
 
@@ -432,93 +452,21 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                         />
                     ))}
                 </div>
-                <div className='grid grid-rows-2 grid-cols-[2fr_3fr_2fr] mablet:grid-cols-[1fr_2fr_1fr] gap-x-2'>
-                    <h2 className={`${nunitoBold.className} text-xl row-span-1 col-span-3`}>Date of Birth</h2>
-                    {birthDateInputMapArray.map((data, index) => (
-                        <FormField
-                            key={data.name + index}
-                            control={form.control}
-                            name={data.name}
-                            render={({ field }) => (
-                                <FormItem className='relative min-w-[80px]'>
-                                    <>
-                                        <FormControl>
-                                            {data.name != 'birthDay' ? (
-                                                <Select onValueChange={(value) => data.setState != undefined && data.setState(value)}>
-                                                    <SelectTrigger
-                                                        className={`${nunitoLight.className} px-4 py-3 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
-                                                    >
-                                                        <SelectValue {...field} placeholder={data.label} className='text-black overflow-ellipsis'>
-                                                            <span className='min-w-[50px] truncate overflow-ellipsis'>
-                                                                {data.name == 'birthYear' && birthYear != '2027'
-                                                                    ? data.state
-                                                                    : data.name == 'birthYear'
-                                                                    ? 'Year'
-                                                                    : data.name == 'birthMonth' && birthMonth != ''
-                                                                    ? data.state
-                                                                    : data.name == 'birthMonth'
-                                                                    ? 'Month'
-                                                                    : ''}
-                                                            </span>
-                                                        </SelectValue>
-                                                    </SelectTrigger>
-                                                    <SelectContent className='bg-background'>
-                                                        <SelectGroup>
-                                                            {data.selections != undefined &&
-                                                                data.selections.map((timeMeasure, index) => (
-                                                                    <SelectItem key={timeMeasure + index} value={timeMeasure} className='hover:bg-background-dark'>
-                                                                        {timeMeasure}
-                                                                    </SelectItem>
-                                                                ))}
-                                                        </SelectGroup>
-                                                    </SelectContent>
-                                                </Select>
-                                            ) : (
-                                                <FormControl>
-                                                    <Popover>
-                                                        <PopoverTrigger asChild>
-                                                            <Button
-                                                                variant={'outline'}
-                                                                className={cn(
-                                                                    `${nunitoLight.className} px-4 py-3 w-full min-w-[87px] truncate h-11 text-base flex justify-start bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`,
-                                                                    !date && 'text-muted-foreground'
-                                                                )}
-                                                            >
-                                                                <CalendarIcon className='mr-2 h-4 w-4 min-h-4 min-w-4 text-gray-500' />
-                                                                {date && birthDay != '' ? (
-                                                                    format(new Date(0, 0, parseInt(birthDay), 0, 0, 0), 'do')
-                                                                ) : (
-                                                                    <span className='text-gray-500 truncate'>Day</span>
-                                                                )}
-                                                            </Button>
-                                                        </PopoverTrigger>
-                                                        <PopoverContent className='w-auto p-0'>
-                                                            <Calendar
-                                                                mode='single'
-                                                                showYear={birthYear}
-                                                                showMonth={birthMonth}
-                                                                showArrows={false}
-                                                                selected={date}
-                                                                onSelect={setDate}
-                                                                showOutsideDays={false}
-                                                                className='bg-background'
-                                                            />
-                                                        </PopoverContent>
-                                                    </Popover>
-                                                </FormControl>
-                                            )}
-                                        </FormControl>
-                                    </>
-                                </FormItem>
-                            )}
-                        />
-                    ))}
-                </div>
+                <BirthDateSelector
+                    birthYear={birthYear}
+                    setBirthYear={setBirthYear}
+                    birthMonth={birthMonth}
+                    setBirthMonth={setBirthMonth}
+                    birthDay={birthDay}
+                    setBirthDay={setBirthDay}
+                    date={date}
+                    setDate={setDate}
+                />
                 {!isParent && (
                     <>
                         <div className='flex flex-col gap-4'>
                             <h2 className={`${nunitoBold.className} text-xl`}>Event(s)</h2>
-                            {eventsMapArray.map((event, index) => (
+                            {eventsMapArray.map(({ event, conversion }, index) => (
                                 <FormField
                                     key={event + index}
                                     control={form.control}
@@ -554,9 +502,27 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                                                 <FormLabel
                                                     className={`${
                                                         events[index].isSelected ? nunitoMedium.className + ' text-black' : nunitoLight.className + ' text-gray-500'
-                                                    }  margin-top-0 text-md transition-all select-none`}
+                                                    }  margin-top-0 text-md transition-all select-none flex items-center gap-x-1.5`}
                                                 >
                                                     {event}
+                                                    {/* {conversion.trim().length > 0 && (
+                                                        <TooltipProvider>
+                                                            <Tooltip>
+                                                                <TooltipTrigger>
+                                                                    <HelpCircle width={17} height={17} className='text-gray-500' />
+                                                                    <Popover>
+                                                                        <PopoverTrigger>
+                                                                            <HelpCircle width={17} height={17} className='text-gray-500' />
+                                                                        </PopoverTrigger>
+                                                                        <PopoverContent>{conversion}</PopoverContent>
+                                                                    </Popover>
+                                                                </TooltipTrigger>
+                                                                <TooltipContent className='bg-background'>
+                                                                    <p className={`${nunitoLight.className}`}>{conversion}</p>
+                                                                </TooltipContent>
+                                                            </Tooltip>
+                                                        </TooltipProvider>
+                                                    )} */}
                                                 </FormLabel>
                                             </>
                                         </FormItem>

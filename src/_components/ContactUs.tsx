@@ -64,7 +64,7 @@ const ContactUs = () => {
         { label: 'message', value: `${messageRef.current != undefined ? messageRef.current.value.trim() : ''}` },
     ];
 
-    const createToast = (text: string, status: boolean, duration: number) => {
+    const createToast = (text: string, status: boolean, duration: number, toastId: any) => {
         if (status) {
             toast.success(text, {
                 duration: duration,
@@ -73,6 +73,7 @@ const ContactUs = () => {
                 style: {
                     background: '#FFFDF5',
                 },
+                id: toastId,
             });
         } else {
             toast.error(text, {
@@ -82,6 +83,7 @@ const ContactUs = () => {
                 style: {
                     background: '#FFFDF5',
                 },
+                id: toastId,
             });
         }
     };
@@ -97,6 +99,14 @@ const ContactUs = () => {
         const messageIsValid = values.message && values.message.length > 0;
         const incorrectInputClasses = ' border-b-primary-pink border-b-4 border-dotted';
 
+        const toastId = toast.loading('Sending message...', {
+            position: 'top-center',
+            className: `${nunitoBold.className} text-white`,
+            style: {
+                background: '#FFFDF5',
+            },
+        });
+
         if (emailIsValid && messageIsValid && messageRef.current != null) {
             if (messageRef.current.className.indexOf(incorrectInputClasses) != -1 && messageIsValid) {
                 messageRef.current.className = messageRef.current.className.replace(new RegExp(incorrectInputClasses, 'g'), '');
@@ -106,7 +116,7 @@ const ContactUs = () => {
             }
 
             try {
-                const response = await fetch('https://helping-hearts-backend.onrender.com/messages', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_DB_HOST}/messages`, {
                     body: JSON.stringify(values),
                     method: 'POST',
                     headers: {
@@ -115,31 +125,31 @@ const ContactUs = () => {
                 });
 
                 if (!response.ok) {
-                    createToast('Unable to send data.', false, 4000);
+                    createToast('Unable to send data.', false, 4000, toastId);
                     throw new Error('Failed to send data.');
                 } else {
-                    createToast('Message successfully sent!', true, 4000);
+                    createToast('Message successfully sent!', true, 4000, toastId);
                     formMapArray.forEach((item) => (item.ref != undefined ? (item.ref.current.value = '') : ''));
                     messageRef.current.value = '';
                     form.reset();
                     messageRef.current.style.height = `40px`;
                 }
             } catch (error) {
-                createToast('Unable to send data.', false, 4000);
+                createToast('Unable to send data.', false, 4000, 'none');
                 console.error('Error sending data: ', error);
             }
         } else if (!emailIsValid && !messageIsValid && messageRef.current != null) {
-            createToast('Invalid information, please try again.', false, 4000);
+            createToast('Invalid information, please try again.', false, 4000, toastId);
             emailRef.current.className += emailRef.current.className.indexOf(incorrectInputClasses) == -1 ? incorrectInputClasses : '';
             messageRef.current.className += messageRef.current.className.indexOf(incorrectInputClasses) == -1 ? incorrectInputClasses : '';
         } else if (!emailIsValid && messageRef.current != null) {
-            createToast('Invalid email address, please try again.', false, 4000);
+            createToast('Invalid email address, please try again.', false, 4000, toastId);
             emailRef.current.className += emailRef.current.className.indexOf(incorrectInputClasses) == -1 ? incorrectInputClasses : '';
             if (messageRef.current.className.indexOf(incorrectInputClasses) != -1 && messageIsValid) {
                 messageRef.current.className = messageRef.current.className.replace(new RegExp(incorrectInputClasses, 'g'), '');
             }
         } else if (!messageIsValid && messageRef.current != null) {
-            createToast('Empty message, please try again.', false, 4000);
+            createToast('Empty message, please try again.', false, 4000, toastId);
             messageRef.current.className += messageRef.current.className.indexOf(incorrectInputClasses) == -1 ? incorrectInputClasses : '';
             if (emailRef.current.className.indexOf(incorrectInputClasses) != -1 && emailIsValid) {
                 emailRef.current.className = emailRef.current.className.replace(new RegExp(incorrectInputClasses, 'g'), '');
@@ -149,16 +159,22 @@ const ContactUs = () => {
 
     return (
         <div className='mx-4 w-full tablet:grid grid-cols-[2fr_3fr] max-w-[1280px] gap-10 justify-center' id='contact-us'>
-            <div className='hidden tablet:flex flex-col gap-5'>
-                <h1 className={`${jua.className} text-background text-4xl`}>have any questions?</h1>
-                <h4 className={`${nunitoLight.className} text-white text-lg`}>
-                    Contact us at right, or email<br></br>
-                    <a className='underline' href='mailto:dphsmedicalclub@gmail.com'>
-                        dphsmedicalclub@gmail.com
-                    </a>
-                    <br></br>
-                    <br></br>
-                    Our team will try our best<br></br>to respond within 24 hours.
+            <div className='flex flex-col gap-5 mb-5'>
+                <h1 className={`${jua.className} text-background text-4xl text-center tablet:text-left`}>have any questions?</h1>
+                <h4 className={`${nunitoLight.className} text-white text-base mablet:text-lg text-center tablet:text-left flex flex-col gap-y-3`}>
+                    <p className='block tablet:hidden'>
+                        Contact us below, or email{' '}
+                        <a className='underline' href='mailto:dphsmedicalclub@gmail.com'>
+                            dphsmedicalclub@gmail.com
+                        </a>
+                    </p>
+                    <p className='hidden tablet:block'>
+                        Contact us at right, or email{' '}
+                        <a className='underline' href='mailto:dphsmedicalclub@gmail.com'>
+                            dphsmedicalclub@gmail.com
+                        </a>
+                    </p>
+                    <p>Our team will try our best to respond within 24 hours. If you do not receive a reply promptly, please send another message or email.</p>
                 </h4>
             </div>
             <div className='w-full flex flex-col items-center'>
@@ -242,7 +258,7 @@ const ContactUs = () => {
                                                             value={data.value}
                                                             className={`${
                                                                 data.value.length > 0 ? 'border-gray-100' : 'border-red-500'
-                                                            } hover:cursor-not-allowed text-ellipsis overflow-hidden opacity-50 bg-background min-h-[4.25rem] h-full w-full max-w-[390px] px-2 py-2 border-gray-100 border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                                                            } hover:cursor-not-allowed rounded-md text-ellipsis overflow-hidden opacity-50 bg-background min-h-[4.25rem] max-h-32 h-full w-full max-w-[390px] px-2 py-2 border-gray-100 border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                                             style={{ lineHeight: 'normal' }}
                                                         ></textarea>
                                                     ) : (
@@ -252,7 +268,7 @@ const ContactUs = () => {
                                                             value={data.value}
                                                             className={`${
                                                                 data.label == 'email' && !/\S+@\S+\.\S+/.test(data.value) ? 'border-red-500' : 'border-gray-100'
-                                                            } bg-background h-8 w-full px-2 py-2 border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                                                            } bg-background h-8 w-full rounded-md px-2 py-2 border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                                         />
                                                     )}
                                                 </div>

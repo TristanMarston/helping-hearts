@@ -7,11 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Nunito } from 'next/font/google';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { cn } from '@/lib/utils';
-import { CalendarIcon } from 'lucide-react';
+import BirthDateSelector from './BirthDateSelector';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
 
@@ -71,9 +67,17 @@ const VolunteerSignUp = () => {
             info.birthMonth.trim() != '' &&
             info.birthDay.trim() != '';
 
+        const toastId = toast.loading('Processing...', {
+            position: 'top-center',
+            className: `${nunitoBold.className} text-white`,
+            style: {
+                background: '#FFFDF5',
+            },
+        });
+
         if (isValid) {
             try {
-                const response = await fetch('https://helping-hearts-backend.onrender.com/volunteers', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_DB_HOST}/volunteers`, {
                     body: JSON.stringify(info),
                     method: 'POST',
                     headers: {
@@ -82,10 +86,10 @@ const VolunteerSignUp = () => {
                 });
 
                 if (!response.ok) {
-                    createToast('Unable to send data.', false, 4000);
+                    createToast('Unable to send data.', false, 4000, toastId);
                     throw new Error('Failed to send data.');
                 } else {
-                    createToast('Welcome to the team!', true, 4000);
+                    createToast('Welcome to the team!', true, 4000, toastId);
                     form.reset();
                     setBirthYear('2027');
                     setBirthMonth('August');
@@ -93,11 +97,11 @@ const VolunteerSignUp = () => {
                     volunteerMapArray.forEach((data) => (data.ref.current.value = ''));
                 }
             } catch (error) {
-                createToast('Unable to send data.', false, 4000);
+                createToast('Unable to send data.', false, 4000, toastId);
                 console.error('Error sending data: ', error);
             }
         } else {
-            createToast('Invalid form info.', false, 4000);
+            createToast('Invalid form info.', false, 4000, toastId);
         }
     }
 
@@ -113,7 +117,7 @@ const VolunteerSignUp = () => {
         { name: 'birthDay', label: 'Day' },
     ];
 
-    const createToast = (text: string, status: boolean, duration: number) => {
+    const createToast = (text: string, status: boolean, duration: number, toastId: any) => {
         if (status) {
             toast.success(text, {
                 duration: duration,
@@ -122,6 +126,7 @@ const VolunteerSignUp = () => {
                 style: {
                     background: '#FFFDF5',
                 },
+                id: toastId,
             });
         } else {
             toast.error(text, {
@@ -131,6 +136,7 @@ const VolunteerSignUp = () => {
                 style: {
                     background: '#FFFDF5',
                 },
+                id: toastId,
             });
         }
     };
@@ -179,7 +185,17 @@ const VolunteerSignUp = () => {
                                     )}
                                 />
                             ))}
-                            <div className='grid grid-rows-2 grid-cols-[2fr_3fr_2fr] mablet:grid-cols-[1fr_2fr_1fr] gap-x-2'>
+                            <BirthDateSelector
+                                birthYear={birthYear}
+                                setBirthYear={setBirthYear}
+                                birthMonth={birthMonth}
+                                setBirthMonth={setBirthMonth}
+                                birthDay={birthDay}
+                                setBirthDay={setBirthDay}
+                                date={date}
+                                setDate={setDate}
+                            />
+                            {/* <div className='grid grid-rows-2 grid-cols-[2fr_3fr_2fr] mablet:grid-cols-[1fr_2fr_1fr] gap-x-2'>
                                 <h2 className={`${nunitoBold.className} text-xl row-span-1 col-span-3`}>Birth Date</h2>
                                 {birthDateInputMapArray.map((data, index) => (
                                     <FormField
@@ -258,7 +274,7 @@ const VolunteerSignUp = () => {
                                         )}
                                     />
                                 ))}
-                            </div>
+                            </div> */}
                         </div>
                         <Button
                             type='submit'

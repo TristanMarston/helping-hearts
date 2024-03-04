@@ -17,7 +17,9 @@ const AboutUs = () => {
                         {/* <h1 className={`${jua.className} text-center text-4xl`}>about us</h1> */}
                         <div className='w-full h-full flex flex-col justify-center items-center'>
                             <h1 className={`${nunitoBlack.className} text-2xl tablet:text-3xl text-center`}>Sign up for our track meet today to support us!</h1>
-                            <h3 className={`${nunitoLight.className} tablet:text-lg`}>Starts at 8:00 A.M. on March 16th, 2024.</h3>
+                            <h3 className={`${nunitoLight.className} tablet:text-lg text-center`}>
+                                8:00 AM - 10:00 AM on <u>March 16th, 2024.</u>
+                            </h3>
                             <div className='mt-5 w-full'>
                                 <h2 className={`${jua.className} text-center text-xl tablet:text-2xl mb-2`}>time until we help hearts</h2>
                                 <ShiftingCountdown />
