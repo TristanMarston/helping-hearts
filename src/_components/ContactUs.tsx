@@ -89,14 +89,18 @@ const ContactUs = () => {
     };
 
     async function onSubmit(values: z.infer<typeof contactUsSchema>) {
-        values['firstName'] = values['firstName']?.trim();
-        values['lastName'] = values['lastName']?.trim();
-        values['subject'] = values['subject']?.trim();
-        values['email'] = values['email']?.trim();
-        values['message'] = values['message']?.trim();
+        const date = Date();
+        const messageInfo = {
+            firstName: values['firstName']?.trim(),
+            lastName: values['lastName']?.trim(),
+            subject: values['subject']?.trim(),
+            email: values['email']?.trim(),
+            message: values['message']?.trim(),
+            dateCreated: date,
+        };
 
-        const emailIsValid = values.email && /\S+@\S+\.\S+/.test(values.email);
-        const messageIsValid = values.message && values.message.length > 0;
+        const emailIsValid = messageInfo.email && /\S+@\S+\.\S+/.test(messageInfo.email);
+        const messageIsValid = messageInfo.message && messageInfo.message.length > 0;
         const incorrectInputClasses = ' border-b-primary-pink border-b-4 border-dotted';
 
         const toastId = toast.loading('Sending message...', {
@@ -117,7 +121,7 @@ const ContactUs = () => {
 
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_DB_HOST}/messages`, {
-                    body: JSON.stringify(values),
+                    body: JSON.stringify(messageInfo),
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

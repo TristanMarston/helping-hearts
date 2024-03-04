@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import BirthDateSelector from './BirthDateSelector';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import Link from 'next/link';
 
 const nunitoLight = Nunito({ weight: '400', subsets: ['latin'] });
 const nunitoBold = Nunito({ weight: '800', subsets: ['latin'] });
@@ -52,10 +54,16 @@ const VolunteerSignUp = () => {
     });
 
     async function onSubmit(values: z.infer<typeof volunteerSchema>) {
-        const info = values;
-        info.birthYear = birthYear;
-        info.birthMonth = birthMonth;
-        info.birthDay = birthDay;
+        const currentDate = Date();
+        const info = {
+            firstName: values['firstName'],
+            lastName: values['lastName'],
+            email: values['email'],
+            birthYear: birthYear,
+            birthMonth: birthMonth,
+            birthDay: birthDay,
+            createdDate: currentDate,
+        };
 
         const isValid =
             info.firstName?.trim() != '' &&
@@ -195,93 +203,38 @@ const VolunteerSignUp = () => {
                                 date={date}
                                 setDate={setDate}
                             />
-                            {/* <div className='grid grid-rows-2 grid-cols-[2fr_3fr_2fr] mablet:grid-cols-[1fr_2fr_1fr] gap-x-2'>
-                                <h2 className={`${nunitoBold.className} text-xl row-span-1 col-span-3`}>Birth Date</h2>
-                                {birthDateInputMapArray.map((data, index) => (
-                                    <FormField
-                                        key={data.name + index}
-                                        control={form.control}
-                                        name={data.name}
-                                        render={({ field }) => (
-                                            <FormItem className='relative min-w-[80px]'>
-                                                <>
-                                                    <FormControl>
-                                                        {data.name != 'birthDay' ? (
-                                                            <Select onValueChange={(value) => data.setState != undefined && data.setState(value)}>
-                                                                <SelectTrigger
-                                                                    className={`${nunitoLight.className} px-4 py-3 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
-                                                                >
-                                                                    <SelectValue placeholder={data.label} className='text-black overflow-ellipsis'>
-                                                                        {data.name == 'birthYear' && birthYear != '2027'
-                                                                            ? data.state
-                                                                            : data.name == 'birthYear'
-                                                                            ? 'Year'
-                                                                            : data.name == 'birthMonth' && birthMonth != ''
-                                                                            ? data.state
-                                                                            : data.name == 'birthMonth'
-                                                                            ? 'Month'
-                                                                            : ''}
-                                                                    </SelectValue>
-                                                                </SelectTrigger>
-                                                                <SelectContent className='bg-background'>
-                                                                    <SelectGroup>
-                                                                        {data.selections != undefined &&
-                                                                            data.selections.map((timeMeasure, index) => (
-                                                                                <SelectItem key={timeMeasure + index} value={timeMeasure} className='hover:bg-background-dark'>
-                                                                                    {timeMeasure}
-                                                                                </SelectItem>
-                                                                            ))}
-                                                                    </SelectGroup>
-                                                                </SelectContent>
-                                                            </Select>
-                                                        ) : (
-                                                            <FormControl>
-                                                                <Popover>
-                                                                    <PopoverTrigger asChild>
-                                                                        <Button
-                                                                            variant={'outline'}
-                                                                            className={cn(
-                                                                                `${nunitoLight.className} px-4 py-3 w-full h-11 min-w-[87px] text-base flex justify-start bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`,
-                                                                                !date && 'text-muted-foreground'
-                                                                            )}
-                                                                        >
-                                                                            <CalendarIcon className='mr-2 h-4 w-4 min-h-4 min-w-4 text-gray-500' />
-                                                                            {date && birthDay != '' ? (
-                                                                                format(new Date(0, 0, parseInt(birthDay), 0, 0, 0), 'do')
-                                                                            ) : (
-                                                                                <span className='text-gray-500 truncate'>Day</span>
-                                                                            )}
-                                                                        </Button>
-                                                                    </PopoverTrigger>
-                                                                    <PopoverContent className='w-auto p-0'>
-                                                                        <Calendar
-                                                                            mode='single'
-                                                                            showYear={birthYear}
-                                                                            showMonth={birthMonth}
-                                                                            showArrows={false}
-                                                                            selected={date}
-                                                                            onSelect={setDate}
-                                                                            showOutsideDays={false}
-                                                                            className='bg-background'
-                                                                        />
-                                                                    </PopoverContent>
-                                                                </Popover>
-                                                            </FormControl>
-                                                        )}
-                                                    </FormControl>
-                                                </>
-                                            </FormItem>
-                                        )}
-                                    />
-                                ))}
-                            </div> */}
                         </div>
-                        <Button
-                            type='submit'
-                            className={`${nunitoBold.className} w-56 h-10 mt-5 self-center text-lg border resize-none overflow-y-hidden min-h-10 border-background bg-primary hover:bg-primary-light text-white rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.1)]`}
-                        >
-                            Submit
-                        </Button>
+                        <Dialog>
+                            <DialogTrigger
+                                className={`${nunitoBold.className} w-56 h-10 mt-5 self-center text-lg border resize-none overflow-y-hidden min-h-10 border-background bg-primary hover:bg-primary-light text-white rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.1)]`}
+                            >
+                                Submit
+                            </DialogTrigger>
+                            <DialogContent className='bg-background rounded-md gap-2.5'>
+                                <DialogHeader className='flex flex-col items-start'>
+                                    <DialogTitle className={`${nunitoBold.className} text-2xl`}>Ready to submit?</DialogTitle>
+                                    <DialogDescription className='flex flex-col items-start text-left w-full gap-2'>
+                                        <p className={`${nunitoLight.className} text-base`}>
+                                            ***Please arrive at the DPHS track <b>before 7:45 A.M.</b> so that we can figure out everybody's roles for the meet.
+                                        </p>
+                                        <p className={`${nunitoLight.className} text-base`}>
+                                            ***If you are a <b>DPHS student</b> volunteering for community service hours, print out{' '}
+                                            <Link className='underline text-primary-light' target='_blank' href='https://drive.google.com/file/d/198Y5wJbZ4p4G3DrZEnVBnRHvu3roQHQQ/view'>
+                                                this form
+                                            </Link>{' '}
+                                            and bring it to David Jackson to fill out once the service has been completed.
+                                        </p>
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <DialogClose
+                                    onClick={form.handleSubmit(onSubmit)}
+                                    className={`${nunitoBold.className} bg-primary transition-all mt-2 hover:bg-primary-light text-white h-10 rounded-md text-sm`}
+                                >
+                                    Submit
+                                </DialogClose>
+                                <DialogClose className={`${nunitoBold.className} bg-background hover:bg-background-dark h-10 transition-all rounded-md text-sm`}>Cancel</DialogClose>
+                            </DialogContent>
+                        </Dialog>
                     </form>
                 </Form>
             </div>

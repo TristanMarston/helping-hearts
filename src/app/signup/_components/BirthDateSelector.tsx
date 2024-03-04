@@ -61,7 +61,11 @@ const BirthDateSelector = ({ birthYear, setBirthYear, birthMonth, setBirthMonth,
                                                 className={`${nunitoLight.className} px-4 py-3 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                             >
                                                 <SelectValue {...field} placeholder={data.label} className='text-black overflow-ellipsis'>
-                                                    <span className='min-w-[50px] truncate overflow-ellipsis'>
+                                                    <span
+                                                        className={`${data.name == 'birthYear' && birthYear != '2027' && 'text-black'} ${
+                                                            data.name == 'birthMonth' && birthMonth != '' && 'text-black'
+                                                        } min-w-[50px] truncate overflow-ellipsis`}
+                                                    >
                                                         {data.name == 'birthYear' && birthYear != '2027'
                                                             ? data.state
                                                             : data.name == 'birthYear'
@@ -93,10 +97,11 @@ const BirthDateSelector = ({ birthYear, setBirthYear, birthMonth, setBirthMonth,
                                                         variant={'outline'}
                                                         className={cn(
                                                             `${nunitoLight.className} px-4 py-3 w-full min-w-[87px] truncate h-11 text-base flex justify-start bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`,
-                                                            !date && 'text-muted-foreground'
+                                                            !date && 'text-muted-foreground',
+                                                            date && birthDay != '' ? 'text-black' : 'text-gray-500'
                                                         )}
                                                     >
-                                                        <CalendarIcon className='mr-2 h-4 w-4 min-h-4 min-w-4 text-gray-500' />
+                                                        <CalendarIcon className={`${date && birthDay != '' ? 'text-black' : 'text-gray-500'} mr-2 h-4 w-4 min-h-4 min-w-4`} />
                                                         {date && birthDay != '' ? (
                                                             format(new Date(0, 0, parseInt(birthDay), 0, 0, 0), 'do')
                                                         ) : (

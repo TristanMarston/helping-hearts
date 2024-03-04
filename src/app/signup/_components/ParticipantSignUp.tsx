@@ -11,7 +11,6 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, Check, HelpCircle, PlusCircle } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import toast from 'react-hot-toast';
 import BirthDateSelector from './BirthDateSelector';
@@ -45,6 +44,7 @@ type ParticipantFields = {
     events: Events[];
     parentId: string;
     isParent: boolean;
+    dateCreated: string;
 };
 
 type ParentFields = {
@@ -56,6 +56,7 @@ type ParentFields = {
     birthMonth: string;
     birthDay: string;
     isParent: boolean;
+    dateCreated: string;
 };
 
 type FormMapArray = {
@@ -92,7 +93,17 @@ type ParticipantFormProps = {
 const ParticipantSignUp = () => {
     const [participants, setParticipants] = useState<number>(1);
     const [participantInfo, setParticipantInfo] = useState<ParticipantFields[]>([]);
-    const [parentInfo, setParentInfo] = useState<ParentFields>({ firstName: '', lastName: '', email: '', phoneNumber: '', birthYear: '', birthMonth: '', birthDay: '', isParent: true });
+    const [parentInfo, setParentInfo] = useState<ParentFields>({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        birthYear: '',
+        birthMonth: '',
+        birthDay: '',
+        isParent: true,
+        dateCreated: '',
+    });
     const [updateState, setUpdateState] = useState<number>(0);
     const [deleteInfoUpdate, setDeleteInfoUpdate] = useState<number>(0);
     let blockSubmitHandle: number = 0;
@@ -352,9 +363,9 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
     ];
 
     const eventsMapArray: EventsMapArray[] = [
-        { event: '1600 meters', conversion: 'b' },
-        { event: '400 meters', conversion: 'b' },
-        { event: '100 meters', conversion: 'b' },
+        { event: '1600 meters', conversion: '~1 mile' },
+        { event: '400 meters', conversion: '~0.25 miles' },
+        { event: '100 meters', conversion: '~0.06 miles' },
         { event: 'high jump', conversion: '' },
         { event: 'long jump', conversion: '' },
     ];
@@ -373,6 +384,7 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
 
     useEffect(() => {
         if (updateState == 5) {
+            const currentDate = Date();
             let data: ParticipantFields | ParentFields;
             if (!isParent) {
                 data = {
@@ -386,6 +398,7 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                     events: events,
                     parentId: '',
                     isParent: isParent,
+                    dateCreated: currentDate,
                 };
             } else {
                 data = {
@@ -397,6 +410,7 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                     birthMonth: birthMonth,
                     birthDay: birthDay,
                     isParent: isParent,
+                    dateCreated: currentDate,
                 };
             }
             props.onChange(data);
@@ -505,24 +519,16 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                                                     }  margin-top-0 text-md transition-all select-none flex items-center gap-x-1.5`}
                                                 >
                                                     {event}
-                                                    {/* {conversion.trim().length > 0 && (
-                                                        <TooltipProvider>
-                                                            <Tooltip>
-                                                                <TooltipTrigger>
-                                                                    <HelpCircle width={17} height={17} className='text-gray-500' />
-                                                                    <Popover>
-                                                                        <PopoverTrigger>
-                                                                            <HelpCircle width={17} height={17} className='text-gray-500' />
-                                                                        </PopoverTrigger>
-                                                                        <PopoverContent>{conversion}</PopoverContent>
-                                                                    </Popover>
-                                                                </TooltipTrigger>
-                                                                <TooltipContent className='bg-background'>
-                                                                    <p className={`${nunitoLight.className}`}>{conversion}</p>
-                                                                </TooltipContent>
-                                                            </Tooltip>
-                                                        </TooltipProvider>
-                                                    )} */}
+                                                    {conversion.trim().length > 0 && (
+                                                        <Popover>
+                                                            <PopoverTrigger>
+                                                                <HelpCircle width={17} height={17} className='text-gray-500' />
+                                                            </PopoverTrigger>
+                                                            <PopoverContent side='top' className={`${nunitoLight.className} w-full h-full p-2 bg-background text-gray-500 text-sm`}>
+                                                                {conversion}
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                    )}
                                                 </FormLabel>
                                             </>
                                         </FormItem>
@@ -540,9 +546,11 @@ const ParticipantForm = ({ isParent, updateState, setUpdateState, deleteInfoUpda
                                         <FormControl>
                                             <Select onValueChange={(value) => setGradeLevel(value)}>
                                                 <SelectTrigger
-                                                    className={`${nunitoLight.className} px-4 py-3 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                                                    className={`${nunitoLight.className} ${
+                                                        gradeLevel != '' ? 'text-black' : 'text-gray-500'
+                                                    } px-4 py-3 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all  appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                                 >
-                                                    <SelectValue {...field} placeholder='Grade Level' className='text-black overflow-ellipsis'>
+                                                    <SelectValue {...field} placeholder='Grade Level' className={`overflow-ellipsis`}>
                                                         {gradeLevel != '' ? gradeLevel : <span>Grade Level</span>}
                                                     </SelectValue>
                                                 </SelectTrigger>
