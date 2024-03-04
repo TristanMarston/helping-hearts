@@ -215,7 +215,7 @@ const VolunteerSignUp = () => {
                                     <DialogTitle className={`${nunitoBold.className} text-2xl`}>Ready to submit?</DialogTitle>
                                     <DialogDescription className='flex flex-col items-start text-left w-full gap-2'>
                                         <p className={`${nunitoLight.className} text-base`}>
-                                            ***Please arrive at the DPHS track <b>before 7:45 A.M.</b> so that we can figure out everybody's roles for the meet.
+                                            ***Please arrive at the DPHS track <b>before 7:45 A.M.</b> so that we can figure out everybody&#39;s roles for the meet.
                                         </p>
                                         <p className={`${nunitoLight.className} text-base`}>
                                             ***If you are a <b>DPHS student</b> volunteering for community service hours, print out{' '}
