@@ -13,7 +13,7 @@ type Context = {
 
 export const AuthenticationContext = createContext<undefined | Context>(undefined);
 
-const page = () => {
+const Page = () => {
     const [signedIn, setSignedIn] = useState<boolean>(false);
 
     return (
@@ -29,4 +29,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Page;
