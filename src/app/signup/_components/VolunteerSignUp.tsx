@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Nunito } from 'next/font/google';
-import { Button } from '@/components/ui/button';
 import BirthDateSelector from './BirthDateSelector';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -62,7 +61,7 @@ const VolunteerSignUp = () => {
             birthYear: birthYear,
             birthMonth: birthMonth,
             birthDay: birthDay,
-            createdDate: currentDate,
+            dateCreated: currentDate,
         };
 
         const isValid =
