@@ -3,7 +3,7 @@
 import Navbar from '@/_components/Navbar';
 import Authentication from './_components/Authentication';
 import { Toaster } from 'react-hot-toast';
-import { useState, createContext } from 'react';
+import { useState, createContext, useContext } from 'react';
 import Admin from './_components/Admin';
 
 type Context = {
@@ -11,7 +11,9 @@ type Context = {
     setSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const AuthenticationContext = createContext<undefined | Context>(undefined);
+const AuthenticationContext = createContext<undefined | Context>(undefined);
+
+export const useAuthentication = () => useContext(AuthenticationContext);
 
 const Page = () => {
     const [signedIn, setSignedIn] = useState<boolean>(false);
