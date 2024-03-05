@@ -76,7 +76,7 @@ const Volunteers = () => {
             ) : (
                 <div className='flex flex-col gap-5'>
                     {Array.from({ length: 3 }).map((_, index) => (
-                        <div className='flex flex-col space-y-3'>
+                        <div className='flex flex-col space-y-3' key={index}>
                             <Skeleton className='h-[125px] w-full rounded-xl bg-background-secondary' />
                             <div className='space-y-2'>
                                 <Skeleton className='h-4 w-[250px] bg-background-secondary' />
