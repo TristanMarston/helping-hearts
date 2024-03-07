@@ -3,31 +3,32 @@
 import Navbar from '@/_components/Navbar';
 import Authentication from './_components/Authentication';
 import { Toaster } from 'react-hot-toast';
-import { useState, createContext, useContext } from 'react';
 import Admin from './_components/Admin';
-
-type Context = {
-    signedIn: boolean;
-    setSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const AuthenticationContext = createContext<undefined | Context>(undefined);
+import { useAuthenticationContext, MyProvider } from './context';
 
 const Page = () => {
-    const [signedIn, setSignedIn] = useState<boolean>(false);
-
     return (
         <>
             <div className='min-h-full flex flex-col'>
-                <AuthenticationContext.Provider value={{ signedIn, setSignedIn }}>
+                <MyProvider>
                     <Toaster />
                     <Navbar />
-                    {signedIn ? <Admin /> : <Authentication />}
-                </AuthenticationContext.Provider>
+                    {/* {signedIn ? <Admin /> : <Authentication />} */}
+                    <AuthenticationOrAdmin />
+                </MyProvider>
             </div>
         </>
     );
 };
 
+const AuthenticationOrAdmin = () => {
+    const context = useAuthenticationContext();
+    if (context === undefined) {
+        throw new Error('useContext(AuthenticationContext) must be used within a AuthenticationContext.Provider');
+    }
+    const { signedIn } = context;
+
+    return signedIn ? <Admin /> : <Authentication />;
+};
+
 export default Page;
-export const useAuthentication = () => useContext(AuthenticationContext);

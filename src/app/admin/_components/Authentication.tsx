@@ -1,7 +1,7 @@
 'use client';
 
 import { useContext, useRef, useState } from 'react';
-import { useAuthentication } from '@/app/admin/page';
+import { useAuthenticationContext } from '@/app/admin/context';
 import { Nunito } from 'next/font/google';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -29,7 +29,7 @@ const Authentication = () => {
     const [showPassword, setShowPassword] = useState(false);
     const usernameRef = useRef() as React.MutableRefObject<HTMLInputElement>;
     const passwordRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-    const context = useAuthentication();
+    const context = useAuthenticationContext();
 
     if (context === undefined) {
         throw new Error('useContext(AuthenticationContext) must be used within a AuthenticationContext.Provider');
