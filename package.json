@@ -34,6 +34,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
     "react-hot-toast": "^2.4.1",
+    "react-resizable-panels": "^2.0.13",
     "shadcn-ui": "^0.8.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
