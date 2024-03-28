@@ -1,4 +1,6 @@
-import React, { createContext, useState, useContext } from 'react';
+'use client';
+
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 type Event = {
     name: string;
@@ -6,6 +8,7 @@ type Event = {
 };
 
 type Athlete = {
+    _id: string;
     firstName: string;
     lastName: string;
     grade: string;
@@ -13,7 +16,7 @@ type Athlete = {
 };
 
 type Context = {
-    athletes: Athlete[];
+    athletesData: Athlete[];
 };
 
 // Create the context
@@ -24,25 +27,25 @@ export const useAthletesContext = () => useContext(AthletesContext);
 
 // Create the provider component
 export const MyProvider = ({ children }: any) => {
-    const [hasFetched, setHasFetched] = useState<boolean>(false);
-    const [athletes, setAthletes] = useState<Athlete[]>([]);
+    const [athletesData, setAthletesData] = useState<Athlete[]>([]);
 
-    fetch(`${process.env.NEXT_PUBLIC_DB_HOST}/athletes`)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then((data) => {
-            setAthletes(() => {
-                setHasFetched(true);
-                return [...data];
+    useEffect(() => {
+        fetch(`${process.env.NEXT_PUBLIC_DB_HOST}/athletes`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setAthletesData(() => {
+                    return [...data];
+                });
+            })
+            .catch((error) => {
+                console.error('There was a problem with the fetch operation:', error);
             });
-        })
-        .catch((error) => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
+    }, []);
 
-    return <AthletesContext.Provider value={{ athletes }}>{children}</AthletesContext.Provider>;
+    return <AthletesContext.Provider value={{ athletesData }}>{children}</AthletesContext.Provider>;
 };

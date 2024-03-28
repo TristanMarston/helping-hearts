@@ -61,8 +61,8 @@ const Hero = () => {
                             </h1>
                             <div className='flex flex-col justify-start items-center'>
                                 <p className={`${nunitoLight.className} text-md my-4 flex text-center`}>
-                                    Helping Hearts is a nonprofit dedicated to spreading joy by supporting children&#39;s healthcare. Join us in our mission to make a difference through
-                                    our upcoming track & field event, where every step counts towards brighter futures.
+                                    Helping Hearts is a nonprofit dedicated to spreading joy by supporting children&#39;s healthcare. Join us in our mission to make a difference by
+                                    supporting our mission.
                                 </p>
                                 <div className='flex justify-center tablet:justify-start gap-3'>
                                     <HeroButtons />
@@ -83,10 +83,10 @@ export const HeroButtons = () => {
     return (
         <>
             <Link
-                href='/signup?isVolunteer=false'
+                href='/results'
                 className={`${nunitoBold.className} max-h-9 w-[8.375rem] px-3.5 py-1.5 transition-all bg-primary hover:bg-primary-light text-white rounded-xl flex items-center justify-center gap-2 tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.25)]`}
             >
-                Sign Up
+                Results
                 <Image
                     src='/arrow-circle-right.svg'
                     alt='arrow right icon'

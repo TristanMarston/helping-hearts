@@ -22,9 +22,9 @@ const Navbar = () => {
             {/* laptop/desktop view */}
             <div className='gap-10 mr-2.5 hidden laptop:flex'>
                 {/* <button className={linkClasses}>Donate</button> */}
-                <Link href='/signup?isVolunteer=true' className={linkClasses}>
+                {/* <Link href='/signup?isVolunteer=true' className={linkClasses}>
                     Volunteer
-                </Link>
+                </Link> */}
                 {/* <button className={linkClasses}>About Us</button> */}
                 <button
                     className={linkClasses}
@@ -41,7 +41,7 @@ const Navbar = () => {
                 <button
                     className={`${nunito.className} tablet:px-5 mablet:px-4 py-1.5 bg-primary text-white rounded-[10px] tablet:text-base hover:bg-primary-light transition-all tracking-wide`}
                 >
-                    <Link href='/signup?isVolunteer=false'>Sign up</Link>
+                    <Link href='/results'>Results</Link>
                 </button>
             </div>
             {/* tablet/mablet view */}
@@ -51,7 +51,7 @@ const Navbar = () => {
                     href='/signup?isVolunteer=false'
                     className={`${nunito.className} tablet:px-5 mablet:px-4 py-1.5 bg-primary text-white rounded-[10px] mablet:text-sm tablet:text-base hover:bg-primary-light transition-all tracking-wide`}
                 >
-                    Sign up
+                    Results
                 </Link>
             </div>
             {/* mobile view */}

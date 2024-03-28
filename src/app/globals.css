@@ -5,3 +5,24 @@
 .margin-top-0 {
     margin-top: 0 !important;
 }
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #faf8ef;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #efecde;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #efecde;
+}

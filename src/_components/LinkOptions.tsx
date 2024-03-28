@@ -1,6 +1,6 @@
 'use client';
 
-import { CircleDollarSign, HeartHandshake, Users, HandHeart, ArrowUpRightFromSquare, Phone, LucideIcon } from 'lucide-react';
+import { CircleDollarSign, HeartHandshake, Users, HandHeart, ArrowUpRightFromSquare, Phone, LucideIcon, NotebookText } from 'lucide-react';
 import Link from 'next/link';
 
 type LinksArray = {
@@ -19,9 +19,9 @@ type ActionsArray = {
 
 const links: LinksArray[] = [
     // { name: 'Donate', description: 'Support us in our mission.', href: '#', icon: CircleDollarSign },
-    { name: 'Volunteer', description: 'Join us and make an impact.', href: '/signup?isVolunteer=true', icon: HeartHandshake },
+    // { name: 'Volunteer', description: 'Join us and make an impact.', href: '/signup?isVolunteer=true', icon: HeartHandshake },
     // { name: 'About Us', description: 'Learn who we are and why.', href: '#', icon: Users },
-    { name: 'Sign Up', description: 'Get involved and join our cause.', href: '/signup?isVolunteer=false', icon: Users },
+    { name: 'Results', description: 'View the results of the event.', href: '/results', icon: NotebookText },
     { name: 'Contact Us', description: 'Connect with us for support.', href: '#', icon: Phone },
     // { name: 'Our Mission', description: 'Discover our purpose and goals.', href: '#', icon: HandHeart },
 ];
