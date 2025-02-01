@@ -2,20 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.heart-image {
+    --_m: radial-gradient(#000 69%, #0000 70%) 84.5%/50%;
+    -webkit-mask-box-image: var(--_m);
+    mask-border: var(--_m);
+    clip-path: polygon(-42% 0, 50% 91%, 142% 0);
 }
 
-@media (prefers-color-scheme: dark) {
+.heart-shadow {
+    --_m: radial-gradient(#000 69%, #0000 70%) 84.5%/50%;
+    -webkit-mask-box-image: var(--_m);
+    mask-border: var(--_m);
+    clip-path: polygon(-42% 0, 50% 91%, 142% 0);
+    filter: drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+.margin-top-0 {
+    margin-top: 0 !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #faf8ef;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #efecde;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #efecde;
+}
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+        --radius: 0.5rem;
+    }
 }
