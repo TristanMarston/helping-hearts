@@ -1,12 +1,8 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 
-export async function POST(request: Request, context: { params: { collection?: string } }) {
-    if (!context.params || !context.params.collection) {
-        return NextResponse.json({ message: 'Please provide collection.' }, { status: 400 });
-    }
-
-    const collection = context.params.collection;
+export async function POST(request: Request, { params }: { params: Promise<{ collection: string }> }) {
+    const collection = (await params).collection;
     const data = await request.json();
 
     if (Object.keys(data).length === 0) {
