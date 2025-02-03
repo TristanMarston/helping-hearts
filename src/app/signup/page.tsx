@@ -9,30 +9,6 @@ import { Fredoka } from 'next/font/google';
 
 const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
 
-export const toastMessage = (text: string, status: boolean, duration: number, toastId: any) => {
-    if (status) {
-        toast.success(text, {
-            duration: duration,
-            position: 'top-center',
-            className: `${fredokaBold.className} text-white`,
-            style: {
-                background: '#FFFDF5',
-            },
-            id: toastId,
-        });
-    } else {
-        toast.error(text, {
-            duration: duration,
-            position: 'top-center',
-            className: `${fredokaBold.className} text-white`,
-            style: {
-                background: '#FFFDF5',
-            },
-            id: toastId,
-        });
-    }
-};
-
 const page = () => {
     return (
         <>

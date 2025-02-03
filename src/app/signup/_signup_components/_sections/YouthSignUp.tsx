@@ -7,7 +7,6 @@ import BirthDateSelector from '../BirthDateSelector';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import SubmitModal from '../SubmitModal';
-import { toastMessage } from '../../page';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
@@ -252,11 +251,13 @@ const YouthSignUp = () => {
             });
 
             if (!obj.firstName || !obj.lastName || !obj.gradeLevel || !obj.events || !obj.birthYear || !obj.birthMonth || !obj.birthDay) {
-                toastMessage('Please fill out all fields.', false, 2000, 'signupError');
+                // toastMessage('Please fill out all fields.', false, 2000, 'signupError');
+                toast.error('Please fill out all the fields', { className: `${fredokaBold.className} !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
+
                 error = true;
                 return;
             }
-            
+
             obj.age = calculateAge(obj.birthYear, obj.birthMonth.toLowerCase(), obj.birthDay);
             sendObject.push(obj);
         });

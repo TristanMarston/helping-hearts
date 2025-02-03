@@ -7,7 +7,6 @@ import BirthDateSelector from '../BirthDateSelector';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import SubmitModal from '../SubmitModal';
-import { toastMessage } from '../../page';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
@@ -132,7 +131,8 @@ const CommunitySignUp = () => {
         });
 
         if (!sendObject.firstName || !sendObject.lastName || !sendObject.email || !sendObject.birthYear || !sendObject.birthMonth || !sendObject.birthDay) {
-            toastMessage('Please fill out all fields.', false, 2000, 'signupError');
+            toast.error('Please fill out all the fields', { className: `${fredokaBold.className} !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
+            // toastMessage('Please fill out all fields.', false, 2000, 'signupError');
             return;
         }
 

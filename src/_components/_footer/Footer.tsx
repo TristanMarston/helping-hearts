@@ -9,7 +9,6 @@ import { useState } from 'react';
 import ConfirmMessageModal from './ConfirmMessageModal';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-import { toastMessage } from '@/app/signup/page';
 
 const jua = Jua({ weight: '400', subsets: ['latin'] });
 const nunitoBold = Nunito({ weight: '800', subsets: ['latin'] });
@@ -65,7 +64,8 @@ const Footer = (props: Props) => {
         });
 
         if (!sendObject.email || !sendObject.message) {
-            toastMessage('Please fill out all fields.', false, 2000, 'signupError');
+            toast.error('Please fill out all the fields', { className: `${fredokaBold.className} !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
+
             return;
         }
 

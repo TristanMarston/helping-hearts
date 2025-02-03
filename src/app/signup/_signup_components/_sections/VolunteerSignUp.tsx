@@ -9,7 +9,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import SubmitModal from '../SubmitModal';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-import { toastMessage } from '../../page';
 
 const sourGummyBold = Sour_Gummy({ weight: '800', subsets: ['latin'] });
 const sourGummySemibold = Sour_Gummy({ weight: '700', subsets: ['latin'] });
@@ -132,7 +131,8 @@ const CommunitySignUp = () => {
         });
 
         if (!sendObject.firstName || !sendObject.lastName || !sendObject.email || !sendObject.birthYear || !sendObject.birthMonth || !sendObject.birthDay) {
-            toastMessage('Please fill out all fields.', false, 2000, 'signupError');
+            toast.error('Please fill out all the fields', { className: `${fredokaBold.className} !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
+            // toastMessage('Please fill out all fields.', false, 2000, 'signupError');
             return;
         }
 
