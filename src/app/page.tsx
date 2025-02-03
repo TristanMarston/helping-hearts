@@ -1,8 +1,6 @@
-import AboutUs from '@/_components/AboutUs';
 import Footer from '@/_components/_footer/Footer';
 import Hero from '@/_components/Hero';
 import Navbar from '@/_components/_navbar/Navbar';
-import Testimonial from '@/_components/Testimonial';
 import { Toaster } from 'react-hot-toast';
 
 export type NavLink = {
