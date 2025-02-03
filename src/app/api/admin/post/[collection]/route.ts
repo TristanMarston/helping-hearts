@@ -5,9 +5,6 @@ export async function POST(request: Request, { params }: { params: { collection:
     const { collection } = params;
     const data = await request.json();
 
-    console.log(data);
-    console.log(process.env.API_URL);
-
     if (Object.keys(data).length === 0) return NextResponse.json({ message: 'Please provide body.' }, { status: 500 });
     if (collection === null || collection.length === 0) return NextResponse.json({ message: 'Please provide collection.' }, { status: 500 });
 

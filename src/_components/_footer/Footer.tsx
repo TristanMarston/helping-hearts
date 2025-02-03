@@ -58,7 +58,6 @@ const Footer = (props: Props) => {
     const [formData, setFormData] = useState<ContactFormData>({ firstName: '', lastName: '', email: '', subject: '', message: '' });
 
     const handleSubmit = () => {
-        console.log(formData);
         const sendObject: any = {};
         Object.keys(formData).forEach((k) => {
             let key = k as keyof ContactFormData;
@@ -69,8 +68,6 @@ const Footer = (props: Props) => {
             toastMessage('Please fill out all fields.', false, 2000, 'signupError');
             return;
         }
-
-        console.log(sendObject);
 
         const toastID = toast.loading('Posting message...', { className: `${fredokaBold.className} !bg-background !text-black`, position: 'bottom-right' });
 
@@ -87,7 +84,6 @@ const Footer = (props: Props) => {
                 }
             })
             .catch((err) => {
-                console.log(err);
                 toast.error(`Couldn't send message. Please try again.`, {
                     id: toastID,
                     duration: 4000,

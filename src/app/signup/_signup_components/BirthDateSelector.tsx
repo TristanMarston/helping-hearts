@@ -4,7 +4,6 @@ import { Fredoka, Nunito } from 'next/font/google';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
@@ -22,7 +21,7 @@ const BirthDateSelector = ({ birthDate, changeBirthDay, changeBirthMonth, change
     const yearsArray: string[] = [];
     const [date, setDate] = useState<Date>();
 
-    for (let year = currentYear; year >= 1960; year--) yearsArray.push(year.toString());
+    for (let year = currentYear; year >= currentYear - 100; year--) yearsArray.push(year.toString());
     const monthsArray: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     function ordinalNumber(number: string) {

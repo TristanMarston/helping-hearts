@@ -2,7 +2,7 @@
 
 import { Check, HelpCircle, PlusCircle } from 'lucide-react';
 import { Fredoka, Sour_Gummy } from 'next/font/google';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import BirthDateSelector from '../BirthDateSelector';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -28,6 +28,29 @@ type ParticipantInfo = {
     events: TrackEvent[];
 };
 
+const months = {
+    january: '01',
+    february: '02',
+    march: '03',
+    april: '04',
+    may: '05',
+    june: '06',
+    july: '07',
+    august: '08',
+    september: '09',
+    october: '10',
+    november: '11',
+    december: '12',
+};
+
+const calculateAge = (
+    birthYear: string | number,
+    birthMonth: 'january' | 'february' | 'march' | 'april' | 'may' | 'june' | 'july' | 'august' | 'september' | 'october' | 'november' | 'december',
+    birthDay: string | number
+) => {
+    return Math.floor((new Date().getTime() - new Date(`${birthYear}-${months[birthMonth]}-${birthDay}`).getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+};
+
 const SignUpForm = ({
     participantInfo,
     setParticipantInfo,
@@ -37,14 +60,29 @@ const SignUpForm = ({
     setParticipantInfo: React.Dispatch<React.SetStateAction<ParticipantInfo[]>>;
     i: number;
 }) => {
-    const gradeLevelsArray: string[] = ['8th Grade', '7th Grade', '6th Grade', '5th Grade', '4th Grade', '3rd Grade', '2nd Grade', '1st Grade', 'Kindergarten'];
-    const eventsMapArray: { event: TrackEvent; conversion?: string }[] = [
-        { event: '1600 meters', conversion: '~1 mile' },
-        { event: '800 meters', conversion: '~0.5 miles' },
-        { event: '400 meters', conversion: '~0.25 miles' },
-        { event: '100 meters', conversion: '~0.06 miles' },
-    ];
+    const gradeLevelsArray: string[] = useMemo(() => ['8th Grade', '7th Grade', '6th Grade', '5th Grade', '4th Grade', '3rd Grade', '2nd Grade', '1st Grade', 'Kindergarten'], []);
+    const eventsMapArray: { event: TrackEvent; conversion?: string }[] = useMemo(
+        () => [
+            { event: '1600 meters', conversion: '~1 mile' },
+            { event: '800 meters', conversion: '~0.5 miles' },
+            { event: '400 meters', conversion: '~0.25 miles' },
+            { event: '100 meters', conversion: '~0.06 miles' },
+        ],
+        []
+    );
     const index = i;
+
+    const handleInputChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
+            const updatedInfo = [...participantInfo];
+            updatedInfo[index] = {
+                ...updatedInfo[index],
+                [key]: e.target.value,
+            };
+            setParticipantInfo(updatedInfo);
+        },
+        [participantInfo, index, setParticipantInfo]
+    );
 
     return (
         <form className='flex flex-col gap-4 px-6 py-4'>
@@ -57,15 +95,7 @@ const SignUpForm = ({
                                 type='text'
                                 className={`${fredokaLight.className} px-4 pt-3 pb-2 w-full h-11 text-lg bg-background appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] focus:outline-none focus:ring-0 focus:border-primary-light peer`}
                                 autoComplete='off'
-                                onChange={(e) => {
-                                    const updatedInfo = [...participantInfo];
-                                    console.log(index);
-                                    updatedInfo[index] = {
-                                        ...updatedInfo[index],
-                                        [key]: e.target.value,
-                                    };
-                                    setParticipantInfo(updatedInfo);
-                                }}
+                                onChange={(e) => handleInputChange(e, key)}
                                 value={participantInfo[index][key]}
                                 placeholder=''
                             />
@@ -210,7 +240,7 @@ const YouthSignUp = () => {
     ]);
     const [submitModalOpen, setSubmitModalOpen] = useState(false);
 
-    const handleSubmit = () => {
+    const handleSubmit = useCallback(() => {
         let error = false;
         const sendObject: any = [];
 
@@ -226,27 +256,8 @@ const YouthSignUp = () => {
                 error = true;
                 return;
             }
-
-            const months: { [key: string]: string } = {
-                january: '01',
-                february: '02',
-                march: '03',
-                april: '04',
-                may: '05',
-                june: '06',
-                july: '07',
-                august: '08',
-                september: '09',
-                october: '10',
-                november: '11',
-                december: '12',
-            };
-
-            const age = Math.floor(
-                (new Date().getTime() - new Date(`${obj.birthYear}-${obj.birthMonth ? months[obj.birthMonth.toLowerCase()] : ''}-${obj.birthDay}`).getTime()) /
-                    (365.25 * 24 * 60 * 60 * 1000)
-            );
-            obj.age = age;
+            
+            obj.age = calculateAge(obj.birthYear, obj.birthMonth.toLowerCase(), obj.birthDay);
             sendObject.push(obj);
         });
 
@@ -277,13 +288,12 @@ const YouthSignUp = () => {
                 }
             })
             .catch((err) => {
-                console.log(err);
                 toast.error(`Couldn't sign up. Please try again.`, {
                     id: toastID,
                     duration: 4000,
                 });
             });
-    };
+    }, [participantInfo]);
 
     return (
         <>

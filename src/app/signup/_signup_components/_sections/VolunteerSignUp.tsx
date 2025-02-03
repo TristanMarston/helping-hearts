@@ -2,7 +2,7 @@
 
 import { Check, HelpCircle, PlusCircle } from 'lucide-react';
 import { Fredoka, Sour_Gummy } from 'next/font/google';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import BirthDateSelector from '../BirthDateSelector';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -27,6 +27,29 @@ type VolunteerInfo = {
     birthDay: string;
 };
 
+const months = {
+    january: '01',
+    february: '02',
+    march: '03',
+    april: '04',
+    may: '05',
+    june: '06',
+    july: '07',
+    august: '08',
+    september: '09',
+    october: '10',
+    november: '11',
+    december: '12',
+};
+
+const calculateAge = (
+    birthYear: string | number,
+    birthMonth: 'january' | 'february' | 'march' | 'april' | 'may' | 'june' | 'july' | 'august' | 'september' | 'october' | 'november' | 'december',
+    birthDay: string | number
+) => {
+    return Math.floor((new Date().getTime() - new Date(`${birthYear}-${months[birthMonth]}-${birthDay}`).getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+};
+
 const SignUpForm = ({ volunteerInfo, setVolunteerInfo }: { volunteerInfo: VolunteerInfo; setVolunteerInfo: React.Dispatch<React.SetStateAction<VolunteerInfo>> }) => {
     return (
         <form className='flex flex-col gap-4 px-4 py-4'>
@@ -44,6 +67,7 @@ const SignUpForm = ({ volunteerInfo, setVolunteerInfo }: { volunteerInfo: Volunt
                                         return { ...prev, [key]: e.target.value };
                                     })
                                 }
+                                value={volunteerInfo[key]}
                                 placeholder=''
                             />
                             <label
@@ -57,50 +81,6 @@ const SignUpForm = ({ volunteerInfo, setVolunteerInfo }: { volunteerInfo: Volunt
                         </div>
                     )
             )}
-            {/* <div className='flex flex-col gap-2'>
-                <h2 className={`${fredokaBold.className} text-xl`}>Event(s)</h2>
-
-                {eventsMapArray.map(({ event, conversion }) => (
-                    <div key={event} className='flex items-center gap-1'>
-                        <div
-                            className={`${
-                                volunteerInfo.events.includes(event)
-                                    ? 'bg-primary border-none shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]'
-                                    : 'bg-background border-2'
-                            } w-5 h-5 flex justify-center items-center rounded-md cursor-pointer transition-all`}
-                            onClick={() => {
-                                setVolunteerInfo((prev) => {
-                                    const updatedInfo = prev.map((info, idx) => {
-                                        if (idx !== index) return info;
-                                        const events = info.events.includes(event) ? info.events.filter((e) => e !== event) : [...info.events, event];
-                                        return { ...info, events };
-                                    });
-                                    return updatedInfo;
-                                });
-                            }}
-                        >
-                            {volunteerInfo[index].events.includes(event) && <Check color='white' strokeWidth={3} width={14} height={14} />}
-                        </div>
-                        <label
-                            className={`${
-                                volunteerInfo[index].events.includes(event) ? `${fredokaBold.className} text-black` : `${fredokaLight.className} text-gray-400`
-                            }  margin-top-0 text-md transition-all select-none flex items-center gap-x-1.5`}
-                        >
-                            {event}
-                            {conversion !== null && (
-                                <Popover>
-                                    <PopoverTrigger>
-                                        <HelpCircle width={17} height={17} className='text-gray-500' />
-                                    </PopoverTrigger>
-                                    <PopoverContent side='top' className={`${fredokaLight.className} w-full h-full p-2 bg-background text-gray-500 text-sm`}>
-                                        {conversion}
-                                    </PopoverContent>
-                                </Popover>
-                            )}
-                        </label>
-                    </div>
-                ))}
-            </div> */}
             <BirthDateSelector
                 birthDate={{ day: volunteerInfo.birthDay, month: volunteerInfo.birthMonth, year: volunteerInfo.birthYear }}
                 changeBirthDay={(day: string) => {
@@ -143,8 +123,7 @@ const CommunitySignUp = () => {
     });
     const [submitModalOpen, setSubmitModalOpen] = useState(false);
 
-    const handleSubmit = () => {
-        console.log(volunteerInfo);
+    const handleSubmit = useCallback(() => {
         const sendObject: any = {};
         Object.keys(volunteerInfo).forEach((k) => {
             let key = k as keyof VolunteerInfo;
@@ -157,27 +136,7 @@ const CommunitySignUp = () => {
             return;
         }
 
-        const months: { [key: string]: string } = {
-            january: '01',
-            february: '02',
-            march: '03',
-            april: '04',
-            may: '05',
-            june: '06',
-            july: '07',
-            august: '08',
-            september: '09',
-            october: '10',
-            november: '11',
-            december: '12',
-        };
-
-        const age = Math.floor(
-            (new Date().getTime() - new Date(`${sendObject.birthYear}-${sendObject.birthMonth ? months[sendObject.birthMonth.toLowerCase()] : ''}-${sendObject.birthDay}`).getTime()) /
-                (365.25 * 24 * 60 * 60 * 1000)
-        );
-        sendObject.age = age;
-        console.log(sendObject);
+        sendObject.age = calculateAge(sendObject.birthYear, sendObject.birthMonth.toLowerCase(), sendObject.birthDay);
 
         const toastID = toast.loading('Signing up...', { className: `${fredokaBold.className} !bg-background !text-black`, position: 'bottom-right' });
 
@@ -194,13 +153,12 @@ const CommunitySignUp = () => {
                 }
             })
             .catch((err) => {
-                console.log(err);
                 toast.error(`Couldn't sign up. Please try again.`, {
                     id: toastID,
                     duration: 4000,
                 });
             });
-    };
+    }, [volunteerInfo]);
 
     return (
         <>
