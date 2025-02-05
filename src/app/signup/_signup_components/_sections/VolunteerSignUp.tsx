@@ -146,10 +146,7 @@ const CommunitySignUp = () => {
                 }
             })
             .catch((err) => {
-                let message = `Couldn't sign up. Please try again.`;
-                if (err.message) message = err.message;
-
-                toast.error(message, {
+                toast.error(`Couldn't sign up. Please try again.`, {
                     id: toastID,
                     duration: 4000,
                 });

@@ -9,9 +9,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ col
         return NextResponse.json({ message: 'Please provide body.' }, { status: 400 });
     }
 
-    if (process.env.API_URL === undefined || process.env.API_URL === undefined) NextResponse.json({ message: 'ENV issue.' }, { status: 500 });
-    if (collection === undefined || collection === undefined) NextResponse.json({ message: 'collection await issue.' }, { status: 500 });
-
     try {
         const response = await axios.post(`${process.env.API_URL}/${collection}`, data, {
             headers: {
