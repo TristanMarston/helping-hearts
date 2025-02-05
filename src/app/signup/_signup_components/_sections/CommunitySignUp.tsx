@@ -1,11 +1,8 @@
 'use client';
 
-import { Check, HelpCircle, PlusCircle } from 'lucide-react';
 import { Fredoka, Sour_Gummy } from 'next/font/google';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import BirthDateSelector from '../BirthDateSelector';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import SubmitModal from '../SubmitModal';
 import toast from 'react-hot-toast';
 import axios from 'axios';

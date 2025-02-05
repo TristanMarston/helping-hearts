@@ -1,21 +1,14 @@
 'use client';
 
-import { Check, HelpCircle, PlusCircle } from 'lucide-react';
 import { Fredoka, Sour_Gummy } from 'next/font/google';
 import React, { useCallback, useEffect, useState } from 'react';
 import BirthDateSelector from '../BirthDateSelector';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import SubmitModal from '../SubmitModal';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
-const sourGummyBold = Sour_Gummy({ weight: '800', subsets: ['latin'] });
-const sourGummySemibold = Sour_Gummy({ weight: '700', subsets: ['latin'] });
 const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
 const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
-
-// type TrackEvent = '1600 meters' | '800 meters' | '400 meters' | '100 meters';
 
 type VolunteerInfo = {
     firstName: string;

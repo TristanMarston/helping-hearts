@@ -73,11 +73,17 @@ const SubmitModal = ({
                                                 <span>
                                                     I understand that I am needed from <b>7:00 AM to 10:30 AM</b> on <b>March 1st, 2025</b> to help with the event.
                                                 </span>
-                                            ) : (
+                                            ) : signUpView === 'youth' ? (
                                                 <span>
                                                     I understand that the event has a <b>$10 participation fee</b>, and will show up to the event with $10 for each participant that I
                                                     plan to bring.
                                                 </span>
+                                            ) : (
+                                                signUpView === 'community' && (
+                                                    <span>
+                                                        I understand that the event has a <b>$10 participation fee</b>, and will show up to the event with $10.
+                                                    </span>
+                                                )
                                             )}
                                         </label>
                                     </span>
@@ -103,11 +109,10 @@ const SubmitModal = ({
                                                 </label>
                                             </span>
                                             <div className={`${fredokaLight.className} p-3 w-full rounded-xl shadow-[0_3px_10px_rgb(0,0,0,0.1)] overflow-y-scroll h-32 text-gray-600`}>
-                                                The Undersigned hereby agrees to defend, indemnify, and hold harmless Helping Hearts and Dos Pueblos High School,
-                                                its officials, employers and agents from and against all loss, liability, charges, and expenses (including attorneys' fees) and cases of
-                                                whatsoever character may arise by reason of the participation in this year's Helping Hearts Youth Track Event or be connected
-                                                anyway therewith. The above-mentioned agencies do not provide accident, medical, liability or workers compensation insurance for program
-                                                participants.
+                                                The Undersigned hereby agrees to defend, indemnify, and hold harmless Helping Hearts and Dos Pueblos High School, its officials,
+                                                employers and agents from and against all loss, liability, charges, and expenses (including attorneys' fees) and cases of whatsoever
+                                                character may arise by reason of the participation in this year's Helping Hearts Youth Track Event or be connected anyway therewith. The
+                                                above-mentioned agencies do not provide accident, medical, liability or workers compensation insurance for program participants.
                                             </div>
                                         </>
                                     )}

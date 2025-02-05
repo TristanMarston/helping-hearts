@@ -1,18 +1,14 @@
 'use client';
 
-import { Suspense, useEffect, useLayoutEffect, useState } from 'react';
-import { Fredoka, Jua, Nunito, Sour_Gummy } from 'next/font/google';
-// import ParticipantSignUp from './ParticipantSignUp';
-// import VolunteerSignUp from './VolunteerSignUp';
+import { Suspense, useEffect, useState } from 'react';
+import { Fredoka, Sour_Gummy } from 'next/font/google';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import YouthSignUp from './_sections/YouthSignUp';
-import SubmitModal from './SubmitModal';
 import CommunitySignUp from './_sections/CommunitySignUp';
 import VolunteerSignUp from './_sections/VolunteerSignUp';
 
 const sourGummyBold = Sour_Gummy({ weight: '800', subsets: ['latin'] });
-const sourGummySemibold = Sour_Gummy({ weight: '700', subsets: ['latin'] });
 const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
 const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
 
@@ -32,8 +28,6 @@ const SignupContent = () => {
         if (type !== 'youth' && type !== 'volunteer' && type !== 'community') return;
         setSignUpView(type || 'youth');
     }, [searchParams]);
-
-    const handleSubmit = () => {};
 
     return (
         <Suspense fallback={<Fallback />}>

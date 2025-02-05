@@ -2,7 +2,7 @@ import axios from 'axios';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request, { params }: { params: Promise<{ collection: string }> }) {
-    const collection = (await params).collection;
+    const { collection } = await params;
     const data = await request.json();
 
     if (Object.keys(data).length === 0) {

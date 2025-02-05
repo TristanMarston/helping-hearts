@@ -117,10 +117,10 @@ const Footer = (props: Props) => {
                         </div>
                     </div>
                 )}
-                <div className='max-h-16 w-full laptop:bg-transparent'>
+                <div className='max-h-16 w-full bg-transparent hidden mid-tablet:block'>
                     <img src='/helping-hearts-wave-footer.svg' className={`${!props.showVolunteerAd ? 'top-10' : 'top-1'} w-full max-h-[15rem] relative -z-40 object-contain`} />
                 </div>
-                <div className='bg-primary h-full w-full flex flex-col items-center pt-10 px-5 pb-3 tablet:gap-10 gap-5'>
+                <div className='bg-primary h-full w-full flex flex-col items-center pt-10 px-5 pb-3 tablet:gap-10 gap-5 mt-4 mid-tablet:mt-0'>
                     <ContactUs setConfirmMessageModalOpen={setIsOpen} formData={formData} setFormData={setFormData} />
                     <div className='w-full max-w-[1280px] rounded-full bg-primary-dark h-[1px]' />
                     <div className='w-full max-w-[1280px] flex flex-col items-center gap-5'>
@@ -131,7 +131,12 @@ const Footer = (props: Props) => {
                         </Link>
                         <div className='flex gap-10'>
                             {links.map((data, index) => (
-                                <Link key={data.text + index} href={data.href} className={`${nunitoLight.className} text-background hover:text-background-light transition-all`}>
+                                <Link
+                                    key={data.text + index}
+                                    href={data.href}
+                                    target={data.text === 'DPHS' ? '_blank' : '_self'}
+                                    className={`${nunitoLight.className} text-background hover:text-background-light transition-all`}
+                                >
                                     {data.text}
                                 </Link>
                             ))}
