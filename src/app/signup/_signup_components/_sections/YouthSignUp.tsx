@@ -13,7 +13,7 @@ import axios from 'axios';
 const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
 const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
 
-type TrackEvent = '1600 meters' | '800 meters' | '400 meters' | '100 meters';
+type TrackEvent = '1600 meters' | '800 meters' | '400 meters' | '100 meters' | 'long jump' | 'softball throw';
 
 type ParticipantInfo = {
     firstName: string;
@@ -64,6 +64,8 @@ const SignUpForm = ({
             { event: '800 meters', conversion: '~0.5 miles' },
             { event: '400 meters', conversion: '~0.25 miles' },
             { event: '100 meters', conversion: '~0.06 miles' },
+            { event: 'softball throw', conversion: 'a new safe javelin-like throwing event!' },
+            { event: 'long jump' },
         ],
         []
     );
@@ -172,7 +174,7 @@ const SignUpForm = ({
                             }  margin-top-0 text-md transition-all select-none flex items-center gap-x-1.5`}
                         >
                             {event}
-                            {conversion !== null && (
+                            {conversion !== undefined && conversion !== null && (
                                 <Popover>
                                     <PopoverTrigger>
                                         <HelpCircle width={17} height={17} className='text-gray-500' />
