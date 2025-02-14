@@ -38,10 +38,6 @@ const EditCollection = ({ collection }: { collection: string }) => {
         fetchCollection();
     }, []);
 
-    useEffect(() => {
-        console.log(response);
-    }, [response]);
-
     return (
         <div className='mt-24 mid-mobile:mt-28 mb-8 w-full flex flex-col items-center gap-6 px-6 max-w-[1400px]'>
             {fetchState === 'loading' ? (
