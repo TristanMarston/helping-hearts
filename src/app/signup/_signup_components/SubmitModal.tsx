@@ -50,7 +50,10 @@ const SubmitModal = ({
                             <h2 className={`${fredokaBold.className} text-2xl mid-mobile:text-3xl mid-phone:text-4xl text-primary`}>Ready to submit?</h2>
                             <section className='flex flex-col items-start text-left w-full gap-2'>
                                 <p className={`${fredokaSemibold.className} text-primary opacity-60 text-xs mid-mobile:text-sm mid-phone:text-base`}>
-                                    REMINDER &ndash; the event will take place on <b>March 1st, 2025</b>. Please arrive by 8:00 AM.
+                                    <span>
+                                        REMINDER &ndash; the event will take place on <b>March 1st, 2025</b>.
+                                    </span>
+                                    {signUpView !== 'volunteer' && <span> Please arrive by 7:30 AM to check in (opens at 7:00 AM).</span>}
                                 </p>
                                 <div className='flex flex-col gap-2 px-3'>
                                     <span className='flex gap-2 items-center'>

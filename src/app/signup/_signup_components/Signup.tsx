@@ -55,7 +55,7 @@ const SignupContent = () => {
                         : 'Please enter the following information to sign up as a volunteer.'}
                 </p>
                 <p>
-                    The event will take place on <time dateTime='2025-03-01'>March 1st, 2025</time> at 8:30 AM at the <b>DPHS Track</b>.
+                    The event will take place on <time dateTime='2025-03-01'>March 1st, 2025</time> at 8:00 AM at the <b>DPHS Track</b>.
                 </p>
             </div>
             <div className='w-full rounded-full grid grid-cols-3 mt-4 bg-background shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]'>

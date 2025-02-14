@@ -44,20 +44,20 @@ const HeartImages = () => {
                         <img
                             src='/helping-hearts-hero2.png'
                             alt='Heart Image 1'
-                            className='heart-shadow object-cover aspect-square transform scale-[1.7] pt-7 mobile:scale-[1.5] mobile:pt-6 mid-phone:scale-[1.5] mid-phone:pt-7'
+                            className='object-cover aspect-square transform scale-[1.7] pt-7 mobile:scale-[1.5] mobile:pt-6 mid-phone:scale-[1.5] mid-phone:pt-7'
                         />
                     </div>
                 </div>
                 <div className='relative w-36 h-36 mobile:w-40 mobile:h-40 mid-phone:w-48 mid-phone:h-48 tablet:w-52 tablet:h-52 min-[1200px]:w-56 min-[1200px]:h-56 heart-image rotate-[10deg] overflow-hidden bg-primary p-1.5 shadow-xl'>
                     <div className='relative w-full h-full heart-image'>
-                        <img src='/helping-hearts-hero1.png' alt='Heart Image 1' className='heart-shadow object-cover aspect-square transform scale-[1.55] object-left' />
+                        <img src='/helping-hearts-hero1.png' alt='Heart Image 1' className='object-cover aspect-square transform scale-[1.55] object-left' />
                     </div>
                 </div>
             </section>
             <section className='flex w-full justify-center items-center'>
                 <div className='relative w-36 h-36 mobile:w-40 mobile:h-40 mid-phone:w-48 mid-phone:h-48 tablet:w-52 tablet:h-52 min-[1200px]:w-56 min-[1200px]:h-56 heart-image rotate-[10deg] overflow-hidden bg-primary p-1.5 shadow-xl'>
                     <div className='relative w-full h-full heart-image'>
-                        <img src='/helping-hearts-hero3.png' alt='Heart Image 1' className='heart-shadow object-cover aspect-square transform scale-[2.2] pb-10' />
+                        <img src='/helping-hearts-hero3.png' alt='Heart Image 1' className='object-cover aspect-square transform scale-[2.2] pb-10' />
                     </div>
                 </div>
             </section>

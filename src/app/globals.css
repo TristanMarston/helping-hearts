@@ -3,18 +3,13 @@
 @tailwind utilities;
 
 .heart-image {
-    --_m: radial-gradient(#000 69%, #0000 70%) 84.5%/50%;
-    -webkit-mask-box-image: var(--_m);
-    mask-border: var(--_m);
-    clip-path: polygon(-42% 0, 50% 91%, 142% 0);
-}
-
-.heart-shadow {
-    --_m: radial-gradient(#000 69%, #0000 70%) 84.5%/50%;
-    -webkit-mask-box-image: var(--_m);
-    mask-border: var(--_m);
-    clip-path: polygon(-42% 0, 50% 91%, 142% 0);
-    filter: drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.3));
+    --_m: radial-gradient(at 70% 31%, #000 29%, #0000 30%), radial-gradient(at 30% 31%, #000 29%, #0000 30%), linear-gradient(#000 0 0) bottom/100% 50% no-repeat;
+    -webkit-mask: var(--_m);
+    mask: var(--_m);
+    object-fit: cover;
+    aspect-ratio: 1;
+    filter: drop-shadow(0 0 20px #c0c);
+    clip-path: polygon(-41% 0, 50% 91%, 141% 0);
 }
 
 .margin-top-0 {
@@ -30,7 +25,7 @@
     height: 96px;
     border-radius: 50%;
     display: inline-block;
-    border-top: 7px solid #FF96AC;
+    border-top: 7px solid #ff96ac;
     border-right: 7px solid transparent;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
@@ -56,8 +51,6 @@
         transform: rotate(360deg);
     }
 }
-
-
 
 /* width */
 ::-webkit-scrollbar {
