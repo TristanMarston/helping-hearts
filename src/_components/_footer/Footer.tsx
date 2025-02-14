@@ -104,13 +104,13 @@ const Footer = (props: Props) => {
                         <div className='flex gap-3'>
                             <Link
                                 href='/signup?type=volunteer'
-                                className={`${fredokaBold.className} w-28 h-8 desktop:w-36 desktop:h-10 desktop:text-xl transition-all bg-background hover:bg-background-secondary text-primary-pink rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.25)]`}
+                                className={`${fredokaBold.className} w-28 h-8 min-[900px]:w-32 min-[900px]:h-9 min-[900px]:text-lg laptop:w-36 laptop:h-10 laptop:text-xl transition-all bg-background hover:bg-background-secondary text-primary-pink rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.25)]`}
                             >
                                 Volunteer
                             </Link>
                             <Link
                                 href='/signup'
-                                className={`${fredokaBold.className} w-28 h-8 desktop:w-36 desktop:h-10 desktop:text-xl border border-background transition-all bg-primary-pink hover:bg-primary-pink-light text-background rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.1)]`}
+                                className={`${fredokaBold.className} w-28 h-8 min-[900px]:w-32 min-[900px]:h-9 min-[900px]:text-lg laptop:w-36 laptop:h-10 laptop:text-xl border border-background transition-all bg-primary-pink hover:bg-primary-pink-light text-background rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.1)]`}
                             >
                                 Sign Up
                             </Link>
