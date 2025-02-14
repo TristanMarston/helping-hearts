@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { APIResponse } from './EditCollection';
-import { Copy, Hash, Loader, RotateCcw, SquareArrowOutUpRight } from 'lucide-react';
+import { Copy, Hash, Home, Loader, RotateCcw, SquareArrowOutUpRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Fredoka } from 'next/font/google';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
 const fredokaSemibold = Fredoka({ weight: '500', subsets: ['latin'] });
@@ -85,20 +86,23 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
 
     return (
         <section className={`${fredokaBold.className} w-full`}>
-            <div className='w-full mid-phone:bg-background-secondary mid-phone:rounded-full mid-phone:shadow-[0_4px_30px_rgba(0,0,0,.4)] flex items-center justify-center mid-phone:justify-between mid-phone:py-3 mid-phone:px-4 gap-3 mid-phone:gap-0 flex-wrap'>
-                <div className='flex items-center justify-start gap-3 w-full mid-phone:w-auto flex-wrap mid-phone:flex-nowrap'>
-                    <div className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.25)] tracking-wider mid-phone:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full'>
-                        {/* <Hash className='w-5 h-5' strokeWidth={2.5} /> */}
-                        {response.data.length} item{response.data.length === 1 ? '' : 's'}
-                    </div>
+            <div className='w-full action-bar-expand:bg-background-secondary action-bar-expand:rounded-full action-bar-expand:shadow-[0_4px_30px_rgba(0,0,0,.4)] flex items-center justify-center action-bar-expand:justify-between action-bar-expand:py-3 action-bar-expand:px-4 gap-3 action-bar-expand:gap-0 flex-wrap'>
+                <div className='flex items-center justify-start gap-4 action-bar-expand:gap-3 w-full action-bar-expand:w-auto flex-wrap action-bar-expand:flex-nowrap'>
+                    <Link
+                        href='/admin'
+                        className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.25)] tracking-wider action-bar-expand:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full cursor-pointer transition-all hover:brightness-110'
+                    >
+                        <Home className='w-5 h-5' strokeWidth={2.5} />
+                        DASHBOARD
+                    </Link>
                     <span
-                        className='relative w-full mid-phone:w-auto'
+                        className='relative w-full action-bar-expand:w-auto'
                         onMouseEnter={() => !isTouchScreen && setExportDropdown(true)}
                         onMouseLeave={() => !isTouchScreen && setExportDropdown(false)}
                         onClick={() => isTouchScreen && setExportDropdown((prev) => !prev)}
                     >
-                        <button className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.25)] tracking-wider mid-phone:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full transition-all hover:brightness-110'>
-                            <SquareArrowOutUpRight className='w-4 h-4 mid-phone:w-5 mid-phone:h-5' strokeWidth={2.5} />
+                        <button className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.25)] tracking-wider action-bar-expand:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full transition-all hover:brightness-110'>
+                            <SquareArrowOutUpRight className='w-4 h-4 action-bar-expand:w-5 action-bar-expand:h-5' strokeWidth={2.5} />
                             EXPORT DATA
                         </button>
                         <AnimatePresence>
@@ -108,7 +112,7 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
                                     transition={{ duration: 0.2 }}
-                                    className={`${fredokaBold.className} absolute w-full mid-phone:w-52 z-50 text-primary tracking-wider top-full mt-2 text-sm rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,.2)] text-center`}
+                                    className={`${fredokaBold.className} absolute w-full action-bar-expand:w-52 z-50 text-primary tracking-wider top-full mt-2 text-sm rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,.2)] text-center`}
                                 >
                                     <div
                                         onClick={() => copyToClipboard(JSON.stringify(response.data))}
@@ -121,8 +125,12 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
                             )}
                         </AnimatePresence>
                     </span>
+                    <div className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.25)] tracking-wider action-bar-expand:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full'>
+                        {/* <Hash className='w-5 h-5' strokeWidth={2.5} /> */}
+                        {response.data.length} item{response.data.length === 1 ? '' : 's'}
+                    </div>
                 </div>
-                <div className='flex items-center justify-center relative w-full mid-phone:w-auto'>
+                <div className='flex items-center justify-center relative w-full action-bar-expand:w-auto'>
                     <div
                         onMouseEnter={() =>
                             setRefreshed((prev) => {
@@ -140,17 +148,17 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
                                 };
                             })
                         }
-                        className='mid-phone:p-2 cursor-pointer bg-background-very-light mid-phone:bg-transparent font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.25)] mid-phone:shadow-none tracking-wider w-full mid-phone:w-auto px-4 py-2 uppercase flex items-center justify-center gap-2 transition-all hover:brightness-110'
+                        className='action-bar-expand:p-2 cursor-pointer bg-background-very-light action-bar-expand:bg-transparent font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.25)] action-bar-expand:shadow-none tracking-wider w-full action-bar-expand:w-auto px-4 py-2 uppercase flex items-center justify-center gap-2 transition-all hover:brightness-110'
                         onClick={() => refreshDocuments()}
                     >
                         <span>
                             {!refreshed.refreshing ? (
-                                <RotateCcw className='text-primary w-4 h-4 mid-phone:w-5 mid-phone:h-5' strokeWidth={2.5} />
+                                <RotateCcw className='text-primary w-4 h-4 action-bar-expand:w-5 action-bar-expand:h-5' strokeWidth={2.5} />
                             ) : (
-                                <Loader className='text-primary w-4 h-4 mid-phone:w-5 mid-phone:h-5 animate-spin' strokeWidth={2.5} />
+                                <Loader className='text-primary w-4 h-4 action-bar-expand:w-5 action-bar-expand:h-5 animate-spin' strokeWidth={2.5} />
                             )}
                         </span>
-                        <span className='block mid-phone:hidden'>REFRESH</span>
+                        <span className='block action-bar-expand:hidden'>REFRESH</span>
                     </div>
                     <AnimatePresence>
                         {refreshed.hovered && (
@@ -159,7 +167,7 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 10 }}
                                 transition={{ duration: 0.2 }}
-                                className={`${fredokaBold.className} absolute hidden mid-phone:block bg-background text-primary tracking-wider bottom-full mb-2 text-sm px-3 py-2 rounded-md shadow-[0_4px_30px_rgba(0,0,0,.2)] text-center`}
+                                className={`${fredokaBold.className} absolute hidden action-bar-expand:block bg-background text-primary tracking-wider bottom-full mb-2 text-sm px-3 py-2 rounded-md shadow-[0_4px_30px_rgba(0,0,0,.2)] text-center`}
                             >
                                 <span>Refresh</span>
                             </motion.div>

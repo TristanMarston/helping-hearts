@@ -18,6 +18,7 @@ export default {
     		'mid-phone': '500px',
     		'mid-phone-wide': '550px',
     		wide: '600px',
+			'action-bar-expand': '620px',
     		tablet: '650px',
     		'mid-tablet-small': '700px',
     		'mid-column': '750px',
