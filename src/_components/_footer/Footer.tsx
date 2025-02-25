@@ -20,6 +20,7 @@ const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
 
 type Props = {
     showVolunteerAd: boolean;
+    page: string;
 };
 
 type Links = {
@@ -92,7 +93,7 @@ const Footer = (props: Props) => {
     };
 
     return (
-        <section className='relative bottom-28'>
+        <section className={`${props.page === 'home' ? 'bottom-28' : 'bottom-0'} relative`}>
             <div className='flex flex-col items-center'>
                 {props.showVolunteerAd && (
                     <div className='bg-primary-pink z-10 relative top-10 laptop:top-14 w-[80vw] max-w-[1280px] min-w-[17rem] py-3 mid-column:py-4 rounded-full shadow-lg flex items-center justify-center px-10 tablet:px-5 laptop:px-8'>

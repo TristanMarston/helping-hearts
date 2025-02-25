@@ -11,7 +11,7 @@ const page = () => {
                 <Navbar />
                 <Signup />
             </div>
-            <Footer showVolunteerAd={false} />
+            <Footer showVolunteerAd={false} page='signup' />
         </>
     );
 };

@@ -22,9 +22,7 @@ const page = () => {
                 <Hero />
             </div>
             <EventInfo />
-            {/*     <AboutUs />*/}
-                <Footer showVolunteerAd={true} /> 
-            {/* </div> */}
+            <Footer showVolunteerAd={true} page='home' />
         </>
     );
 };
