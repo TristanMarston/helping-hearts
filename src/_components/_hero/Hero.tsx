@@ -3,6 +3,7 @@
 import { Sour_Gummy, Fredoka } from 'next/font/google';
 import Image from 'next/image';
 import Link from 'next/link';
+import EventInfo from './EventInfo';
 
 const sourGummyBold = Sour_Gummy({ weight: '800', subsets: ['latin'] });
 const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
@@ -30,6 +31,7 @@ const Hero = () => {
                     </div>
                 </div>
             </div>
+            {/* <EventInfo /> */}
         </>
     );
 };

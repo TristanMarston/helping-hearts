@@ -92,10 +92,10 @@ const Footer = (props: Props) => {
     };
 
     return (
-        <>
+        <section className='relative bottom-28'>
             <div className='flex flex-col items-center'>
                 {props.showVolunteerAd && (
-                    <div className='bg-primary-pink relative top-10 laptop:top-14 w-[80vw] max-w-[1280px] min-w-[17rem] py-3 mid-column:py-4 rounded-full shadow-lg flex items-center justify-center px-10 tablet:px-5 laptop:px-8'>
+                    <div className='bg-primary-pink z-10 relative top-10 laptop:top-14 w-[80vw] max-w-[1280px] min-w-[17rem] py-3 mid-column:py-4 rounded-full shadow-lg flex items-center justify-center px-10 tablet:px-5 laptop:px-8'>
                         <h1
                             className={`${sourGummyBold.className} text-background hidden tablet:block tablet:text-3xl mid-column:text-4xl min-[900px]:text-5xl laptop:text-6xl w-full tracking-[0.01em]`}
                         >
@@ -117,10 +117,10 @@ const Footer = (props: Props) => {
                         </div>
                     </div>
                 )}
-                <div className='max-h-16 w-full bg-transparent hidden mid-tablet:block'>
+                <div className='max-h-16 w-full bg-transparent hidden mid-tablet:block z-[1]'>
                     <img src='/helping-hearts-wave-footer.svg' className={`${!props.showVolunteerAd ? 'top-10' : 'top-1'} w-full max-h-[15rem] relative -z-40 object-contain`} />
                 </div>
-                <div className='bg-primary h-full w-full flex flex-col items-center pt-10 px-5 pb-3 tablet:gap-10 gap-5 mt-4 mid-tablet:mt-0'>
+                <div className='bg-primary h-full w-full flex flex-col items-center pt-10 px-5 pb-3 z-[2] tablet:gap-10 gap-5 mt-4 mid-tablet:mt-0'>
                     <ContactUs setConfirmMessageModalOpen={setIsOpen} formData={formData} setFormData={setFormData} />
                     <div className='w-full max-w-[1280px] rounded-full bg-primary-dark h-[1px]' />
                     <div className='w-full max-w-[1280px] flex flex-col items-center gap-5'>
@@ -152,7 +152,7 @@ const Footer = (props: Props) => {
                 </div>
             </div>
             <ConfirmMessageModal open={isOpen} setOpen={setIsOpen} formData={formData} handleSubmit={handleSubmit} />
-        </>
+        </section>
     );
 };
 

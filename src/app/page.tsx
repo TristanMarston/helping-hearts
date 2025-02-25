@@ -1,5 +1,6 @@
 import Footer from '@/_components/_footer/Footer';
-import Hero from '@/_components/Hero';
+import EventInfo from '@/_components/_hero/EventInfo';
+import Hero from '@/_components/_hero/Hero';
 import Navbar from '@/_components/_navbar/Navbar';
 import { Toaster } from 'react-hot-toast';
 
@@ -20,6 +21,7 @@ const page = () => {
                 <Navbar />
                 <Hero />
             </div>
+            <EventInfo />
             {/*     <AboutUs />*/}
                 <Footer showVolunteerAd={true} /> 
             {/* </div> */}
