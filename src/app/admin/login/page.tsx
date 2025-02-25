@@ -12,7 +12,6 @@ const page = () => {
                 <Navbar /> 
                 <AdminLogin />
             </div>
-            <Footer showVolunteerAd={false} />
         </>
     );
 };
