@@ -53,7 +53,7 @@ const SubmitModal = ({
                                     <span>
                                         REMINDER &ndash; the event will take place on <b>March 1st, 2025</b>.
                                     </span>
-                                    {signUpView !== 'volunteer' && <span> Please arrive by 7:30 AM to check in (opens at 7:00 AM).</span>}
+                                    {signUpView !== 'volunteer' && <span> Please arrive by 8:00 AM to check in (opens at 7:00 AM).</span>}
                                 </p>
                                 <div className='flex flex-col gap-2 px-3'>
                                     <span className='flex gap-2 items-center'>

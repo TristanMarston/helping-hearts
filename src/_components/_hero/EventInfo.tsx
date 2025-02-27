@@ -43,8 +43,8 @@ const EventInfo = () => {
                         race! We are also looking for volunteers, so please click the link below to sign up!
                     </p>
                     <p className='text-sm mid-mobile:text-base tablet:text-lg text-gray-700'>
-                        The event will take place on <b>March 1st, 2025, at 7:30 A.M.</b> at the DPHS Track. Registration opens at 7:00 A.M., and the event will officially begin at 8:00
-                        A.M., so we recommend that athletes arrive between 7:30 A.M. and 7:45 A.M. to warm up and prepare. We hope to see you there!
+                        The event will take place on <b>March 1st, 2025, at 7:30 A.M.</b> at the DPHS Track. Registration opens at 7:00 A.M., and the event will officially begin at 8:30
+                        A.M., so we recommend that athletes arrive between 7:30 A.M. and 8:00 A.M. to warm up and prepare. We hope to see you there!
                     </p>
                 </div>
             </div>

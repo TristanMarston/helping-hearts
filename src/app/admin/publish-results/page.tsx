@@ -1,6 +1,6 @@
 import Navbar from '@/_components/_navbar/Navbar';
 import { Toaster } from 'react-hot-toast';
-import AdminLogin from '../_components/AdminLogin';
+import PublishResultsScreen from './_components/PublishResultsScreen';
 
 
 const page = () => {
@@ -9,7 +9,7 @@ const page = () => {
             <Toaster />
             <div className='w-full h-full flex flex-col items-center px-5'>
                 <Navbar /> 
-                <AdminLogin />
+                <PublishResultsScreen />
             </div>
         </>
     );

@@ -23,6 +23,7 @@ export default {
     		'mid-tablet-small': '700px',
     		'mid-column': '750px',
     		'mid-tablet': '800px',
+			'mid-tablet-wide': '860px',
     		'two-column': '1000px',
     		laptop: '1280px'
     	},

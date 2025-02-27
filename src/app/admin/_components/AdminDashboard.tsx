@@ -23,6 +23,13 @@ const AdminDashboard = () => {
             <div className='w-full max-w-[1000px] flex flex-col mx-6 my-8'>
                 <h1 className={`${sourGummyBold.className} text-black text-3xl mid-phone-wide:text-4xl mb-2`}>Administration Dashboard</h1>
                 <section className='flex flex-col gap-4'>
+                    <Link
+                        href={`/admin/publish-results`}
+                        className='w-full gap-12 rounded-xl bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'
+                    >
+                        <h4 className={`${fredokaBold.className} text-primary capitalize text-lg`}>Publish Results</h4>
+                        <p className={`${fredokaBold.className} text-base text-primary-light uppercase`}>interface</p>
+                    </Link>
                     {collections.map(({ name, collectionName }) => (
                         <Link
                             key={name}
