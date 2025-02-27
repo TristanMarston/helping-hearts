@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Fredoka, Sour_Gummy } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -24,7 +24,7 @@ type Result = {
     enteredAt: string;
 };
 
-const ResultsHome = () => {
+const ResultsContent = () => {
     // const isDatePast = new Date() > new Date('2025-03-01');
 
     const searchParams = useSearchParams();
@@ -44,15 +44,15 @@ const ResultsHome = () => {
     const events = ['100 meters', '400 meters', '800 meters', '1600 meters', 'softball throw', 'long jump'];
 
     const adjustSearchParams = (race: 'youth' | 'community', sort: 'performance' | 'age', event: string) => {
-        // const createQueryString = (names: string[], values: string[]) => {
-        //     const params = new URLSearchParams(searchParams.toString());
-        //     names.forEach((name, index) => {
-        //         params.set(name, values[index]);
-        //     });
-        //     return params.toString();
-        // };
-        // const newQueryString = createQueryString(['race', 'sort', 'event'], [race, sort, event.replaceAll('all events', 'all')]);
-        // router.push(`?${newQueryString}`);
+        const createQueryString = (names: string[], values: string[]) => {
+            const params = new URLSearchParams(searchParams.toString());
+            names.forEach((name, index) => {
+                params.set(name, values[index]);
+            });
+            return params.toString();
+        };
+        const newQueryString = createQueryString(['race', 'sort', 'event'], [race, sort, event.replaceAll('all events', 'all')]);
+        router.push(`?${newQueryString}`);
     };
 
     const sortResults = useCallback(
@@ -320,9 +320,17 @@ const AthleteCard = ({ firstName, lastName, performance, unit, age, athleteID, i
     return (
         <Link
             href={`/results/${athleteID}`}
-            className={`${index % 2 === 0 ? 'bg-background' : 'bg-background-secondary'} grid grid-cols-[15%_3%_59%_3%_20%] mid-phone-wide:grid-cols-[10%_3%_69%_3%_15%] tablet:grid-cols-[15%_3%_59%_3%_20%] mid-tablet-wide:grid-cols-[10%_3%_69%_3%_15%] p-2 rounded-lg text-sm hover:scale-[1.02] transition-all`}
+            className={`${
+                index % 2 === 0 ? 'bg-background' : 'bg-background-secondary'
+            } grid grid-cols-[15%_3%_59%_3%_20%] mid-phone-wide:grid-cols-[10%_3%_69%_3%_15%] tablet:grid-cols-[15%_3%_59%_3%_20%] mid-tablet-wide:grid-cols-[10%_3%_69%_3%_15%] p-2 rounded-lg text-sm hover:scale-[1.02] transition-all`}
         >
-            <span className={`${index % 2 === 0 ? 'bg-primary' : 'bg-primary-light'} h-full shadow-lg rounded-lg text-white text-base mid-phone-wide:text-lg tablet:text-base mid-tablet-wide:text-lg w-full flex items-center justify-center`}>{position}</span>
+            <span
+                className={`${
+                    index % 2 === 0 ? 'bg-primary' : 'bg-primary-light'
+                } h-full shadow-lg rounded-lg text-white text-base mid-phone-wide:text-lg tablet:text-base mid-tablet-wide:text-lg w-full flex items-center justify-center`}
+            >
+                {position}
+            </span>
             <span></span>
             <span className='h-full w-full flex flex-col gap-0.5 justify-start'>
                 <span className='font-semibold text-base mid-phone-wide:text-[17px] tablet:text-base mid-tablet-wide:text-[17px] overflow-hidden text-nowrap text-ellipsis'>
@@ -331,10 +339,26 @@ const AthleteCard = ({ firstName, lastName, performance, unit, age, athleteID, i
                 <span className='text-gray-600 text-xs mid-phone-wide:text-sm tablet:text-xs mid-tablet-wide:text-sm'>Age {age}</span>
             </span>
             <span></span>
-            <span className={`${index % 2 === 0 ? 'bg-primary' : 'bg-primary-light'} h-full shadow-lg w-full text-base mid-tablet-wide:text-[17px] rounded-lg text-white px-2 py-1 grid place-items-center`}>
+            <span
+                className={`${
+                    index % 2 === 0 ? 'bg-primary' : 'bg-primary-light'
+                } h-full shadow-lg w-full text-base mid-tablet-wide:text-[17px] rounded-lg text-white px-2 py-1 grid place-items-center`}
+            >
                 {performanceString}
             </span>
         </Link>
+    );
+};
+
+const Fallback = () => {
+    return <div>placeholder</div>;
+};
+
+const ResultsHome = () => {
+    return (
+        <Suspense fallback={<Fallback />}>
+            <ResultsContent />
+        </Suspense>
     );
 };
 
