@@ -71,6 +71,11 @@ const PublishResultsScreen = () => {
                         id: toastID,
                         duration: 4000,
                     });
+
+                    setAthleteData([{ firstName: '', lastName: '', minutes: '', feet: '', athleteID: '', score: '' }]);
+                    setChosenAthlete([]);
+                    setChosenEvent('');
+                    setChosenUnit(undefined);
                 }
             })
             .catch((err) => {
@@ -79,8 +84,6 @@ const PublishResultsScreen = () => {
                     duration: 4000,
                 });
             });
-
-        console.log(sendData);
     };
 
     const fetchCollection = async () => {
@@ -103,7 +106,7 @@ const PublishResultsScreen = () => {
     return (
         <div className='w-full flex justify-center mt-16 mid-mobile:mt-20'>
             <div className='w-full max-w-[1000px] flex flex-col mx-6 mt-8 mb-36'>
-                <h1 className={`${sourGummyBold.className} text-black text-3xl wide:text-4xl mid-tablet:text-5xl mb-4`}>Results Publishing Interface</h1>
+                <h1 className={`${sourGummyBold.className} text-black text-3xl wide:text-4xl mid-tablet:text-5xl mb-4`}>Youth Results Publishing Interface</h1>
                 <section className={`${fredokaLight.className} w-full h-full flex flex-col gap-4`}>
                     <span className='flex items-center gap-4'>
                         <span className={`text-black font-bold text-lg wide:text-xl mid-tablet:text-2xl`}>Event:</span>
@@ -177,7 +180,10 @@ const PublishResultsScreen = () => {
                                 )}
                             </div>
                             {athleteData.map((athlete, index) => (
-                                <div className={`grid grid-rows-1 ${chosenUnit === 'meters' ? 'grid-cols-[5%_7.5%_40%_47.5%]' : 'grid-cols-[5%_7.5%_40%_23.75%_23.75%]'}`}>
+                                <div
+                                    key={athlete.athleteID + index}
+                                    className={`grid grid-rows-1 ${chosenUnit === 'meters' ? 'grid-cols-[5%_7.5%_40%_47.5%]' : 'grid-cols-[5%_7.5%_40%_23.75%_23.75%]'}`}
+                                >
                                     <span className='border-b border-r border-gray-400 grid place-items-center p-2'>{index + 1}</span>
                                     <span className='border-b border-r border-gray-400 grid place-items-center p-2'>
                                         {athlete.athleteID !== '' &&

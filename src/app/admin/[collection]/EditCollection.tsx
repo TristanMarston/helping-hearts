@@ -26,6 +26,7 @@ const EditCollection = ({ collection }: { collection: string }) => {
             .then((res) => {
                 if (res.status === 200) {
                     setFetchState('success');
+                    console.log(res.data.schema);
                     setResponse({ data: res.data.data, schema: res.data.schema });
                 } else setFetchState('failed');
             })

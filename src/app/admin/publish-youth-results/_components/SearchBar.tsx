@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { AthleteData } from './PublishResultsScreen';
+import { AthleteData } from './YouthPublishResultsScreen';
 
 type FilteredResult = {
     firstName: string;
@@ -47,6 +47,8 @@ const SearchBar = ({
             console.log('chosenAthlete', chosenAthlete);
             setQuery(`${chosenAthlete[index].firstName} ${chosenAthlete[index].lastName}`);
         }
+
+        if (chosenAthlete.length === 0) setQuery('');
     }, [chosenAthlete]);
 
     return (

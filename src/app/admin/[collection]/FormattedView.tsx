@@ -25,8 +25,8 @@ const FormattedView = ({ response }: { response: APIResponse }) => {
                             </div>
                         )}
                         {schema.map(
-                            ({ key, type, required }, index) =>
-                                (obj[key] !== undefined || required) &&
+                            ({ key, type, required }) =>
+                                ((obj[key] !== undefined && obj[key] !== null) || required) &&
                                 (type === 'object' || type === 'array' ? (
                                     <NestedObject key={key} objKey={key} type={type} required={required} obj={obj} />
                                 ) : (
