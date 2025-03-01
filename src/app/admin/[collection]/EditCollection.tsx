@@ -56,14 +56,9 @@ const EditCollection = ({ collection }: { collection: string }) => {
                             >
                                 {collection.toLowerCase().replaceAll('-', ' ').replaceAll('dpi', '').replaceAll('helping hearts', '').trim()}
                             </h1>
-                            {/* <h3
-                                className={`${sourGummyBold.className} text-base mt-3 max-w-[700px] text-center font-bold text-secondary tracking-wide`}
-                            >
-                                This is the {collection} collection, you may edit any of the fields below.
-                            </h3> */}
                         </section>
                         <ActionBar collection={collection} response={response} setResponse={setResponse} />
-                        <FormattedView response={response} />
+                        <FormattedView response={response} collection={collection} />
                     </div>
                 )
             )}

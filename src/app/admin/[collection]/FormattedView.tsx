@@ -1,23 +1,109 @@
 import { Fredoka } from 'next/font/google';
 import { APIResponse } from './EditCollection';
-import { useState } from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ChevronDown, ChevronRight, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 
+const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
 const fredokaSemibold = Fredoka({ weight: '500', subsets: ['latin'] });
 const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
 
-const FormattedView = ({ response }: { response: APIResponse }) => {
+const FormattedView = ({ response, collection }: { response: APIResponse; collection: string }) => {
     const { data, schema } = response;
+    const [filteredData, setFilteredData] = useState(data);
+    const [query, setQuery] = useState('');
+
+    useEffect(() => {
+        if (schema.filter((key) => key.key === 'firstName' || key.key === 'lastName').length === 2) {
+            if (query.trim() === '') {
+                setFilteredData(data);
+            } else {
+                setFilteredData(data.filter((athlete) => `${athlete.firstName} ${athlete.lastName}`.toLowerCase().includes(query.toLowerCase())));
+            }
+        }
+    }, [query, data]);
+
+    const markAsPaid = (type: 'paid' | 'island foxes', id: string) => {
+        if (collection !== 'dpi-youth-participants' && collection !== 'dpi-community-participants') return;
+
+        const toastID = toast.loading('Marking Payment...', {
+            className: `${fredokaBold.className} !bg-background !text-black`,
+            position: 'top-center',
+        });
+
+        if (id === '') {
+            toast.error('No ID Passed; Reload Page.', {
+                id: toastID,
+                duration: 4000,
+            });
+
+            return;
+        }
+
+        const sendData = {
+            paymentStatus: type,
+        };
+
+        console.log(sendData);
+
+        axios
+            .post(
+                `/api/admin/${collection === 'dpi-youth-participants' ? 'mark-paid-youth' : collection === 'dpi-community-participants' ? 'mark-paid-community' : ''}/${id}`,
+                JSON.stringify(sendData)
+            )
+            .then((res) => {
+                if (res.status === 200) {
+                    toast.success('Successfully Marked Payment.', {
+                        id: toastID,
+                        duration: 4000,
+                    });
+                }
+            })
+            .catch((err) => {
+                toast.error('Could not mark payment. Reload page.', {
+                    id: toastID,
+                    duration: 4000,
+                });
+            });
+    };
 
     return (
-        <div className='mt-2'>
+        <div className={collection === 'dpi-youth-participants' || collection === 'dpi-community-participants' ? '' : 'mt-2'}>
+            {(collection === 'dpi-youth-participants' || collection === 'dpi-community-participants') && (
+                <span className={`${fredokaLight.className} flex relative mt-4`}>
+                    <input
+                        placeholder={'Name'}
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        className={`placeholder:text-gray-500 mb-4 outline-none w-full bg-background text-secondary pl-10 pr-2 py-2 rounded-xl border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                    />
+                    <Search className='absolute left-3 top-3 opacity-80 w-5 h-5' />
+                </span>
+            )}
             <section className='flex flex-col gap-4'>
-                {data.map((obj, index) => (
+                {filteredData.map((obj, index) => (
                     <div
                         key={obj._id || index}
-                        className={`${fredokaLight.className} w-full flex flex-col gap-0.5 text-sm p-3 mobile:text-base mobile:p-4 mid-phone-wide:text-lg border rounded-lg shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                        className={`${fredokaLight.className} relative w-full flex flex-col gap-0.5 text-sm p-3 mobile:text-base mobile:p-4 mid-phone-wide:text-lg border rounded-lg shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                     >
+                        {(collection === 'dpi-youth-participants' || collection === 'dpi-community-participants') && (
+                            <div className='absolute flex gap-2 right-4 top-4'>
+                                <div
+                                    onClick={() => markAsPaid('paid', obj._id)}
+                                    className='bg-background-light p-2 text-primary font-bold rounded-xl shadow-[0_4px_30px_rgba(0,0,0,.2)] cursor-pointer uppercase hover:scale-105 transition-all'
+                                >
+                                    PAID
+                                </div>
+                                <div
+                                    onClick={() => markAsPaid('island foxes', obj._id)}
+                                    className='bg-background-light p-2 text-primary font-bold rounded-xl shadow-[0_4px_30px_rgba(0,0,0,.2)] cursor-pointer uppercase hover:scale-105 transition-all'
+                                >
+                                    ISLAND FOXES
+                                </div>
+                            </div>
+                        )}
                         {obj._id && (
                             <div>
                                 <span className={fredokaSemibold.className}>id: </span>
@@ -73,8 +159,13 @@ const FormattedView = ({ response }: { response: APIResponse }) => {
 };
 
 const RegularObject = ({ objKey, type, required, obj }: { objKey: string; type: string; required: boolean; obj: any }) => {
-    const value = obj[objKey];
-    const objectEmpty = value.toString().trim().length === 0 || value === null || value === undefined;
+    let value = obj[objKey];
+    let objectEmpty = value === null || value === undefined || value.toString().trim().length === 0;
+
+    if (objKey === 'payment' && objectEmpty) {
+        value = 'not paid';
+        objectEmpty = false;
+    }
 
     return objectEmpty && !required ? (
         <></>

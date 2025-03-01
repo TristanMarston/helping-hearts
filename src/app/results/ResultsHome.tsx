@@ -34,11 +34,9 @@ type CommunityResult = {
 };
 
 const ResultsContent = () => {
-    // const isDatePast = new Date() > new Date('2025-03-01');
-
     const searchParams = useSearchParams();
     const router = useRouter();
-    const isDatePast = new Date(2025, 2, 1, 0, 1) > new Date('2025-03-01');
+    const isDatePast = true;
 
     const [raceType, setRaceType] = useState<'youth' | 'community'>('youth');
     const [previousRaceType, setPreviousRaceType] = useState<'youth' | 'community'>('youth');
@@ -347,6 +345,7 @@ const ResultsContent = () => {
                         </Select>
 
                         <div
+                            key={raceType}
                             className={`${
                                 response === 'success' &&
                                 `tablet:grid ${
@@ -360,11 +359,11 @@ const ResultsContent = () => {
                         >
                             {response === 'success' ? (
                                 raceType === 'youth' ? (
-                                    events
-                                        .filter((event) => (eventView === 'all events' ? true : event === eventView))
-                                        .map(
-                                            (event) =>
-                                                filteredYouthResults.filter((result) => result.event === event).length > 0 && (
+                                    filteredYouthResults.length > 0 ? (
+                                        events
+                                            .filter((event) => (eventView === 'all events' ? true : event === eventView))
+                                            .map((event) =>
+                                                filteredYouthResults.filter((result) => result.event === event).length > 0 ? (
                                                     <div key={event} className='w-full flex flex-col gap-1'>
                                                         <div className='px-2 py-1 phone:text-lg uppercase font-bold border-b-primary border-b-2 text-primary w-full'>{event}</div>
                                                         {filteredYouthResults
@@ -373,14 +372,25 @@ const ResultsContent = () => {
                                                                 <YouthAthleteCard key={result.athleteID} index={index} {...result} />
                                                             ))}
                                                     </div>
+                                                ) : (
+                                                    filteredYouthResults.length === 0 && <div className='w-full grid place-items-center p-4'>No results available.</div>
                                                 )
-                                        )
+                                            )
+                                    ) : (
+                                        <div className='w-full grid place-items-center p-4'>No results available.</div>
+                                    )
                                 ) : (
                                     <div className='w-full flex flex-col gap-1'>
-                                        <div className='px-2 py-1 phone:text-lg uppercase font-bold border-b-primary border-b-2 text-primary w-full'>1 MILE RACE</div>
-                                        {filteredCommunityResults.map((result, index) => (
-                                            <CommunityAthleteCard key={result.athleteID} index={index} {...result} />
-                                        ))}
+                                        {filteredCommunityResults.length > 0 ? (
+                                            <>
+                                                <div className='px-2 py-1 phone:text-lg uppercase font-bold border-b-primary border-b-2 text-primary w-full'>1 MILE RACE</div>
+                                                {filteredCommunityResults.map((result, index) => (
+                                                    <CommunityAthleteCard key={result.athleteID} index={index} {...result} />
+                                                ))}
+                                            </>
+                                        ) : (
+                                            <div className='w-full grid place-items-center p-4'>No results available.</div>
+                                        )}
                                     </div>
                                 )
                             ) : response === 'failed' ? (
