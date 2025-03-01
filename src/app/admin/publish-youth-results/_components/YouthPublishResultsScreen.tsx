@@ -5,8 +5,9 @@ import { Fredoka, Sour_Gummy } from 'next/font/google';
 import { useEffect, useState } from 'react';
 import SearchBar from './SearchBar';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Check, PlusCircle, X } from 'lucide-react';
+import { Check, Home, PlusCircle, X } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 const sourGummyBold = Sour_Gummy({ weight: '800', subsets: ['latin'] });
 const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
@@ -48,19 +49,21 @@ const PublishResultsScreen = () => {
 
         const sendData: AthleteDataSend[] = [];
         athleteData.forEach((athlete) => {
-            sendData.push({
-                athleteID: athlete.athleteID,
-                event: chosenEvent,
-                score:
-                    chosenUnit === 'minutes & seconds'
-                        ? String(Number(athlete.score) + Number(athlete.minutes !== undefined ? athlete.minutes : '0') * 60)
-                        : chosenUnit === 'feet & inches'
-                        ? String(Number(athlete.score) + Number(athlete.feet !== undefined ? athlete.feet : '0') * 12)
-                        : chosenUnit === 'meters'
-                        ? String(Number(athlete.score) * 39.37)
-                        : '0',
-                unit: chosenUnit === 'minutes & seconds' ? 'seconds' : chosenUnit === 'feet & inches' ? 'inches' : chosenUnit === 'meters' ? 'inches' : 'error',
-            });
+            if (athlete.athleteID !== '') {
+                sendData.push({
+                    athleteID: athlete.athleteID,
+                    event: chosenEvent,
+                    score:
+                        chosenUnit === 'minutes & seconds'
+                            ? String(Number(athlete.score) + Number(athlete.minutes !== undefined ? athlete.minutes : '0') * 60)
+                            : chosenUnit === 'feet & inches'
+                            ? String(Number(athlete.score) + Number(athlete.feet !== undefined ? athlete.feet : '0') * 12)
+                            : chosenUnit === 'meters'
+                            ? String(Number(athlete.score) * 39.37)
+                            : '0',
+                    unit: chosenUnit === 'minutes & seconds' ? 'seconds' : chosenUnit === 'feet & inches' ? 'inches' : chosenUnit === 'meters' ? 'inches' : 'error',
+                });
+            }
         });
 
         axios
@@ -278,6 +281,13 @@ const PublishResultsScreen = () => {
                         <PlusCircle strokeWidth={2.5} />
                         Add Athlete
                     </div>
+                    <Link
+                        href='/admin'
+                        className={`${fredokaBold.className} bg-background flex justify-center items-center gap-2 text-primary py-2 px-3 wide:py-2.5 wide:text-lg tracking-wider w-full text-center rounded-xl shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)] cursor-pointer transition-all hover:brightness-110`}
+                    >
+                        <Home strokeWidth={2.5} />
+                        Admin Homepage
+                    </Link>
                     <button
                         type='submit'
                         onClick={handleSubmit}

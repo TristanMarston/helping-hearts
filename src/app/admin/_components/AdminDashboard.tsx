@@ -23,7 +23,7 @@ const AdminDashboard = () => {
     ];
 
     const syncSpreadsheet = () => {
-        const toastID = toast.loading('Marking Payment...', {
+        const toastID = toast.loading('Syncing Spreadsheets...', {
             className: `${fredokaBold.className} !bg-background !text-black`,
             position: 'top-center',
         });
