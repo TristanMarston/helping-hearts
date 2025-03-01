@@ -29,6 +29,7 @@ const Navbar = () => {
                 { title: 'Volunteer', href: '/signup?type=volunteer', isDropdown: false },
             ],
         },
+        { title: 'Results', href: '/results', isDropdown: false },
         { title: 'Contact Us', href: '#contact-us', isDropdown: false },
     ];
 
@@ -48,6 +49,12 @@ const Navbar = () => {
                     </Link>
                     {/* laptop/desktop view */}
                     <div className='gap-6 mr-2.5 hidden tablet:flex'>
+                        <Link
+                            href='/results'
+                            className={`${fredokaSemibold.className} text-primary-very-dark hover:text-primary-dark transition-all ease-in-out duration-300 font-medium flex items-center justify-center tracking-wide`}
+                        >
+                            Results
+                        </Link>
                         <button
                             onClick={(e) => {
                                 e.preventDefault();
