@@ -83,6 +83,8 @@ const ResultsContent = () => {
                     return a.age - b.age;
                 });
 
+                console.log(sorted);
+
                 if (formatRaceType === 'youth') setSortedYouthResults(sorted as YouthResult[]);
                 else setSortedCommunityResults(sorted as CommunityResult[]);
             } else if (sortResultsBy === 'age') {
@@ -129,10 +131,13 @@ const ResultsContent = () => {
                         return acc;
                     }, {});
 
+                    console.log(resultsByEvent);
+
                     Object.keys(resultsByEvent).forEach((event) => {
                         resultsByEvent[event]
                             .sort((a: YouthResult, b: YouthResult) => {
-                                const performanceDifference = Number(a.performance) - Number(b.performance);
+                                const performanceDifference =
+                                    event === 'softball throw' || event === 'long jump' ? Number(b.performance) - Number(a.performance) : Number(a.performance) - Number(b.performance);
                                 if (performanceDifference !== 0) {
                                     return performanceDifference;
                                 }
@@ -146,6 +151,8 @@ const ResultsContent = () => {
                     formattedResults.forEach((result: any) => {
                         result.position = resultsByEvent[result.event].find((r: any) => r.athleteID === result.athleteID && r.performance === result.performance).position;
                     });
+
+                    console.log(formattedResults);
 
                     sortResults(formattedResults, sort as 'performance' | 'age', 'youth');
                     setYouthResults(formattedResults);
@@ -368,6 +375,7 @@ const ResultsContent = () => {
                                                         <div className='px-2 py-1 phone:text-lg uppercase font-bold border-b-primary border-b-2 text-primary w-full'>{event}</div>
                                                         {filteredYouthResults
                                                             .filter((result) => result.event === event)
+                                                            .sort((a, b) => a.position - b.position)
                                                             .map((result, index) => (
                                                                 <YouthAthleteCard key={result.athleteID} index={index} {...result} />
                                                             ))}
@@ -486,7 +494,7 @@ const YouthAthleteCard = ({ firstName, lastName, performance, unit, age, index, 
             <span
                 className={`${
                     index % 2 === 0 ? 'bg-primary' : 'bg-primary-light'
-                } h-full shadow-lg w-full text-base tablet:text-sm mid-tablet-wide:text-[15px] two-column:text-base rounded-lg text-white px-2 py-1 grid place-items-center`}
+                } h-full shadow-lg w-full text-[11px] mobile:text-xs phone:text-sm tablet:text-xs mid-column:text-sm two-column:text-base rounded-lg text-white px-2 py-1 grid place-items-center`}
             >
                 {performanceString}
             </span>
