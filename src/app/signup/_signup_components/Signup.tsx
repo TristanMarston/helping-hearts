@@ -71,7 +71,7 @@ const SignupContent = () => {
                         </ul>
                     )}
                 </div>
-                <p>
+                <p className='text-base'>
                     The event will take place on <time dateTime='2026-03-15'>March 15th, 2026</time> at 8:00 AM at the <b>DPHS Track</b>.
                 </p>
             </div>
@@ -79,8 +79,8 @@ const SignupContent = () => {
                 {(['youth', 'community', 'volunteer'] as SignUpView[]).map((tab) => (
                     <Link
                         key={tab}
-                        className={`relative flex-1 font-fredoka font-semibold rounded-full flex justify-center items-center text-sm mid-mobile:text-base p-1.5 transition-colors duration-300 z-10 ${
-                            signUpView === tab ? 'text-white' : 'text-primary hover:text-primary-dark'
+                        className={`relative flex-1 font-fredoka font-semibold rounded-full flex justify-center items-center text-sm mid-mobile:text-base p-1.5 transition-colors duration-300 z-10 transition-all ${
+                            signUpView === tab ? 'text-white' : 'text-primary hover:text-primary-dark hover:bg-background-secondary'
                         }`}
                         onClick={() => setSignUpView(tab)}
                         href={`/signup?type=${tab}`}

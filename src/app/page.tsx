@@ -15,7 +15,6 @@ export type NavLink = {
 const page = () => {
     return (
         <>
-            {/* <div className='min-h-full flex flex-col'> */}
             <Toaster />
             <div className='w-full h-fit flex flex-col overflow-x-hidden items-center px-5'>
                 <Navbar />

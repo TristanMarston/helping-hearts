@@ -99,99 +99,93 @@ const ResultsContent = () => {
         [sortBy, sortedYouthResults, youthResults],
     );
 
-    const getYouthResults = (sort: 'age' | 'performance') => {
-        getPublicResults('youth')
-            .then((res) => {
-                if (res.success) {
-                    setResponse('success');
-                    const formattedResults = (res.data || [])
-                        .filter((athlete: any) => athlete.results.length > 0)
-                        .map((athlete: any) =>
-                            athlete.results.map((result: any) => ({
-                                athleteID: athlete._id,
-                                firstName: athlete.firstName,
-                                lastName: athlete.lastName,
-                                age: athlete.age,
-                                event: result.event,
-                                performance: result.performance,
-                                unit: result.unit,
-                                enteredAt: result.enteredAt,
-                            })),
-                        )
-                        .flat();
+    const getYouthResults = async (sort: 'age' | 'performance') => {
+        const res = await getPublicResults('youth');
+        if (res.success) {
+            setResponse('success');
+            const formattedResults = (res.data || [])
+                .filter((athlete: any) => athlete.results.length > 0)
+                .map((athlete: any) =>
+                    athlete.results.map((result: any) => ({
+                        athleteID: athlete._id,
+                        firstName: athlete.firstName,
+                        lastName: athlete.lastName,
+                        age: athlete.age,
+                        event: result.event,
+                        performance: result.performance,
+                        unit: result.unit,
+                        enteredAt: result.enteredAt,
+                    })),
+                )
+                .flat();
 
-                    const resultsByEvent = formattedResults.reduce((acc: any, result: any) => {
-                        if (!acc[result.event]) acc[result.event] = [];
-                        acc[result.event].push(result);
-                        return acc;
-                    }, {});
+            const resultsByEvent = formattedResults.reduce((acc: any, result: any) => {
+                if (!acc[result.event]) acc[result.event] = [];
+                acc[result.event].push(result);
+                return acc;
+            }, {});
 
-                    console.log(resultsByEvent);
+            console.log(resultsByEvent);
 
-                    Object.keys(resultsByEvent).forEach((event) => {
-                        resultsByEvent[event]
-                            .sort((a: YouthResult, b: YouthResult) => {
-                                const performanceDifference =
-                                    event === 'softball throw' || event === 'long jump' ? Number(b.performance) - Number(a.performance) : Number(a.performance) - Number(b.performance);
-                                if (performanceDifference !== 0) {
-                                    return performanceDifference;
-                                }
-                                return a.age - b.age;
-                            })
-                            .forEach((result: any, index: number) => {
-                                result.position = index + 1;
-                            });
-                    });
-
-                    formattedResults.forEach((result: any) => {
-                        result.position = resultsByEvent[result.event].find((r: any) => r.athleteID === result.athleteID && r.performance === result.performance).position;
-                    });
-
-                    console.log(formattedResults);
-
-                    sortResults(formattedResults, sort as 'performance' | 'age', 'youth');
-                    setYouthResults(formattedResults);
-                    setFilteredYouthResults(formattedResults);
-                } else setResponse('failed');
-            })
-            .catch((err) => {
-                setResponse('failed');
-                console.error(err);
-            });
-    };
-
-    const getCommunityResults = (sort: 'age' | 'performance') => {
-        getPublicResults('community')
-            .then((res) => {
-                if (res.success) {
-                    setResponse('success');
-                    const formattedResults = (res.data || [])
-                        .filter((athlete: any) => athlete.result !== '' && athlete.result !== null && athlete.result !== undefined)
-                        .map((athlete: any) => ({
-                            athleteID: athlete._id,
-                            firstName: athlete.firstName,
-                            lastName: athlete.lastName,
-                            age: athlete.age,
-                            performance: athlete.result,
-                        }))
-                        .flat();
-
-                    formattedResults.sort((a: CommunityResult, b: CommunityResult) => Number(a.performance) - Number(b.performance));
-                    formattedResults.forEach((result: CommunityResult, index: number) => {
+            Object.keys(resultsByEvent).forEach((event) => {
+                resultsByEvent[event]
+                    .sort((a: YouthResult, b: YouthResult) => {
+                        const performanceDifference =
+                            event === 'softball throw' || event === 'long jump' ? Number(b.performance) - Number(a.performance) : Number(a.performance) - Number(b.performance);
+                        if (performanceDifference !== 0) {
+                            return performanceDifference;
+                        }
+                        return a.age - b.age;
+                    })
+                    .forEach((result: any, index: number) => {
                         result.position = index + 1;
                     });
-
-                    console.log(formattedResults);
-
-                    sortResults(formattedResults, sort as 'performance' | 'age', 'community');
-                    setCommunityResults(formattedResults);
-                    setFilteredCommunityResults(formattedResults);
-                } else setResponse('failed');
-            })
-            .catch((err) => {
-                setResponse('failed');
-                console.error(err);
             });
+
+            formattedResults.forEach((result: any) => {
+                result.position = resultsByEvent[result.event].find((r: any) => r.athleteID === result.athleteID && r.performance === result.performance).position;
+            });
+
+            console.log(formattedResults);
+
+            sortResults(formattedResults, sort as 'performance' | 'age', 'youth');
+            setYouthResults(formattedResults);
+            setFilteredYouthResults(formattedResults);
+        } else {
+            setResponse('failed');
+            console.error(res);
+        }
+    };
+
+    const getCommunityResults = async (sort: 'age' | 'performance') => {
+        const res = await getPublicResults('community');
+        if (res.success) {
+            setResponse('success');
+            const formattedResults = (res.data || [])
+                .filter((athlete: any) => athlete.result !== '' && athlete.result !== null && athlete.result !== undefined)
+                .map((athlete: any) => ({
+                    athleteID: athlete._id,
+                    firstName: athlete.firstName,
+                    lastName: athlete.lastName,
+                    age: athlete.age,
+                    performance: athlete.result,
+                }))
+                .flat();
+
+            formattedResults.sort((a: CommunityResult, b: CommunityResult) => Number(a.performance) - Number(b.performance));
+            formattedResults.forEach((result: CommunityResult, index: number) => {
+                result.position = index + 1;
+            });
+
+            console.log(formattedResults);
+
+            sortResults(formattedResults, sort as 'performance' | 'age', 'community');
+            setCommunityResults(formattedResults);
+            setFilteredCommunityResults(formattedResults);
+        } else {
+            setResponse('failed');
+            console.error(res);
+        }
     };
 
     useEffect(() => {

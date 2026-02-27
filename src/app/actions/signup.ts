@@ -12,6 +12,7 @@ export async function submitYouthParticipants(participants: any[]) {
                 data: {
                     name,
                     grade: p.gradeLevel,
+                    dob,
                 },
             });
 
@@ -67,14 +68,14 @@ export async function submitCommunityParticipant(participant: any) {
 export async function submitVolunteer(volunteer: any) {
     try {
         const name = `${volunteer.firstName} ${volunteer.lastName}`;
-        const dobStr = `${volunteer.birthYear}-${volunteer.birthMonth}-${volunteer.birthDay}`;
+        const dob = new Date(`${volunteer.birthYear}-${volunteer.birthMonth}-${volunteer.birthDay}`);
 
         await prisma.volunteer.create({
             data: {
                 name,
                 email: volunteer.email,
-                dob: dobStr,
-                dphsStudent: false, // Defaulting to false as it was not in the frontend
+                dob,
+                dphsStudent: volunteer.dphsStudent,
             },
         });
 

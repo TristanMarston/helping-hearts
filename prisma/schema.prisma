@@ -11,6 +11,7 @@ model YouthAthlete {
     name          String
     grade         String
     events        Event[]
+    dob           DateTime
     
     createdAt     DateTime @default(now())
     updatedAt     DateTime @updatedAt
@@ -22,7 +23,7 @@ model CommunityAthlete {
     email         String
     dob           DateTime
     raceId        String?  @unique
-    race          Event?   @relation(fields: [raceId], references: [id])
+    race          Event?   @relation(fields: [raceId], references: [id], onDelete: Cascade)
     
     createdAt     DateTime @default(now())
     updatedAt     DateTime @updatedAt
@@ -43,7 +44,7 @@ model Event {
     name               String
     performance        String
     youthAthleteId     String?
-    youthAthlete       YouthAthlete?     @relation(fields: [youthAthleteId], references: [id])
+    youthAthlete       YouthAthlete?     @relation(fields: [youthAthleteId], references: [id], onDelete: Cascade)
     communityAthlete   CommunityAthlete?
 
     createdAt          DateTime @default(now())
@@ -54,7 +55,7 @@ model Volunteer {
     id              String  @id @default(uuid())
     name            String
     email           String
-    dob             String
+    dob             DateTime
     dphsStudent     Boolean
     
     createdAt       DateTime @default(now())

@@ -1,15 +1,10 @@
 'use client';
 
-
 import React, { useCallback, useState } from 'react';
 import BirthDateSelector from '../BirthDateSelector';
 import SubmitModal from '../SubmitModal';
 import toast from 'react-hot-toast';
 import { submitCommunityParticipant } from '@/app/actions/signup';
-
-
-
-
 
 // type TrackEvent = '1600 meters' | '800 meters' | '400 meters' | '100 meters';
 
@@ -118,7 +113,7 @@ const CommunitySignUp = () => {
     });
     const [submitModalOpen, setSubmitModalOpen] = useState(false);
 
-    const handleSubmit = useCallback(() => {
+    const handleSubmit = useCallback(async () => {
         const sendObject: any = {};
         Object.keys(participantInfo).forEach((k) => {
             let key = k as keyof ParticipantInfo;
@@ -127,37 +122,33 @@ const CommunitySignUp = () => {
         });
 
         if (!sendObject.firstName || !sendObject.lastName || !sendObject.email || !sendObject.birthYear || !sendObject.birthMonth || !sendObject.birthDay) {
-            toast.error('Please fill out all the fields', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
+            toast.error('Please fill out all the fields', {
+                className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
+                position: 'top-center',
+                duration: 4000,
+            });
             // toastMessage('Please fill out all fields.', false, 2000, 'signupError');
             return;
         }
 
         sendObject.age = calculateAge(sendObject.birthYear, sendObject.birthMonth.toLowerCase(), sendObject.birthDay);
 
-        const toastID = toast.loading('Signing up...', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right' });
+        const toastID = toast.loading('Signing up...', { className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`, position: 'top-center' });
 
-        submitCommunityParticipant(sendObject)
-            .then((res) => {
-                if (res.success) {
-                    toast.success('Successfully signed up!', {
-                        id: toastID,
-                        duration: 4000,
-                    });
-
-                    setParticipantInfo({ firstName: '', lastName: '', email: '', birthYear: '', birthMonth: '', birthDay: '' });
-                } else {
-                    toast.error(res.message, {
-                        id: toastID,
-                        duration: 4000,
-                    });
-                }
-            })
-            .catch((err) => {
-                toast.error(`Couldn't sign up. Please try again.`, {
-                    id: toastID,
-                    duration: 4000,
-                });
+        const res = await submitCommunityParticipant(sendObject);
+        if (res.success) {
+            toast.success('Successfully signed up!', {
+                id: toastID,
+                duration: 4000,
             });
+
+            setParticipantInfo({ firstName: '', lastName: '', email: '', birthYear: '', birthMonth: '', birthDay: '' });
+        } else {
+            toast.error(`Couldn't sign up. Please try again.`, {
+                id: toastID,
+                duration: 4000,
+            });
+        }
     }, [participantInfo]);
 
     return (
@@ -168,8 +159,16 @@ const CommunitySignUp = () => {
 
                     <div className='w-full flex justify-center mt-6'>
                         <button
+                            disabled={
+                                participantInfo.firstName.length === 0 ||
+                                participantInfo.lastName.length === 0 ||
+                                participantInfo.email.length === 0 ||
+                                participantInfo.birthYear.length === 0 ||
+                                participantInfo.birthMonth.length === 0 ||
+                                participantInfo.birthDay.length === 0
+                            }
                             onClick={() => setSubmitModalOpen(true)}
-                            className={`font-fredoka font-semibold bg-primary text-white text-lg shadow-xl rounded-full py-2 px-16 hover:brightness-[1.1] transition-all`}
+                            className={`font-fredoka disabled:opacity-50 disabled:pointer-events-none cursor-pointer font-semibold bg-primary text-white text-xl shadow-md shadow-primary-dark rounded-[18px] py-2 px-24 hover:brightness-[1.1] transition-all`}
                         >
                             Submit
                         </button>

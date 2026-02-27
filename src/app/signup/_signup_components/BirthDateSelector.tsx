@@ -51,7 +51,12 @@ const BirthDateSelector = ({ birthDate, changeBirthDay, changeBirthMonth, change
         <div className='flex flex-col gap-y-4 tablet:gap-y-0 tablet:grid tablet:grid-rows-2 tablet:grid-cols-[2fr_3fr_2fr] tablet:gap-x-2'>
             <h2 className={`font-fredoka font-semibold text-xl row-span-1 col-span-3`}>Date of Birth</h2>
 
-            <Select onValueChange={(value: string) => changeBirthYear(value)}>
+            <Select
+                onValueChange={(value: string) => {
+                    changeBirthYear(value);
+                    changeBirthDay('');
+                }}
+            >
                 <SelectTrigger
                     className={`font-fredoka font-normal px-4 py-3 cursor-pointer w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-[10px] border border-gray-100 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                 >
@@ -70,7 +75,12 @@ const BirthDateSelector = ({ birthDate, changeBirthDay, changeBirthMonth, change
                 </SelectContent>
             </Select>
 
-            <Select onValueChange={(value: string) => changeBirthMonth(value)}>
+            <Select
+                onValueChange={(value: string) => {
+                    changeBirthMonth(value);
+                    changeBirthDay('');
+                }}
+            >
                 <SelectTrigger
                     className={`font-fredoka font-normal px-4 py-3 cursor-pointer w-full h-11 text-base bg-background hover:bg-background-secondary transition-all text-gray-500 appearance-none rounded-[10px] border border-gray-100 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                 >

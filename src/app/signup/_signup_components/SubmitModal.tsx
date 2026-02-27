@@ -68,7 +68,7 @@ const SubmitModal = ({
                                         <label className={`font-fredoka font-normal text-gray-600`}>
                                             {signUpView === 'volunteer' ? (
                                                 <span>
-                                                    I understand that I am needed from <b>7:00 AM to 10:30 AM</b> on <b>March 1st, 2025</b> to help with the event.
+                                                    I understand that I am needed from <b>7:45 AM to 10:30 AM</b> on <b>March 15th, 2026</b> to help with the event.
                                                 </span>
                                             ) : signUpView === 'youth' ? (
                                                 <span>
@@ -108,14 +108,20 @@ const SubmitModal = ({
                                             <div className={`font-fredoka font-normal p-3 w-full rounded-xl shadow-[0_3px_10px_rgb(0,0,0,0.1)] overflow-y-scroll h-32 text-gray-600`}>
                                                 The Undersigned hereby agrees to defend, indemnify, and hold harmless SB Helping Hearts and Dos Pueblos High School, its officials,
                                                 employers and agents from and against all loss, liability, charges, and expenses (including attorneys' fees) and cases of whatsoever
-                                                character may arise by reason of the participation in this year's SB Helping Hearts Youth Track Event or be connected anyway therewith. The
-                                                above-mentioned agencies do not provide accident, medical, liability or workers compensation insurance for program participants.
+                                                character may arise by reason of the participation in this year's SB Helping Hearts Youth Track Event or be connected anyway therewith.
+                                                The above-mentioned agencies do not provide accident, medical, liability or workers compensation insurance for program participants.
                                             </div>
                                         </>
                                     )}
                                 </div>
                             </section>
-                            <div className='flex flex-col gap-2 mid-phone:gap-2.5 mt-4'>
+                            <div className='flex gap-2 mid-phone:gap-2.5 mt-4'>
+                                <button
+                                    onClick={() => setOpen(false)}
+                                    className={`font-fredoka font-semibold bg-transparent hover:bg-background-secondary transition-all text-primary-light w-full p-1 text-base mid-phone:p-1.5 mid-phone:text-lg rounded-full shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.25)]`}
+                                >
+                                    Cancel
+                                </button>
                                 <button
                                     onClick={() => {
                                         if (!canSubmit.terms || !canSubmit.waiver) return;
@@ -127,12 +133,6 @@ const SubmitModal = ({
                                     } bg-primary hover:brightness-125 transition-all text-background w-full p-1 text-base mid-phone:p-1.5 mid-phone:text-lg rounded-full shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.25)]`}
                                 >
                                     Submit
-                                </button>
-                                <button
-                                    onClick={() => setOpen(false)}
-                                    className={`font-fredoka font-semibold bg-transparent hover:bg-background-secondary transition-all text-primary-light w-full p-1 text-base mid-phone:p-1.5 mid-phone:text-lg rounded-full shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.25)]`}
-                                >
-                                    Cancel
                                 </button>
                             </div>
                         </motion.div>

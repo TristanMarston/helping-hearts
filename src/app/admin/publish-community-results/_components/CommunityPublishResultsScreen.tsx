@@ -31,8 +31,8 @@ const PublishResultsScreen = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const toastID = toast.loading('Publishing results...', {
-            className: `font-fredoka font-semibold !bg-background !text-black`,
-            position: 'bottom-right',
+            className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
+            position: 'top-center',
         });
 
         const sendData: AthleteDataSend[] = [];
@@ -45,42 +45,31 @@ const PublishResultsScreen = () => {
             }
         });
 
-        submitCommunityResults(sendData)
-            .then((res) => {
-                if (res.success) {
-                    toast.success('Successfully published results!', {
-                        id: toastID,
-                        duration: 4000,
-                    });
-                    setAthleteData([{ firstName: '', lastName: '', athleteID: '', minutes: '', score: '' }]);
-                    setChosenAthlete([]);
-                } else {
-                    toast.error(res.message, {
-                        id: toastID,
-                        duration: 4000,
-                    });
-                }
-            })
-            .catch((err) => {
-                toast.error('Could not publish results.', {
-                    id: toastID,
-                    duration: 4000,
-                });
+        const res = await submitCommunityResults(sendData);
+        if (res.success) {
+            toast.success('Successfully published results!', {
+                id: toastID,
+                duration: 4000,
             });
+            setAthleteData([{ firstName: '', lastName: '', athleteID: '', minutes: '', score: '' }]);
+            setChosenAthlete([]);
+        } else {
+            toast.error(res.message, {
+                id: toastID,
+                duration: 4000,
+            });
+        }
 
         console.log(sendData);
     };
 
     const fetchCollection = async () => {
-        getCollection('dpi-community-participants')
-            .then((res) => {
-                if (res.success) {
-                    setResponse(res.data || []);
-                }
-            })
-            .catch((err) => {
-                console.error(err);
-            });
+        const res = await getCollection('dpi-community-participants');
+        if (res.success) {
+            setResponse(res.data || []);
+        } else {
+            console.error(res);
+        }
     };
 
     useEffect(() => {

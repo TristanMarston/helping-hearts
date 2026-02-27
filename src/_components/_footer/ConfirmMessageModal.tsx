@@ -23,7 +23,7 @@ const ConfirmMessageModal = ({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setOpen(false)}
-                        className='bg-slate-900/20 overflow-x-hidden backdrop-blur p-2 mid-mobile:p-4 mid-phone:p-6 fixed inset-0 z-[100] grid place-items-center overflow-y-scroll cursor-pointer'
+                        className='bg-slate-900/20 overflow-hidden backdrop-blur p-2 mid-mobile:p-4 mid-phone:p-6 fixed inset-0 z-[100] grid place-items-center overflow-y-scroll cursor-pointer'
                     >
                         <motion.div
                             initial={{ scale: 0, rotate: '12.5deg' }}
@@ -55,7 +55,7 @@ const ConfirmMessageModal = ({
                                                     value={formData[key as keyof typeof formData]}
                                                     className={`${
                                                         formData[key as keyof typeof formData].length > 0 ? 'border-gray-100' : 'border-red-500'
-                                                    } text-primary text-sm mid-phone:text-base mid-phone:px-3 mid-phone:py-1.5 opacity-60 hover:cursor-not-allowed rounded-[10px] text-ellipsis overflow-y-scroll bg-background min-h-[4.25rem] max-h-32 h-full w-full py-2 px-2.5 border-gray-100 border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                                                    } text-primary text-sm mid-phone:text-base hide-scrollbar mid-phone:px-3 mid-phone:py-1.5 opacity-60 hover:cursor-not-allowed rounded-[10px] text-ellipsis overflow-y-scroll bg-background min-h-[4.25rem] max-h-32 h-full w-full py-2 px-2.5 border-gray-100 border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                                     style={{ lineHeight: 'normal' }}
                                                 ></textarea>
                                             ) : (
@@ -80,11 +80,12 @@ const ConfirmMessageModal = ({
                                     Cancel
                                 </button>
                                 <button
+                                    disabled={!/\S+@\S+\.\S+/.test(formData.email) || formData.message.length === 0}
                                     onClick={() => {
                                         handleSubmit();
                                         setOpen(false);
                                     }}
-                                    className={`font-fredoka cursor-pointer font-semibold bg-primary hover:brightness-125 transition-all text-background w-full p-1 text-base mid-phone:p-1.5 mid-phone:text-lg rounded-full shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.25)]`}
+                                    className={`font-fredoka cursor-pointer disabled:opacity-50 disabled:pointer-events-none font-semibold bg-primary hover:brightness-125 transition-all text-background w-full p-1 text-base mid-phone:p-1.5 mid-phone:text-lg rounded-full shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.25)]`}
                                 >
                                     Submit
                                 </button>

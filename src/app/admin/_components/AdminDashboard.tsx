@@ -18,32 +18,24 @@ const AdminDashboard = () => {
         { name: 'messages', collectionName: 'messages' },
     ];
 
-    const syncSpreadsheet = () => {
+    const syncSpreadsheet = async () => {
         const toastID = toast.loading('Syncing Spreadsheets...', {
-            className: `font-fredoka font-semibold !bg-background !text-black`,
+            className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
             position: 'top-center',
         });
 
-        syncSpreadsheets()
-            .then((res) => {
-                if (res.success) {
-                    toast.success('Successfully Synced Spreadsheets.', {
-                        id: toastID,
-                        duration: 4000,
-                    });
-                } else {
-                    toast.error('Could not sync spreadsheets. Reload page.', {
-                        id: toastID,
-                        duration: 4000,
-                    });
-                }
-            })
-            .catch((err) => {
-                toast.error('Could not sync spreadsheets. Reload page.', {
-                    id: toastID,
-                    duration: 4000,
-                });
+        const res = await syncSpreadsheets();
+        if (res.success) {
+            toast.success('Successfully Synced Spreadsheets.', {
+                id: toastID,
+                duration: 4000,
             });
+        } else {
+            toast.error('Could not sync spreadsheets. Reload page.', {
+                id: toastID,
+                duration: 4000,
+            });
+        }
     };
 
     return (

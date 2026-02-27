@@ -256,7 +256,11 @@ const YouthSignUp = () => {
 
             if (!obj.firstName || !obj.lastName || !obj.gradeLevel || !obj.events || !obj.birthYear || !obj.birthMonth || !obj.birthDay) {
                 // toastMessage('Please fill out all fields.', false, 2000, 'signupError');
-                toast.error('Please fill out all the fields', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
+                toast.error('Please fill out all the fields', {
+                    className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
+                    position: 'top-center',
+                    duration: 4000,
+                });
 
                 error = true;
                 return;
@@ -268,7 +272,7 @@ const YouthSignUp = () => {
 
         if (error) return;
 
-        const toastID = toast.loading('Signing up...', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right' });
+        const toastID = toast.loading('Signing up...', { className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`, position: 'top-center' });
 
         const res = await submitYouthParticipants(sendObject);
         if (res.success) {
@@ -315,7 +319,7 @@ const YouthSignUp = () => {
                                 </li>
                             ))}
                         </ul>
-                        <div className='border-t pt-4 flex justify-between items-center text-xl font-bold'>
+                        <div className='border-t pt-4 flex justify-between items-center text-xl font-bold tracking-wide'>
                             <span>Total Due:</span>
                             <span className='text-primary'>
                                 {new Intl.NumberFormat('en-US', {

@@ -5,6 +5,7 @@ import BirthDateSelector from '../BirthDateSelector';
 import SubmitModal from '../SubmitModal';
 import toast from 'react-hot-toast';
 import { submitVolunteer } from '@/app/actions/signup';
+import { Check } from 'lucide-react';
 
 type VolunteerInfo = {
     firstName: string;
@@ -13,6 +14,7 @@ type VolunteerInfo = {
     birthYear: string;
     birthMonth: string;
     birthDay: string;
+    dphsStudent: boolean;
 };
 
 const months = {
@@ -96,6 +98,27 @@ const SignUpForm = ({ volunteerInfo, setVolunteerInfo }: { volunteerInfo: Volunt
                     });
                 }}
             />
+            <div className='flex items-center gap-2'>
+                <div
+                    className={`${
+                        volunteerInfo.dphsStudent
+                            ? 'bg-primary border-none shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]'
+                            : 'bg-background border-2 border-gray-200'
+                    } w-5 h-5 flex justify-center items-center rounded-md cursor-pointer transition-all`}
+                    onClick={() => {
+                        setVolunteerInfo((prev) => ({ ...prev, dphsStudent: !prev.dphsStudent }));
+                    }}
+                >
+                    {volunteerInfo.dphsStudent && <Check color='white' strokeWidth={3} width={14} height={14} />}
+                </div>
+                <label
+                    className={`${
+                        volunteerInfo.dphsStudent ? `font-fredoka font-semibold text-black` : `font-fredoka font-normal text-gray-500`
+                    }  margin-top-0 text-md transition-all select-none flex items-center gap-x-1.5`}
+                >
+                    I am a student at Dos Pueblos High School
+                </label>
+            </div>
         </form>
     );
 };
@@ -108,49 +131,45 @@ const CommunitySignUp = () => {
         birthYear: '',
         birthMonth: '',
         birthDay: '',
+        dphsStudent: false,
     });
     const [submitModalOpen, setSubmitModalOpen] = useState(false);
 
-    const handleSubmit = useCallback(() => {
+    const handleSubmit = useCallback(async () => {
         const sendObject: any = {};
         Object.keys(volunteerInfo).forEach((k) => {
             let key = k as keyof VolunteerInfo;
-            if (volunteerInfo[key] && volunteerInfo[key].toString().length > 0)
+            if (volunteerInfo[key] !== undefined && volunteerInfo[key].toString().length > 0)
                 sendObject[key] = key !== 'birthDay' && key !== 'birthYear' ? volunteerInfo[key] : parseInt(volunteerInfo[key]);
         });
 
         if (!sendObject.firstName || !sendObject.lastName || !sendObject.email || !sendObject.birthYear || !sendObject.birthMonth || !sendObject.birthDay) {
-            toast.error('Please fill out all the fields', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
-            // toastMessage('Please fill out all fields.', false, 2000, 'signupError');
+            toast.error('Please fill out all the fields', {
+                className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
+                position: 'top-center',
+                duration: 4000,
+            });
             return;
         }
 
         sendObject.age = calculateAge(sendObject.birthYear, sendObject.birthMonth.toLowerCase(), sendObject.birthDay);
 
-        const toastID = toast.loading('Signing up...', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right' });
+        const toastID = toast.loading('Signing up...', { className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`, position: 'top-center' });
 
-        submitVolunteer(sendObject)
-            .then((res) => {
-                if (res.success) {
-                    toast.success('Successfully signed up!', {
-                        id: toastID,
-                        duration: 4000,
-                    });
-
-                    setVolunteerInfo({ firstName: '', lastName: '', email: '', birthYear: '', birthMonth: '', birthDay: '' });
-                } else {
-                    toast.error(res.message, {
-                        id: toastID,
-                        duration: 4000,
-                    });
-                }
-            })
-            .catch((err) => {
-                toast.error(`Couldn't sign up. Please try again.`, {
-                    id: toastID,
-                    duration: 4000,
-                });
+        const res = await submitVolunteer(sendObject);
+        if (res.success) {
+            toast.success('Successfully signed up!', {
+                id: toastID,
+                duration: 400000,
             });
+
+            setVolunteerInfo({ firstName: '', lastName: '', email: '', birthYear: '', birthMonth: '', birthDay: '', dphsStudent: false });
+        } else {
+            toast.error(res.message, {
+                id: toastID,
+                duration: 400000,
+            });
+        }
     }, [volunteerInfo]);
 
     return (
@@ -161,8 +180,16 @@ const CommunitySignUp = () => {
 
                     <div className='w-full flex justify-center mt-6'>
                         <button
+                            disabled={
+                                volunteerInfo.firstName.length === 0 ||
+                                volunteerInfo.lastName.length === 0 ||
+                                volunteerInfo.email.length === 0 ||
+                                volunteerInfo.birthYear.length === 0 ||
+                                volunteerInfo.birthMonth.length === 0 ||
+                                volunteerInfo.birthDay.length === 0
+                            }
                             onClick={() => setSubmitModalOpen(true)}
-                            className={`font-fredoka font-semibold bg-primary text-white text-lg shadow-xl rounded-full py-2 px-16 hover:brightness-[1.1] transition-all`}
+                            className={`font-fredoka disabled:opacity-50 disabled:pointer-events-none cursor-pointer font-semibold bg-primary text-white text-xl shadow-md shadow-primary-dark rounded-[18px] py-2 px-24 hover:brightness-[1.1] transition-all`}
                         >
                             Submit
                         </button>

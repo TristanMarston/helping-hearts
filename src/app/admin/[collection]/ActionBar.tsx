@@ -27,7 +27,11 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
 
     const refreshDocuments = async () => {
         function error() {
-            toast.error('Refresh unsuccessful', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
+            toast.error('Refresh unsuccessful', {
+                className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
+                position: 'top-center',
+                duration: 4000,
+            });
             setRefreshed((prev) => {
                 return {
                     ...prev,
@@ -43,25 +47,25 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
             };
         });
 
-        getCollection(collection)
-            .then((res) => {
-                if (res.success) {
-                    setResponse({ data: res.data || [], schema: res.schema || [] });
-                    setRefreshed((prev) => {
-                        return {
-                            ...prev,
-                            refreshing: false,
-                        };
-                    });
-                } else error();
-            })
-            .catch((err) => {
-                error();
+        const res = await getCollection(collection);
+        if (res.success) {
+            setResponse({ data: res.data || [], schema: res.schema || [] });
+            setRefreshed((prev) => {
+                return {
+                    ...prev,
+                    refreshing: false,
+                };
             });
+        } else {
+            error();
+        }
     };
 
     const copyToClipboard = (text: string) => {
-        const toastID = toast.loading('Copying to clipboard...', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right' });
+        const toastID = toast.loading('Copying to clipboard...', {
+            className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
+            position: 'top-center',
+        });
 
         navigator.clipboard
             .writeText(text)

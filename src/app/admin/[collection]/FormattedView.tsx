@@ -20,11 +20,11 @@ const FormattedView = ({ response, collection }: { response: APIResponse; collec
         }
     }, [query, data]);
 
-    const markAsPaid = (type: 'paid' | 'island foxes', id: string) => {
+    const markAsPaid = async (type: 'paid' | 'island foxes', id: string) => {
         if (collection !== 'dpi-youth-participants' && collection !== 'dpi-community-participants') return;
 
         const toastID = toast.loading('Marking Payment...', {
-            className: `font-fredoka font-semibold !bg-background !text-black`,
+            className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
             position: 'top-center',
         });
 
@@ -41,28 +41,18 @@ const FormattedView = ({ response, collection }: { response: APIResponse; collec
             paymentStatus: type,
         };
 
-        console.log(sendData);
-
-        markPaid(collection, id, type)
-            .then((res) => {
-                if (res.success) {
-                    toast.success('Successfully Marked Payment.', {
-                        id: toastID,
-                        duration: 4000,
-                    });
-                } else {
-                    toast.error('Could not mark payment. Reload page.', {
-                        id: toastID,
-                        duration: 4000,
-                    });
-                }
-            })
-            .catch((err) => {
-                toast.error('Could not mark payment. Reload page.', {
-                    id: toastID,
-                    duration: 4000,
-                });
+        const res = await markPaid(collection, id, type);
+        if (res.success) {
+            toast.success('Successfully Marked Payment.', {
+                id: toastID,
+                duration: 4000,
             });
+        } else {
+            toast.error('Could not mark payment. Reload page.', {
+                id: toastID,
+                duration: 4000,
+            });
+        }
     };
 
     return (

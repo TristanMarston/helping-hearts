@@ -15,31 +15,23 @@ const AdminLogin = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const toastID = toast.loading('Signing in...', {
-            className: `font-fredoka font-semibold !bg-background !text-black`,
-            position: 'bottom-right',
+            className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
+            position: 'top-center',
         });
 
-        loginAdmin({ username: formData.username, password: formData.password })
-            .then((res) => {
-                if (res.success) {
-                    toast.success('Successfully signed in!', {
-                        id: toastID,
-                        duration: 4000,
-                    });
-                    router.push('/admin');
-                } else {
-                    toast.error(res.message, {
-                        id: toastID,
-                        duration: 4000,
-                    });
-                }
-            })
-            .catch((err) => {
-                toast.error('Invalid username or password', {
-                    id: toastID,
-                    duration: 4000,
-                });
+        const res = await loginAdmin({ username: formData.username, password: formData.password });
+        if (res.success) {
+            toast.success('Successfully signed in!', {
+                id: toastID,
+                duration: 4000,
             });
+            router.push('/admin');
+        } else {
+            toast.error(res.message, {
+                id: toastID,
+                duration: 4000,
+            });
+        }
     };
 
     const handleInputChange = useCallback(

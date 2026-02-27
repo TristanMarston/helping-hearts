@@ -39,8 +39,8 @@ const PublishResultsScreen = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const toastID = toast.loading('Publishing results...', {
-            className: `font-fredoka font-semibold !bg-background !text-black`,
-            position: 'bottom-right',
+            className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
+            position: 'top-center',
         });
 
         const sendData: AthleteDataSend[] = [];
@@ -62,43 +62,32 @@ const PublishResultsScreen = () => {
             }
         });
 
-        submitYouthResults(sendData)
-            .then((res) => {
-                if (res.success) {
-                    toast.success('Successfully published results!', {
-                        id: toastID,
-                        duration: 4000,
-                    });
-
-                    setAthleteData([{ firstName: '', lastName: '', minutes: '', feet: '', athleteID: '', score: '' }]);
-                    setChosenAthlete([]);
-                    setChosenEvent('');
-                    setChosenUnit(undefined);
-                } else {
-                    toast.error(res.message, {
-                        id: toastID,
-                        duration: 4000,
-                    });
-                }
-            })
-            .catch((err) => {
-                toast.error('Could not publish results.', {
-                    id: toastID,
-                    duration: 4000,
-                });
+        const res = await submitYouthResults(sendData);
+        if (res.success) {
+            toast.success('Successfully published results!', {
+                id: toastID,
+                duration: 4000,
             });
+
+            setAthleteData([{ firstName: '', lastName: '', minutes: '', feet: '', athleteID: '', score: '' }]);
+            setChosenAthlete([]);
+            setChosenEvent('');
+            setChosenUnit(undefined);
+        } else {
+            toast.error(res.message, {
+                id: toastID,
+                duration: 4000,
+            });
+        }
     };
 
     const fetchCollection = async () => {
-        getCollection('dpi-youth-participants')
-            .then((res) => {
-                if (res.success) {
-                    setResponse(res.data || []);
-                }
-            })
-            .catch((err) => {
-                console.error(err);
-            });
+        const res = await getCollection('dpi-youth-participants');
+        if (res.success) {
+            setResponse(res.data || []);
+        } else {
+            console.error(res);
+        }
     };
 
     useEffect(() => {
