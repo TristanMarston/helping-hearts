@@ -6,9 +6,6 @@ import { DayPicker } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
-import { Fredoka } from 'next/font/google';
-
-const fredoka = Fredoka({ weight: '400', subsets: ['latin'] });
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
     showYear: string;
@@ -21,9 +18,9 @@ function Calendar({ className, classNames, showOutsideDays = true, showYear, sho
     const customDisplay = showYear === '' || showMonth === '';
 
     return customDisplay ? (
-        <div className={`${fredoka.className} p-2 rounded-lg bg-background`}>Please select a year and a month.</div>
+        <div className={`font-fredoka p-2 rounded-lg bg-background`}>Please select a year and a month.</div>
     ) : (
-        <div className={fredoka.className}>
+        <div className={'font-fredoka'}>
             <DayPicker
                 showOutsideDays={showOutsideDays}
                 className={cn('p-3', className)}
@@ -39,7 +36,10 @@ function Calendar({ className, classNames, showOutsideDays = true, showYear, sho
                     weekday: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
                     week: 'flex w-full mt-2',
                     // day: 'h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
-                    day: cn(buttonVariants({ variant: 'ghost' }), 'h-9 w-full p-0 font-normal aria-selected:opacity-100 hover:bg-background-dark [&>*]:w-full [&>*]:h-full'),
+                    day: cn(
+                        buttonVariants({ variant: 'ghost' }),
+                        'h-9 cursor-pointer w-full p-0 font-normal aria-selected:opacity-100 hover:bg-background-dark [&>*]:w-full [&>*]:h-full',
+                    ),
                     range_end: 'day-range-end',
                     selected: 'bg-background-dark text-primary-foreground hover:bg-background-dark hover:text-primary-foreground focus:bg-background-dark focus:text-primary-foreground',
                     today: 'bg-accent text-accent-foreground',

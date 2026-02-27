@@ -1,13 +1,9 @@
 'use client';
 
-import { Sour_Gummy, Fredoka } from 'next/font/google';
 import Image from 'next/image';
 import Link from 'next/link';
 import EventInfo from './EventInfo';
-
-const sourGummyBold = Sour_Gummy({ weight: '800', subsets: ['latin'] });
-const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
-const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
+import { ArrowUpRight } from 'lucide-react';
 
 const Hero = () => {
     return (
@@ -17,14 +13,12 @@ const Hero = () => {
                     <div className='flex flex-col gap-2 two-column:grid two-column:grid-cols-2 two-column:grid-rows-1 two-column:gap-4'>
                         <HeartImages />
                         <div className='flex flex-col justify-normal gap-2 two-column:col-[1] two-column:row-[1]'>
-                            <h1
-                                className={`${sourGummyBold.className} max-w-[260px] text-4xl mobile:max-w-[300px] mobile:text-5xl mid-phone-wide:max-w-[400px] mid-phone-wide:text-6xl mid-tablet-small:max-w-none mid-tablet-small:text-[7vw] two-column:text-6xl two-column:max-w-[400px] text-center mx-auto leading-tight`}
-                            >
-                                let&apos;s help a heart today!
+                            <h1 className='font-sour-gummy font-extrabold max-w-[260px] text-4xl mobile:max-w-[300px] mobile:text-[45px] mid-phone-wide:max-w-[400px] mid-phone-wide:text-6xl mid-tablet-small:max-w-none mid-tablet-small:text-[7vw] two-column:text-6xl two-column:max-w-[400px] text-center mx-auto leading-tight'>
+                                let&apos;s run for a good cause!
                             </h1>
-                            <p className={`${fredokaLight.className} text-sm mobile:text-base mid-phone-wide:text-lg text-center mt-2 tracking-wide text-gray-700`}>
-                                Helping Hearts is a nonprofit created by the DPHS Medical Club committed to spreading joy and supporting children&#39;s healthcare. Join us in making a
-                                difference through our upcoming track & field event.
+                            <p className='font-fredoka font-normal text-sm mobile:text-base mid-phone-wide:text-lg text-center mt-2 tracking-wide text-gray-700'>
+                                SB Helping Hearts is a nonprofit and DPHS club committed to spreading joy and supporting children&#39;s healthcare. Join us in making a difference
+                                through our upcoming track & field event on <span className='font-bold tracking-wide'>March 15th, 2026</span>.
                             </p>
                             <HeroButtons />
                         </div>
@@ -74,16 +68,10 @@ const HeroButtons = () => {
             <div className='grid grid-cols-2 w-full max-w-xs justify-center items-center gap-3 mt-4'>
                 <Link
                     href='/signup'
-                    className={`${fredokaBold.className} text-base py-1.5 mid-phone-wide:text-lg transition-all bg-primary hover:bg-primary-light text-white rounded-xl flex items-center justify-center gap-2 tracking-wider shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.25)]`}
+                    className={`font-fredoka font-semibold text-base py-1.5 mid-phone-wide:text-lg transition-all bg-primary hover:bg-primary-light text-white rounded-[14px] flex items-center justify-center gap-1 tracking-wider shadow-md shadow-primary-dark hover:shadow-sm`}
                 >
-                    Signup
-                    <Image
-                        src='/arrow-circle-right.svg'
-                        alt='arrow right icon'
-                        width={20}
-                        height={20}
-                        className='filter invert-[100%] sepia-[0%] saturate-[7500%] hue-rotate-[131deg] brightness-[105%] contrast-[105%]'
-                    />
+                    Sign Up
+                    <ArrowUpRight />
                 </Link>
                 <button
                     onClick={(e) => {
@@ -93,7 +81,7 @@ const HeroButtons = () => {
                             targetElement.scrollIntoView({ behavior: 'smooth' });
                         }
                     }}
-                    className={`${fredokaBold.className} text-base py-1.5 mid-phone-wide:text-lg transition-all bg-background hover:bg-background-secondary text-black rounded-xl flex items-center justify-center gap-2 tracking-wider shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.25)]`}
+                    className={`font-fredoka font-semibold text-base py-1.5 mid-phone-wide:text-lg transition-all bg-background hover:bg-background-secondary cursor-pointer text-black rounded-[14px] flex items-center justify-center gap-2 tracking-wider shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.25)]`}
                 >
                     Contact Us
                 </button>

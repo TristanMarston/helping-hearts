@@ -1,17 +1,12 @@
 'use client';
 
-import axios from 'axios';
-import { Fredoka, Sour_Gummy } from 'next/font/google';
 import { useEffect, useState } from 'react';
 import SearchBar from './SearchBar';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Check, Home, PlusCircle, X } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { submitCommunityResults, getCollection } from '@/app/actions/admin';
 import Link from 'next/link';
-
-const sourGummyBold = Sour_Gummy({ weight: '800', subsets: ['latin'] });
-const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
-const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
 
 export type AthleteData = {
     firstName: string;
@@ -36,7 +31,7 @@ const PublishResultsScreen = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const toastID = toast.loading('Publishing results...', {
-            className: `${fredokaBold.className} !bg-background !text-black`,
+            className: `font-fredoka font-semibold !bg-background !text-black`,
             position: 'bottom-right',
         });
 
@@ -50,16 +45,20 @@ const PublishResultsScreen = () => {
             }
         });
 
-        axios
-            .post(`/api/admin/post-results/dpi-community-participants`, JSON.stringify(sendData))
+        submitCommunityResults(sendData)
             .then((res) => {
-                if (res.status === 200) {
+                if (res.success) {
                     toast.success('Successfully published results!', {
                         id: toastID,
                         duration: 4000,
                     });
                     setAthleteData([{ firstName: '', lastName: '', athleteID: '', minutes: '', score: '' }]);
                     setChosenAthlete([]);
+                } else {
+                    toast.error(res.message, {
+                        id: toastID,
+                        duration: 4000,
+                    });
                 }
             })
             .catch((err) => {
@@ -73,11 +72,10 @@ const PublishResultsScreen = () => {
     };
 
     const fetchCollection = async () => {
-        axios
-            .get(`/api/admin/get/dpi-community-participants`)
+        getCollection('dpi-community-participants')
             .then((res) => {
-                if (res.status === 200) {
-                    setResponse(res.data.data);
+                if (res.success) {
+                    setResponse(res.data || []);
                 }
             })
             .catch((err) => {
@@ -92,8 +90,8 @@ const PublishResultsScreen = () => {
     return (
         <div className='w-full flex justify-center mt-16 mid-mobile:mt-20'>
             <div className='w-full max-w-[1000px] flex flex-col mx-6 mt-8 mb-36'>
-                <h1 className={`${sourGummyBold.className} text-black text-3xl wide:text-4xl mid-tablet:text-5xl mb-4`}>Community Results Publishing Interface</h1>
-                <section className={`${fredokaLight.className} w-full h-full flex flex-col gap-4`}>
+                <h1 className={`font-sour-gummy font-extrabold text-black text-3xl wide:text-4xl mid-tablet:text-5xl mb-4`}>Community Results Publishing Interface</h1>
+                <section className={`font-fredoka font-normal w-full h-full flex flex-col gap-4`}>
                     <div className='bg-background p-2 rounded-lg border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] h-full flex flex-col gap-4'>
                         <div>
                             <div className={`grid grid-rows-1 grid-cols-[5%_7.5%_40%_23.75%_23.75%]`}>
@@ -131,7 +129,7 @@ const PublishResultsScreen = () => {
                                     </span>
                                     <input
                                         type='text'
-                                        className={`${fredokaLight.className} p-2 w-full text-base caret-black text-black placeholder:text-gray-500 bg-background outline-none border-b border-r border-gray-400 text-center appearance-none`}
+                                        className={`font-fredoka font-normal p-2 w-full text-base caret-black text-black placeholder:text-gray-500 bg-background outline-none border-b border-r border-gray-400 text-center appearance-none`}
                                         autoComplete='off'
                                         onChange={(e) =>
                                             setAthleteData((prev) => {
@@ -145,7 +143,7 @@ const PublishResultsScreen = () => {
                                     />
                                     <input
                                         type='text'
-                                        className={`${fredokaLight.className} p-2 w-full text-base caret-black text-black placeholder:text-gray-500 bg-background outline-none border-b border-r border-gray-400 text-center appearance-none`}
+                                        className={`font-fredoka font-normal p-2 w-full text-base caret-black text-black placeholder:text-gray-500 bg-background outline-none border-b border-r border-gray-400 text-center appearance-none`}
                                         autoComplete='off'
                                         onChange={(e) =>
                                             setAthleteData((prev) => {
@@ -165,14 +163,14 @@ const PublishResultsScreen = () => {
                         onClick={() => {
                             setAthleteData((prev) => [...prev, { firstName: '', lastName: '', athleteID: '', score: '' }]);
                         }}
-                        className={`${fredokaBold.className} bg-background flex justify-center items-center gap-2 text-primary py-2 px-3 wide:py-2.5 wide:text-lg tracking-wider w-full text-center rounded-xl shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)] cursor-pointer transition-all hover:brightness-110`}
+                        className={`font-fredoka font-semibold bg-background flex justify-center items-center gap-2 text-primary py-2 px-3 wide:py-2.5 wide:text-lg tracking-wider w-full text-center rounded-xl shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)] cursor-pointer transition-all hover:brightness-110`}
                     >
                         <PlusCircle strokeWidth={2.5} />
                         Add Athlete
                     </div>
                     <Link
                         href='/admin'
-                        className={`${fredokaBold.className} bg-background flex justify-center items-center gap-2 text-primary py-2 px-3 wide:py-2.5 wide:text-lg tracking-wider w-full text-center rounded-xl shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)] cursor-pointer transition-all hover:brightness-110`}
+                        className={`font-fredoka font-semibold bg-background flex justify-center items-center gap-2 text-primary py-2 px-3 wide:py-2.5 wide:text-lg tracking-wider w-full text-center rounded-xl shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)] cursor-pointer transition-all hover:brightness-110`}
                     >
                         <Home strokeWidth={2.5} />
                         Admin Homepage
@@ -180,7 +178,7 @@ const PublishResultsScreen = () => {
                     <button
                         type='submit'
                         onClick={handleSubmit}
-                        className={`${fredokaBold.className} bg-primary py-2 px-3 wide:py-2.5 wide:text-lg tracking-wider text-white w-full text-center rounded-xl shadow-lg cursor-pointer transition-all hover:brightness-110`}
+                        className={`font-fredoka font-semibold bg-primary py-2 px-3 wide:py-2.5 wide:text-lg tracking-wider text-white w-full text-center rounded-xl shadow-lg cursor-pointer transition-all hover:brightness-110`}
                     >
                         Submit
                     </button>

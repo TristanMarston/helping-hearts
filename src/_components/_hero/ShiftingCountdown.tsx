@@ -1,14 +1,10 @@
 'use client';
 
-import { useAnimate } from 'framer-motion';
-import { Fredoka, Sour_Gummy } from 'next/font/google';
+import { useAnimate } from 'motion/react';
+
 import { useEffect, useRef, useState } from 'react';
 
-const sourGummyBold = Sour_Gummy({ weight: '800', subsets: ['latin'] });
-const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
-const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
-
-const COUNTDOWN_FROM = '2025-03-01T07:30:00';
+const COUNTDOWN_FROM = '2026-03-15T08:00:00';
 
 const SECOND = 1000;
 const MINUTE = SECOND * 60;
@@ -39,12 +35,12 @@ const CountdownItem = ({ unit, text, index }: { unit: Units; text: string; index
                 index === 0 ? 'rounded-l-[30px]' : index === 3 ? 'rounded-r-[30px]' : 'rounded-none'
             } flex py-4 mid-phone:py-6 w-1/4 flex-col bg-background-light items-center justify-center gap-1 border-r-[1px] border-slate-200 font-mono md:h-36 md:gap-2`}
         >
-            <div className={`${fredokaBold.className} relative w-full overflow-hidden text-center`}>
+            <div className={`font-fredoka font-semibold relative w-full overflow-hidden text-center`}>
                 <span ref={ref} className='block text-2xl font-medium text-black mid-phone:text-4xl mid-tablet:text-5xl'>
                     {time}
                 </span>
             </div>
-            <span className={`${fredokaLight.className} text-xs font-light text-slate-500 mid-phone:text-sm mid-tablet:text-base`}>{text}</span>
+            <span className={`font-fredoka font-normal text-xs font-light text-slate-500 mid-phone:text-sm mid-tablet:text-base`}>{text}</span>
         </div>
     );
 };

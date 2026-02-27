@@ -1,6 +1,5 @@
 'use client';
 
-import { Fredoka, Jua, Nunito, Sour_Gummy } from 'next/font/google';
 import Image from 'next/image';
 import Link from 'next/link';
 import { LucideIcon, Instagram, Github } from 'lucide-react';
@@ -8,15 +7,7 @@ import ContactUs from './ContactUs';
 import { useState } from 'react';
 import ConfirmMessageModal from './ConfirmMessageModal';
 import toast from 'react-hot-toast';
-import axios from 'axios';
-
-const jua = Jua({ weight: '400', subsets: ['latin'] });
-const nunitoBold = Nunito({ weight: '800', subsets: ['latin'] });
-const nunitoLight = Nunito({ weight: '600', subsets: ['latin'] });
-
-const sourGummyBold = Sour_Gummy({ weight: '800', subsets: ['latin'] });
-const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
-const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
+import { sendMessage } from '@/app/actions/messages';
 
 type Props = {
     showVolunteerAd: boolean;
@@ -48,70 +39,64 @@ const links: Links[] = [
     // { text: 'About', href: '/signup?isVolunteer=false' },
 ];
 
-const iconLinks: IconLinks[] = [
-    { icon: Instagram, href: 'https://www.instagram.com/sbhelpinghearts/' },
-    { icon: Github, href: 'https://github.com/TristanMarston/helping-hearts' },
-];
+const iconLinks: IconLinks[] = [{ icon: Instagram, href: 'https://www.instagram.com/sbhelpinghearts/' }];
 
 const Footer = (props: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [formData, setFormData] = useState<ContactFormData>({ firstName: '', lastName: '', email: '', subject: '', message: '' });
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const sendObject: any = {};
-        Object.keys(formData).forEach((k) => {
-            let key = k as keyof ContactFormData;
-            if (formData[key] && formData[key].toString().length > 0) sendObject[key] = formData[key];
-        });
+        sendObject.name = `${formData.firstName} ${formData.lastName}`.trim();
+        sendObject.email = formData.email.trim().toLowerCase();
+        sendObject.subject = formData.subject.trim();
+        sendObject.message = formData.message.trim();
 
         if (!sendObject.email || !sendObject.message) {
-            toast.error('Please fill out all the fields', { className: `${fredokaBold.className} !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
+            toast.error('Please fill out all the fields', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
 
             return;
         }
 
-        const toastID = toast.loading('Posting message...', { className: `${fredokaBold.className} !bg-background !text-black`, position: 'bottom-right' });
+        const toastID = toast.loading('Posting message...', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right' });
 
-        axios
-            .post(`/api/sendMessage`, sendObject)
-            .then((res) => {
-                if (res.status === 200) {
-                    toast.success('Successfully sent message!', {
-                        id: toastID,
-                        duration: 4000,
-                    });
-
-                    setFormData({ firstName: '', lastName: '', email: '', subject: '', message: '' });
-                }
-            })
-            .catch((err) => {
-                toast.error(`Couldn't send message. Please try again.`, {
-                    id: toastID,
-                    duration: 4000,
-                });
+        const res = await sendMessage(sendObject);
+        console.log(res);
+        if (res.success) {
+            toast.success('Successfully sent message!', {
+                id: toastID,
+                duration: 4000,
             });
+
+            setFormData({ firstName: '', lastName: '', email: '', subject: '', message: '' });
+        } else {
+            toast.error(`Couldn't send message. Please use the email address.`, {
+                id: toastID,
+                duration: 4000,
+            });
+        }
     };
 
     return (
-        <section className={`${props.page === 'home' ? 'bottom-28' : 'bottom-0'} relative`}>
+        <section className={`${props.page === 'home' ? 'bottom-28' : 'bottom-0'} relative overflow-x-hidden`}>
             <div className='flex flex-col items-center'>
                 {props.showVolunteerAd && (
                     <div className='bg-primary-pink z-10 relative top-10 laptop:top-14 w-[80vw] max-w-[1280px] min-w-[17rem] py-3 mid-column:py-4 rounded-full shadow-lg flex items-center justify-center px-10 tablet:px-5 laptop:px-8'>
                         <h1
-                            className={`${sourGummyBold.className} text-background hidden tablet:block tablet:text-3xl mid-column:text-4xl min-[900px]:text-5xl laptop:text-6xl w-full tracking-[0.01em]`}
+                            className={`font-sour-gummy font-extrabold text-background hidden tablet:block tablet:text-3xl mid-column:text-4xl min-[900px]:text-5xl laptop:text-6xl w-full tracking-[0.01em]`}
                         >
                             Volunteer Today!
                         </h1>
                         <div className='flex gap-3'>
                             <Link
                                 href='/signup?type=volunteer'
-                                className={`${fredokaBold.className} w-28 h-8 min-[900px]:w-32 min-[900px]:h-9 min-[900px]:text-lg laptop:w-36 laptop:h-10 laptop:text-xl transition-all bg-background hover:bg-background-secondary text-primary-pink rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.25)]`}
+                                className={`font-fredoka font-semibold w-28 h-8 min-[900px]:w-32 min-[900px]:h-9 min-[900px]:text-lg laptop:w-36 laptop:h-10 laptop:text-xl transition-all bg-background hover:bg-background-secondary text-primary-pink rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.25)]`}
                             >
                                 Volunteer
                             </Link>
                             <Link
                                 href='/signup'
-                                className={`${fredokaBold.className} w-28 h-8 min-[900px]:w-32 min-[900px]:h-9 min-[900px]:text-lg laptop:w-36 laptop:h-10 laptop:text-xl border border-background transition-all bg-primary-pink hover:bg-primary-pink-light text-background rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.1)]`}
+                                className={`font-fredoka font-semibold w-28 h-8 min-[900px]:w-32 min-[900px]:h-9 min-[900px]:text-lg laptop:w-36 laptop:h-10 laptop:text-xl border border-background transition-all bg-primary-pink hover:bg-primary-pink-light text-background rounded-full flex items-center gap-2 justify-center tracking-wide shadow-[4.0px_4.0px_5.0px_rgba(0,0,0,0.1)]`}
                             >
                                 Sign Up
                             </Link>
@@ -128,7 +113,7 @@ const Footer = (props: Props) => {
                         <Link className='flex items-center justify-center gap-[5px]' href='/'>
                             <Image src='/helping-hearts-logo-default-white.png' className='hidden tablet:block' alt='logo' width={54} height={34} />
                             <Image src='/helping-hearts-logo-default-white.png' className='mablet:block tablet:hidden' alt='logo' width={38} height={24} />
-                            <h1 className={`${jua.className} tablet:text-4xl text-[1.625rem] text-background`}>helping hearts</h1>
+                            <h1 className={`font-jua tablet:text-4xl text-[1.625rem] text-background`}>helping hearts</h1>
                         </Link>
                         <div className='flex gap-10'>
                             {links.map((data, index) => (
@@ -136,12 +121,13 @@ const Footer = (props: Props) => {
                                     key={data.text + index}
                                     href={data.href}
                                     target={data.text === 'DPHS' ? '_blank' : '_self'}
-                                    className={`${nunitoLight.className} text-background hover:text-background-light transition-all`}
+                                    className={`font-fredoka font-light text-background hover:text-background-light transition-all`}
                                 >
                                     {data.text}
                                 </Link>
                             ))}
                         </div>
+                        <p className='font-fredoka text-background'>Website created by Tristan Marston.</p>
                         <div className='flex gap-10'>
                             {iconLinks.map((data, index) => (
                                 <Link key={index} href={data.href} target='_blank'>

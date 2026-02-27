@@ -1,6 +1,85 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin "tailwindcss-animate";
+
+:root {
+    --primary: #ed3a5f;
+    --primary-light: #f16985;
+    --primary-dark: #e0143e;
+    --primary-very-dark: #b81133;
+    --primary-pink: #ff96ac;
+    --primary-pink-light: #ffa4b7;
+    --background: #fffdf5;
+    --background-secondary: #faf8ef;
+    --background-dark: #efecde;
+    --background-light: #fff8de;
+    --background-very-light: #fffbec;
+}
+
+@theme {
+    --font-inter: var(--font-inter);
+    --font-fredoka: var(--font-fredoka);
+    --font-sour-gummy: var(--font-sour-gummy);
+    --font-jua: var(--font-jua);
+    --font-nunito: var(--font-nunito);
+    
+    --color-primary: var(--primary);
+    --color-primary-light: var(--primary-light);
+    --color-primary-dark: var(--primary-dark);
+    --color-primary-very-dark: var(--primary-very-dark);
+    --color-primary-pink: var(--primary-pink);
+    --color-primary-pink-light: var(--primary-pink-light);
+    --color-background: var(--background);
+    --color-background-secondary: var(--background-secondary);
+    --color-background-dark: var(--background-dark);
+    --color-background-light: var(--background-light);
+    --color-background-very-light: var(--background-very-light);
+
+    --breakpoint-mobile: 350px;
+    --breakpoint-mid-mobile: 400px;
+    --breakpoint-phone: 450px;
+    --breakpoint-mid-phone: 500px;
+    --breakpoint-mid-phone-wide: 550px;
+    --breakpoint-wide: 600px;
+    --breakpoint-action-bar-expand: 620px;
+    --breakpoint-tablet: 650px;
+    --breakpoint-mid-tablet-small: 700px;
+    --breakpoint-mid-column: 750px;
+    --breakpoint-mid-tablet: 800px;
+    --breakpoint-mid-tablet-wide: 860px;
+    --breakpoint-two-column: 1000px;
+    --breakpoint-laptop: 1280px;
+
+    --breakpoint-navbar-xs: 440px;
+    --breakpoint-navbar-sm: 550px;
+    --breakpoint-navbar-md: 650px;
+    --breakpoint-navbar-lg: 800px;
+
+    --container-max-width: 1280px;
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --animate-accordion-down: accordion-down 0.2s ease-out;
+    --animate-accordion-up: accordion-up 0.2s ease-out;
+
+    @keyframes accordion-down {
+        from {
+            height: 0;
+        }
+        to {
+            height: var(--radix-accordion-content-height);
+        }
+    }
+    @keyframes accordion-up {
+        from {
+            height: var(--radix-accordion-content-height);
+        }
+        to {
+            height: 0;
+        }
+    }
+}
 
 .heart-image {
     --_m: radial-gradient(at 70% 31%, #000 29%, #0000 30%), radial-gradient(at 30% 31%, #000 29%, #0000 30%), linear-gradient(#000 0 0) bottom/100% 50% no-repeat;
@@ -10,6 +89,10 @@
     aspect-ratio: 1;
     filter: drop-shadow(0 0 20px #c0c);
     clip-path: polygon(-41% 0, 50% 91%, 141% 0);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
 }
 
 .margin-top-0 {

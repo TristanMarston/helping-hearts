@@ -1,15 +1,11 @@
 'use client';
 
-import axios from 'axios';
+import { getCollection } from '@/app/actions/admin';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Fredoka, Sour_Gummy } from 'next/font/google';
+
 import ActionBar from './ActionBar';
 import FormattedView from './FormattedView';
-
-const sourGummyBold = Sour_Gummy({ weight: '800', subsets: ['latin'] });
-const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
-const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
 
 export type APIResponse = {
     data: any[];
@@ -21,18 +17,12 @@ const EditCollection = ({ collection }: { collection: string }) => {
     const [response, setResponse] = useState<APIResponse>({ data: [], schema: [] });
 
     const fetchCollection = async () => {
-        axios
-            .get(`/api/admin/get/${collection}`)
-            .then((res) => {
-                if (res.status === 200) {
-                    setFetchState('success');
-                    console.log(res.data.schema);
-                    setResponse({ data: res.data.data, schema: res.data.schema });
-                } else setFetchState('failed');
-            })
-            .catch((err) => {
-                setFetchState('failed');
-            });
+        const res = await getCollection(collection);
+        console.log(res);
+        if (res.success) {
+            setFetchState('success');
+            setResponse({ data: res.data || [], schema: res.schema || [] });
+        } else setFetchState('failed');
     };
 
     useEffect(() => {
@@ -46,13 +36,13 @@ const EditCollection = ({ collection }: { collection: string }) => {
                     <div className='loader w-24 h-24'></div>
                 </div>
             ) : fetchState === 'failed' ? (
-                <h3 className={`${sourGummyBold.className} text-6xl`}>Something went wrong. Try refreshing?</h3>
+                <h3 className={`font-sour-gummy font-extrabold text-6xl`}>Something went wrong. Try refreshing?</h3>
             ) : (
                 fetchState === 'success' && (
-                    <div className='w-full flex flex-col gap-4'>
+                    <div className='w-full flex flex-col gap-4 max-w-[1240px]'>
                         <section className=''>
                             <h1
-                                className={`${sourGummyBold.className} text-black leading-none text-center text-3xl mid-mobile:text-4xl mid-tablet-small:text-left mid-phone-wide:text-5xl uppercase`}
+                                className={`font-sour-gummy font-extrabold text-black leading-none text-center text-3xl mid-mobile:text-4xl mid-tablet-small:text-left mid-phone-wide:text-5xl uppercase`}
                             >
                                 {collection.toLowerCase().replaceAll('-', ' ').replaceAll('dpi', '').replaceAll('helping hearts', '').trim()}
                             </h1>

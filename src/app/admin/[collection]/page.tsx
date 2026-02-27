@@ -14,7 +14,7 @@ const page = () => {
             <Toaster />
             <div className='w-full h-fit flex flex-col items-center px-5'>
                 <Navbar />
-                <EditCollection collection={params().collection} />
+                {/* <EditCollection collection={params().collection} /> */}
             </div>
         </>
     );

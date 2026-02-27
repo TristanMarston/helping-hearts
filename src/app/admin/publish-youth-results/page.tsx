@@ -8,7 +8,7 @@ const page = () => {
             <Toaster />
             <div className='w-full h-full flex flex-col items-center px-5'>
                 <Navbar />
-                <PublishResultsScreen />
+                {/* <PublishResultsScreen /> */}
             </div>
         </>
     );

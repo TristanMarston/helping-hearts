@@ -1,11 +1,9 @@
 import { NavLink } from '@/app/page';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
-import { Fredoka } from 'next/font/google';
+
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-
-const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
 
 const HoverListItem = ({ title, href, className, setIsOpen }: { title: string; href: string; className?: string; setIsOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -23,7 +21,7 @@ const HoverListItem = ({ title, href, className, setIsOpen }: { title: string; h
                 }}
                 className={`font-bold text-xl min-[320px]:text-2xl min-[400px]:text-3xl w-full flex justify-end`}
             >
-                <span className={`${fredokaBold.className} tracking-wide inline-block text-primary text-right ${className}`}>
+                <span className={`font-fredoka font-semibold tracking-wide inline-block text-primary text-right ${className}`}>
                     {title}
                     <motion.div className='h-1 bg-secondary rounded-full' initial={{ width: '0%' }} animate={{ width: isHovered ? '100%' : '0%' }} transition={{ duration: 0.2 }} />
                 </span>
@@ -59,7 +57,7 @@ const HoverListItemCollapsible = ({
 
     return dropdownOptions ? (
         <motion.li
-            className={`${fredokaBold.className} flex flex-col cursor-pointer text-primary`}
+            className={`font-fredoka font-semibold flex flex-col cursor-pointer text-primary`}
             variants={parentVariants}
             initial={false}
             animate={selectedDropdown === title ? 'open' : 'closed'}
@@ -106,7 +104,7 @@ const MenuItems = ({ links, isOpen, setIsOpen }: { links: NavLink[]; isOpen: boo
                         />
                     ) : (
                         <HoverListItem title={title} href={href} key={title + index} setIsOpen={setIsOpen} />
-                    )
+                    ),
                 )}
             </ul>
         </nav>

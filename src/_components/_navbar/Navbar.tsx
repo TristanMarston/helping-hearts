@@ -1,60 +1,73 @@
 'use client';
 
 import Image from 'next/image';
-import { Fredoka, Jua, Nunito, Nunito_Sans } from 'next/font/google';
-// import DropDownMenu from './DropDownMenu';
-// import Drawer from './Drawer';
 import Link from 'next/link';
 import { useState } from 'react';
 import MenuToggle from './MenuToggle';
 import { NavLink } from '@/app/page';
 import MobileMenu from './MobileMenu';
-import { motion } from 'framer-motion';
+import { Goal, HandHeart, TrendingUp } from 'lucide-react';
 
-const jua = Jua({ weight: '400', subsets: ['latin'] });
-const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
-const fredokaSemibold = Fredoka({ weight: '500', subsets: ['latin'] });
+const links: NavLink[] = [
+    {
+        title: 'Sign Up',
+        href: '#',
+        isDropdown: true,
+        dropdownOptions: () => (
+            <>
+                <Link href='/signup?type=youth' className='p-3 w-full rounded-4xl flex gap-3 hover:bg-background-light transition-colors cursor-pointer'>
+                    <div className='rounded-full bg-primary-light shadow-md shadow-primary-dark primary-border p-2 w-14 h-14 aspect-square grid place-items-center'>
+                        <Goal className='text-background w-7 h-7' />
+                    </div>
+                    <div className='font-fredoka'>
+                        <h4 className='font-bold tracking-wide text-lg'>Youth Sign Up</h4>
+                        <p className='text-[15px]'>Sign up a little one to try out some fun events!</p>
+                    </div>
+                </Link>
+                <Link href='/signup?type=community' className='p-3 w-full rounded-4xl flex gap-3 hover:bg-background-light transition-colors cursor-pointer'>
+                    <div className='rounded-full bg-primary-light shadow-md shadow-primary-dark primary-border p-2 w-14 h-14 aspect-square grid place-items-center'>
+                        <TrendingUp className='text-background w-7 h-7' />
+                    </div>
+                    <div className='font-fredoka'>
+                        <h4 className='font-bold tracking-wide text-lg'>Community Sign Up</h4>
+                        <p className='text-[15px]'>Take part in our annual community 1-mile race!</p>
+                    </div>
+                </Link>
+                <Link href='/signup?type=volunteer' className='p-3 w-full rounded-4xl flex gap-3 hover:bg-background-light transition-colors cursor-pointer'>
+                    <div className='rounded-full bg-primary-light shadow-md shadow-primary-dark primary-border p-2 w-14 h-14 aspect-square grid place-items-center'>
+                        <HandHeart className='text-background w-7 h-7' />
+                    </div>
+                    <div className='font-fredoka'>
+                        <h4 className='font-bold tracking-wide text-lg'>Volunteer Sign Up</h4>
+                        <p className='text-[15px]'>Make a difference by helping us run this special event.</p>
+                    </div>
+                </Link>
+            </>
+        ),
+    },
+    // { title: 'Results', href: '/results', isDropdown: false },
+    { title: 'Contact Us', href: '#contact-us', isDropdown: false },
+];
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const links: NavLink[] = [
-        {
-            title: 'Sign Up',
-            href: '#',
-            isDropdown: true,
-            dropdownOptions: [
-                { title: 'Youth Race', href: '/signup?type=youth', isDropdown: false },
-                { title: 'Community Race', href: '/signup?type=community', isDropdown: false },
-                { title: 'Volunteer', href: '/signup?type=volunteer', isDropdown: false },
-            ],
-        },
-        { title: 'Results', href: '/results', isDropdown: false },
-        { title: 'Contact Us', href: '#contact-us', isDropdown: false },
-    ];
-
     return (
         <>
-            <motion.section
-                // initial={{ backgroundColor: '#FFFDF5' }}
-                // animate={{ backgroundColor: menuOpen ? 'FFF8DE' : '#FFFDF5' }}
-                // transition={{ duration: 0.5 }}
-                className={` w-screen fixed top-0 backdrop-blur-sm px-5 taptop:px-7 z-[60]`}
-            >
-                <nav className='w-full sticky mt-5 bg-background-very-light h-[50px] mid-mobile:h-[60px] rounded-full text-secondary shadow-[0_4px_30px_rgba(0,0,0,.4)] pl-2 pr-3 flex items-center justify-between'>
+            <section className={`w-full max-w-[1320px] fixed top-0 backdrop-blur-sm px-5 z-[60]`}>
+                <nav className='w-full sticky mt-5 bg-background-very-light h-[60px] rounded-full text-secondary shadow-[0_4px_30px_rgba(0,0,0,.4)] pl-2 pr-3 flex items-center justify-between'>
                     <Link className='flex items-center justify-center gap-[5px] ml-2' href='/'>
-                        <Image src='/helping-hearts-logo-default.png' className='hidden mid-mobile:block' alt='logo' width={54} height={34} />
-                        <Image src='/helping-hearts-logo-default.png' className='block mid-mobile:hidden' alt='logo' width={38} height={24} />
-                        <h1 className={`${jua.className} hidden mid-tablet:block tablet:text-4xl text-[1.625rem] text-primary font-black`}>helping hearts</h1>
+                        <Image src='/helping-hearts-logo-default.png' alt='logo' width={54} height={34} />
+                        <h1 className={`font-jua hidden navbar-xs:block text-[33px] navbar-lg:text-4xl text-primary font-light`}>helping hearts</h1>
                     </Link>
                     {/* laptop/desktop view */}
-                    <div className='gap-6 mr-2.5 hidden tablet:flex'>
-                        <Link
+                    <div className='gap-6 mr-2.5 flex items-center'>
+                        {/* <Link
                             href='/results'
-                            className={`${fredokaSemibold.className} text-primary-very-dark hover:text-primary-dark transition-all ease-in-out duration-300 font-medium flex items-center justify-center tracking-wide`}
+                            className='font-fredoka font-medium hidden navbar-md:flex text-primary-dark hover:text-primary-light cursor-pointer transition-all ease-in-out duration-300 items-center justify-center tracking-wide'
                         >
                             Results
-                        </Link>
+                        </Link> */}
                         <button
                             onClick={(e) => {
                                 e.preventDefault();
@@ -63,19 +76,20 @@ const Navbar = () => {
                                     targetElement.scrollIntoView({ behavior: 'smooth' });
                                 }
                             }}
-                            className={`${fredokaSemibold.className} text-primary-very-dark hover:text-primary-dark transition-all ease-in-out duration-300 font-medium flex items-center justify-center tracking-wide`}
+                            className='font-fredoka font-medium hidden navbar-md:flex text-primary-dark hover:text-primary-light cursor-pointer transition-all ease-in-out duration-300 items-center justify-center tracking-wide'
                         >
                             Contact
                         </button>
-                        <button
-                            className={`${fredokaBold.className} tablet:px-5 mablet:px-4 py-1.5 bg-primary text-white rounded-[10px] tablet:text-base hover:bg-primary-light transition-all tracking-wider`}
+                        <Link
+                            href='/signup'
+                            className={`font-fredoka hidden navbar-sm:flex cursor-pointer -mr-3 navbar-md:m-0 font-semibold h-fit px-5 py-1.5 bg-primary text-white rounded-[14px] shadow-md shadow-primary-dark tablet:text-base hover:bg-primary-light hover:shadow-sm transition-all tracking-wider`}
                         >
-                            <Link href='/signup'>Sign Up</Link>
-                        </button>
+                            Sign Up
+                        </Link>
+                        <MenuToggle toggle={() => setMenuOpen((prev) => !prev)} isOpen={menuOpen} color={menuOpen ? '#ed3a5f' : '#ed3a5f'} />
                     </div>
-                    <MenuToggle toggle={() => setMenuOpen((prev) => !prev)} isOpen={menuOpen} color={menuOpen ? '#ed3a5f' : '#ed3a5f'} />
                 </nav>
-            </motion.section>
+            </section>
             <MobileMenu isOpen={menuOpen} setIsOpen={setMenuOpen} links={links} />
         </>
     );

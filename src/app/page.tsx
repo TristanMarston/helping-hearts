@@ -8,7 +8,7 @@ export type NavLink = {
     title: string;
     href: string;
     isDropdown: boolean;
-    dropdownOptions?: NavLink[];
+    dropdownOptions?: () => React.ReactNode;
     description?: string;
 };
 
@@ -17,7 +17,7 @@ const page = () => {
         <>
             {/* <div className='min-h-full flex flex-col'> */}
             <Toaster />
-            <div className='w-full h-fit flex flex-col items-center px-5'>
+            <div className='w-full h-fit flex flex-col overflow-x-hidden items-center px-5'>
                 <Navbar />
                 <Hero />
             </div>

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { AthleteData } from './CommunityPublishResultsScreen';

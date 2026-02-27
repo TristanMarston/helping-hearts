@@ -1,16 +1,12 @@
 'use client';
 
-import axios from 'axios';
-import { Fredoka, Sour_Gummy } from 'next/font/google';
+import { getPublicResults } from '@/app/actions/results';
+
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-const sourGummyBold = Sour_Gummy({ weight: '800', subsets: ['latin'] });
-const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
-const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
 
 type YouthResult = {
     athleteID: string;
@@ -20,7 +16,7 @@ type YouthResult = {
     event: string;
     performance: string;
     unit: string;
-    position: number;
+    position?: number;
     enteredAt: string;
 };
 
@@ -29,7 +25,7 @@ type CommunityResult = {
     firstName: string;
     lastName: string;
     age: number;
-    position: number;
+    position?: number;
     performance: string;
 };
 
@@ -100,16 +96,15 @@ const ResultsContent = () => {
                 else setSortedCommunityResults(sorted as CommunityResult[]);
             }
         },
-        [sortBy, sortedYouthResults, youthResults]
+        [sortBy, sortedYouthResults, youthResults],
     );
 
     const getYouthResults = (sort: 'age' | 'performance') => {
-        axios
-            .get(`/api/admin/get/dpi-youth-participants`)
+        getPublicResults('youth')
             .then((res) => {
-                if (res.status === 200) {
+                if (res.success) {
                     setResponse('success');
-                    const formattedResults = res.data.data
+                    const formattedResults = (res.data || [])
                         .filter((athlete: any) => athlete.results.length > 0)
                         .map((athlete: any) =>
                             athlete.results.map((result: any) => ({
@@ -121,7 +116,7 @@ const ResultsContent = () => {
                                 performance: result.performance,
                                 unit: result.unit,
                                 enteredAt: result.enteredAt,
-                            }))
+                            })),
                         )
                         .flat();
 
@@ -166,12 +161,11 @@ const ResultsContent = () => {
     };
 
     const getCommunityResults = (sort: 'age' | 'performance') => {
-        axios
-            .get(`/api/admin/get/dpi-community-participants`)
+        getPublicResults('community')
             .then((res) => {
-                if (res.status === 200) {
+                if (res.success) {
                     setResponse('success');
-                    const formattedResults = res.data.data
+                    const formattedResults = (res.data || [])
                         .filter((athlete: any) => athlete.result !== '' && athlete.result !== null && athlete.result !== undefined)
                         .map((athlete: any) => ({
                             athleteID: athlete._id,
@@ -262,13 +256,13 @@ const ResultsContent = () => {
     return (
         <div className='w-full flex flex-col items-center mt-16 mid-mobile:mt-20'>
             <div className='w-full max-w-[1280px] flex flex-col px-5 my-8'>
-                <h1 className={`${sourGummyBold.className} text-black text-left text-4xl mb-2`}>Results</h1>
+                <h1 className={`font-sour-gummy font-extrabold text-black text-left text-4xl mb-2`}>Results</h1>
                 {isDatePast ? (
-                    <div className={`${fredokaLight.className} w-full`}>
+                    <div className={`font-fredoka font-normal w-full`}>
                         <p>On March 1st, 2025, we hosted our annual youth track & field event. Here were the results:</p>
                         <div className='w-full rounded-full grid grid-cols-2 mt-4 bg-background shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]'>
                             <button
-                                className={`${fredokaBold.className} ${
+                                className={`font-fredoka font-semibold ${
                                     raceType === 'youth' ? 'bg-primary text-white' : ' bg-background text-primary hover:bg-background-secondary'
                                 } rounded-full flex justify-center items-center text-sm mid-mobile:text-base p-1.5`}
                                 onClick={() => {
@@ -279,7 +273,7 @@ const ResultsContent = () => {
                                 Youth
                             </button>
                             <button
-                                className={`${fredokaBold.className} ${
+                                className={`font-fredoka font-semibold ${
                                     raceType === 'community' ? 'bg-primary text-white' : ' bg-background text-primary hover:bg-background-secondary'
                                 } rounded-full flex justify-center items-center text-sm mid-mobile:text-base p-1.5`}
                                 onClick={() => {
@@ -307,7 +301,7 @@ const ResultsContent = () => {
                                 defaultValue={searchParams.get('event')?.replaceAll('all', 'all events').replaceAll('00m', '00 meters') || 'all events'}
                             >
                                 <SelectTrigger
-                                    className={`${fredokaLight.className} ${
+                                    className={`font-fredoka font-normal ${
                                         eventView !== '' ? 'text-black' : 'text-gray-500'
                                     } mt-2 px-4 py-3 ring-0 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all appearance-none rounded-lg border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                                 >
@@ -315,7 +309,7 @@ const ResultsContent = () => {
                                         {eventView !== '' ? eventView : <span>all events</span>}
                                     </SelectValue>
                                 </SelectTrigger>
-                                <SelectContent className={`${fredokaLight.className} bg-background p-1.5`}>
+                                <SelectContent className={`font-fredoka font-normal bg-background p-1.5`}>
                                     <SelectGroup>
                                         {['all events', ...events].map((event, index) => (
                                             <SelectItem key={event + index} value={event} className={`px-7 cursor-pointer hover:bg-background-light transition-all text-base`}>
@@ -334,13 +328,13 @@ const ResultsContent = () => {
                             defaultValue={searchParams.get('sort') || 'performance'}
                         >
                             <SelectTrigger
-                                className={`${fredokaLight.className} text-black mt-2 px-4 py-3 ring-0 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all appearance-none rounded-lg border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                                className={`font-fredoka font-normal text-black mt-2 px-4 py-3 ring-0 w-full h-11 text-base bg-background hover:bg-background-secondary transition-all appearance-none rounded-lg border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                             >
                                 <SelectValue placeholder='Events' className={`overflow-ellipsis text-gray-400`}>
                                     {sortBy}
                                 </SelectValue>
                             </SelectTrigger>
-                            <SelectContent className={`${fredokaLight.className} bg-background p-1.5`}>
+                            <SelectContent className={`font-fredoka font-normal bg-background p-1.5`}>
                                 <SelectGroup>
                                     {['performance', 'age'].map((event, index) => (
                                         <SelectItem key={event + index} value={event} className={`px-7 cursor-pointer hover:bg-background-light transition-all text-base`}>
@@ -375,14 +369,14 @@ const ResultsContent = () => {
                                                         <div className='px-2 py-1 phone:text-lg uppercase font-bold border-b-primary border-b-2 text-primary w-full'>{event}</div>
                                                         {filteredYouthResults
                                                             .filter((result) => result.event === event)
-                                                            .sort((a, b) => a.position - b.position)
+                                                            .sort((a, b) => (a.position || 0) - (b.position || 0))
                                                             .map((result, index) => (
                                                                 <YouthAthleteCard key={result.athleteID} index={index} {...result} />
                                                             ))}
                                                     </div>
                                                 ) : (
                                                     filteredYouthResults.length === 0 && <div className='w-full grid place-items-center p-4'>No results available.</div>
-                                                )
+                                                ),
                                             )
                                     ) : (
                                         <div className='w-full grid place-items-center p-4'>No results available.</div>
@@ -413,7 +407,7 @@ const ResultsContent = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className={`${fredokaLight.className} text-wrap w-full flex flex-col gap-1`}>
+                    <div className={`font-fredoka font-normal text-wrap w-full flex flex-col gap-1`}>
                         <p className='font-bold text-lg'>Results are not available at this time.</p>
                         <p>When the event has concluded, check back here to see the results of the races!</p>
                     </div>

@@ -1,0 +1,82 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+model YouthAthlete {
+    id            String  @id @default(uuid())
+    name          String
+    grade         String
+    events        Event[]
+    
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+}
+
+model CommunityAthlete {
+    id            String   @id @default(uuid())
+    name          String
+    email         String
+    dob           DateTime
+    raceId        String?  @unique
+    race          Event?   @relation(fields: [raceId], references: [id])
+    
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+}
+
+enum EventType {
+    run_1600
+    run_800
+    run_400
+    run_100
+    run_4x100
+    softball_throw
+    long_jump
+}
+
+model Event {
+    id                 String            @id @default(uuid())
+    name               String
+    performance        String
+    youthAthleteId     String?
+    youthAthlete       YouthAthlete?     @relation(fields: [youthAthleteId], references: [id])
+    communityAthlete   CommunityAthlete?
+
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @updatedAt
+}
+
+model Volunteer {
+    id              String  @id @default(uuid())
+    name            String
+    email           String
+    dob             String
+    dphsStudent     Boolean
+    
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+}
+
+model Message {
+    id          String  @id @default(uuid())
+    name        String
+    email       String
+    subject     String
+    message     String
+
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
+
+model User {
+    id          String @id @default(uuid())
+    username    String @unique
+    password    String
+
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}

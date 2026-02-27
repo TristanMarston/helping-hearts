@@ -1,14 +1,9 @@
-import { Fredoka } from 'next/font/google';
 import { APIResponse } from './EditCollection';
 import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronRight, Search } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
-
-const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
-const fredokaSemibold = Fredoka({ weight: '500', subsets: ['latin'] });
-const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
+import { markPaid } from '@/app/actions/admin';
 
 const FormattedView = ({ response, collection }: { response: APIResponse; collection: string }) => {
     const { data, schema } = response;
@@ -29,7 +24,7 @@ const FormattedView = ({ response, collection }: { response: APIResponse; collec
         if (collection !== 'dpi-youth-participants' && collection !== 'dpi-community-participants') return;
 
         const toastID = toast.loading('Marking Payment...', {
-            className: `${fredokaBold.className} !bg-background !text-black`,
+            className: `font-fredoka font-semibold !bg-background !text-black`,
             position: 'top-center',
         });
 
@@ -48,14 +43,15 @@ const FormattedView = ({ response, collection }: { response: APIResponse; collec
 
         console.log(sendData);
 
-        axios
-            .post(
-                `/api/admin/${collection === 'dpi-youth-participants' ? 'mark-paid-youth' : collection === 'dpi-community-participants' ? 'mark-paid-community' : ''}/${id}`,
-                JSON.stringify(sendData)
-            )
+        markPaid(collection, id, type)
             .then((res) => {
-                if (res.status === 200) {
+                if (res.success) {
                     toast.success('Successfully Marked Payment.', {
+                        id: toastID,
+                        duration: 4000,
+                    });
+                } else {
+                    toast.error('Could not mark payment. Reload page.', {
                         id: toastID,
                         duration: 4000,
                     });
@@ -72,7 +68,7 @@ const FormattedView = ({ response, collection }: { response: APIResponse; collec
     return (
         <div className={collection === 'dpi-youth-participants' || collection === 'dpi-community-participants' ? '' : 'mt-2'}>
             {(collection === 'dpi-youth-participants' || collection === 'dpi-community-participants') && (
-                <span className={`${fredokaLight.className} flex relative mt-4`}>
+                <span className={`font-fredoka font-normal flex relative mt-4`}>
                     <input
                         placeholder={'Name'}
                         value={query}
@@ -86,7 +82,7 @@ const FormattedView = ({ response, collection }: { response: APIResponse; collec
                 {filteredData.map((obj, index) => (
                     <div
                         key={obj._id || index}
-                        className={`${fredokaLight.className} relative w-full flex flex-col gap-0.5 text-sm p-3 mobile:text-base mobile:p-4 mid-phone-wide:text-lg border rounded-lg shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                        className={`font-fredoka font-normal relative w-full flex flex-col gap-0.5 text-sm p-3 mobile:text-base mobile:p-4 mid-phone-wide:text-lg border rounded-lg shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                     >
                         {(collection === 'dpi-youth-participants' || collection === 'dpi-community-participants') && (
                             <div className='absolute flex gap-2 right-4 top-4'>
@@ -106,7 +102,7 @@ const FormattedView = ({ response, collection }: { response: APIResponse; collec
                         )}
                         {obj._id && (
                             <div>
-                                <span className={fredokaSemibold.className}>id: </span>
+                                <span className={'font-fredoka font-medium'}>id: </span>
                                 <span className='text-primary'>{obj._id}</span>
                             </div>
                         )}
@@ -117,11 +113,11 @@ const FormattedView = ({ response, collection }: { response: APIResponse; collec
                                     <NestedObject key={key} objKey={key} type={type} required={required} obj={obj} />
                                 ) : (
                                     <RegularObject key={key} objKey={key} type={type} required={required} obj={obj} />
-                                ))
+                                )),
                         )}
                         {obj.createdAt && (
                             <div>
-                                <span className={fredokaSemibold.className}>createdAt: </span>
+                                <span className={'font-fredoka font-medium'}>createdAt: </span>
                                 <span className='text-blue-400'>
                                     {new Date(obj.createdAt).toLocaleString('en-US', {
                                         year: '2-digit',
@@ -137,7 +133,7 @@ const FormattedView = ({ response, collection }: { response: APIResponse; collec
                         )}
                         {obj.updatedAt && (
                             <div>
-                                <span className={fredokaSemibold.className}>updatedAt: </span>
+                                <span className={'font-fredoka font-medium'}>updatedAt: </span>
                                 <span className='text-blue-400'>
                                     {new Date(obj.updatedAt).toLocaleString('en-US', {
                                         year: '2-digit',
@@ -171,7 +167,7 @@ const RegularObject = ({ objKey, type, required, obj }: { objKey: string; type: 
         <></>
     ) : (
         <div>
-            <span className={fredokaSemibold.className}>{objKey}: </span>
+            <span className={'font-fredoka font-medium'}>{objKey}: </span>
             <span className={`${type === 'string' ? 'text-green-600' : type === 'number' ? 'text-purple-500' : type === 'boolean' ? 'text-orange-400' : 'text-black'}`}>
                 {type === 'string' && `"`}
                 {value}
@@ -187,7 +183,7 @@ const NestedObject = ({ objKey, type, required, obj }: { objKey: string; type: s
 
     return (
         <div className={`${open ? 'items-start' : 'items-center'} flex gap-2`}>
-            <span className={fredokaSemibold.className}>{objKey}: </span>
+            <span className={'font-fredoka font-medium'}>{objKey}: </span>
             {type === 'array' && (
                 <span className='flex flex-col text-teal-600'>
                     <div className='flex items-center gap-2'>

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 const Path = ({ color, isOpen, ...props }: { color: string; isOpen: boolean; [key: string]: any }) => (
     <motion.path fill='transparent' strokeWidth='3' stroke={color} animate={isOpen ? 'open' : 'closed'} strokeLinecap='round' {...props} />
@@ -8,8 +8,8 @@ const MenuToggle = ({ toggle, isOpen, color }: { toggle: () => void; isOpen: boo
     <button
         onClick={toggle}
         className={`${
-            isOpen ? 'bg-secondary shadow-[0_4px_30px_rgba(0,0,0,.7)] overflow-y-hidden ' : 'bg-transparent shadow-none '
-        } z-[60] p-3 rounded-full grid place-items-center transition-colors tablet:hidden sticky scale-[0.9] mid-mobile:scale-100`}
+            isOpen ? 'bg-secondary shadow-[0_4px_30px_rgba(0,0,0,.4)] overflow-y-hidden ' : 'bg-transparent shadow-none '
+        } z-[60] p-3 rounded-full grid place-items-center transition-colors tablet:hidden sticky cursor-pointer`}
         aria-label='Mobile Menu Button'
     >
         <svg width='21' height='21' viewBox='0 0 21 20'>

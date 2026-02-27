@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import { APIResponse } from './EditCollection';
 import { Copy, Hash, Home, Loader, RotateCcw, SquareArrowOutUpRight } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Fredoka } from 'next/font/google';
-import axios from 'axios';
+import { AnimatePresence, motion } from 'motion/react';
+
+import { getCollection } from '@/app/actions/admin';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-
-const fredokaBold = Fredoka({ weight: '600', subsets: ['latin'] });
-const fredokaSemibold = Fredoka({ weight: '500', subsets: ['latin'] });
-const fredokaLight = Fredoka({ weight: '400', subsets: ['latin'] });
 
 const ActionBar = ({ collection, response, setResponse }: { collection: string; response: APIResponse; setResponse: React.Dispatch<React.SetStateAction<APIResponse>> }) => {
     const [refreshed, setRefreshed] = useState<{ hovered: boolean; refreshing: boolean }>({ hovered: false, refreshing: false });
@@ -31,7 +27,7 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
 
     const refreshDocuments = async () => {
         function error() {
-            toast.error('Refresh unsuccessful', { className: `${fredokaBold.className} !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
+            toast.error('Refresh unsuccessful', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right', duration: 4000 });
             setRefreshed((prev) => {
                 return {
                     ...prev,
@@ -47,11 +43,10 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
             };
         });
 
-        axios
-            .get(`/api/admin/get/${collection}`)
+        getCollection(collection)
             .then((res) => {
-                if (res.status === 200) {
-                    setResponse({ data: res.data.data, schema: res.data.schema });
+                if (res.success) {
+                    setResponse({ data: res.data || [], schema: res.schema || [] });
                     setRefreshed((prev) => {
                         return {
                             ...prev,
@@ -66,7 +61,7 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
     };
 
     const copyToClipboard = (text: string) => {
-        const toastID = toast.loading('Copying to clipboard...', { className: `${fredokaBold.className} !bg-background !text-black`, position: 'bottom-right' });
+        const toastID = toast.loading('Copying to clipboard...', { className: `font-fredoka font-semibold !bg-background !text-black`, position: 'bottom-right' });
 
         navigator.clipboard
             .writeText(text)
@@ -85,7 +80,7 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
     };
 
     return (
-        <section className={`${fredokaBold.className} w-full`}>
+        <section className={`font-fredoka font-semibold w-full`}>
             <div className='w-full action-bar-expand:bg-background-secondary action-bar-expand:rounded-full action-bar-expand:shadow-[0_4px_30px_rgba(0,0,0,.4)] flex items-center justify-center action-bar-expand:justify-between action-bar-expand:py-3 action-bar-expand:px-4 gap-3 action-bar-expand:gap-0 flex-wrap'>
                 <div className='flex items-center justify-start gap-4 action-bar-expand:gap-3 w-full action-bar-expand:w-auto flex-wrap action-bar-expand:flex-nowrap'>
                     <Link
@@ -112,7 +107,7 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
                                     transition={{ duration: 0.2 }}
-                                    className={`${fredokaBold.className} absolute w-full action-bar-expand:w-52 z-50 text-primary tracking-wider top-full mt-2 text-sm rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,.2)] text-center`}
+                                    className={`font-fredoka font-semibold absolute w-full action-bar-expand:w-52 z-50 text-primary tracking-wider top-full mt-2 text-sm rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,.2)] text-center`}
                                 >
                                     <div
                                         onClick={() => copyToClipboard(JSON.stringify(response.data))}
@@ -167,7 +162,7 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 10 }}
                                 transition={{ duration: 0.2 }}
-                                className={`${fredokaBold.className} absolute hidden action-bar-expand:block bg-background text-primary tracking-wider bottom-full mb-2 text-sm px-3 py-2 rounded-md shadow-[0_4px_30px_rgba(0,0,0,.2)] text-center`}
+                                className={`font-fredoka font-semibold absolute hidden action-bar-expand:block bg-background text-primary tracking-wider bottom-full mb-2 text-sm px-3 py-2 rounded-md shadow-[0_4px_30px_rgba(0,0,0,.2)] text-center`}
                             >
                                 <span>Refresh</span>
                             </motion.div>
