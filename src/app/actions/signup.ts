@@ -21,6 +21,7 @@ export async function submitYouthParticipants(participants: any[]) {
                     data: {
                         name: eventName,
                         performance: '',
+                        unit: '',
                         youthAthleteId: youth.id,
                     },
                 });
@@ -50,6 +51,7 @@ export async function submitCommunityParticipant(participant: any) {
             data: {
                 name: '1600 meters',
                 performance: '',
+                unit: '',
             },
         });
 

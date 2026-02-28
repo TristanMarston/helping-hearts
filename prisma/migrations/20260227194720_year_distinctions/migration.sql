@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "CommunityAthlete" ADD COLUMN     "year" INTEGER NOT NULL DEFAULT 2026;
+
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "year" INTEGER NOT NULL DEFAULT 2026;
+
+-- AlterTable
+ALTER TABLE "YouthAthlete" ADD COLUMN     "year" INTEGER NOT NULL DEFAULT 2026;
