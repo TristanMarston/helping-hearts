@@ -38,6 +38,7 @@ enum EventType {
     run_100
     run_4x100
     softball_throw
+    shot_put
     long_jump
 }
 

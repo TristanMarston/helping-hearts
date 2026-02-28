@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, HelpCircle, PlusCircle, Trash2 } from 'lucide-react';
+import { Check, HelpCircle, PlusCircle, Trash2, TriangleAlert } from 'lucide-react';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import BirthDateSelector from '../BirthDateSelector';
@@ -9,8 +9,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import SubmitModal from '../SubmitModal';
 import toast from 'react-hot-toast';
 import { submitYouthParticipants } from '@/app/actions/signup';
+import { cn } from '@/lib/utils';
 
-type TrackEvent = '1600 meters' | '800 meters' | '4x100 meter relay' | '400 meters' | '100 meters' | 'long jump' | 'softball throw';
+type TrackEvent = '1600 meters' | '800 meters' | '4x100 meter relay' | '400 meters' | '100 meters' | 'long jump' | 'softball throw' | 'shot put';
 
 type ParticipantInfo = {
     firstName: string;
@@ -65,8 +66,9 @@ const SignUpForm = ({
             { event: '400 meters', conversion: '~0.25 miles' },
             { event: '100 meters', conversion: '~0.06 miles' },
             { event: '4x100 meter relay', conversion: '4 athletes run 100 meters each' },
-            { event: 'softball throw', conversion: 'a new safe javelin-like throwing event!' },
             { event: 'long jump' },
+            { event: 'shot put', conversion: 'meant only for kids 5th grade and above' },
+            { event: 'softball throw', conversion: 'a safe throwing event for 4th grade and below' },
         ],
         [],
     );
@@ -152,13 +154,27 @@ const SignUpForm = ({
                 <h2 className={`font-fredoka font-semibold text-xl`}>Event(s)</h2>
 
                 {eventsMapArray.map(({ event, conversion }) => (
-                    <div key={event} className='flex items-center gap-1'>
+                    <div
+                        key={event}
+                        className={cn(
+                            'flex items-center gap-1.5',
+                            (event === 'shot put' && participantInfo[index].events.includes('softball throw')) ||
+                                (event === 'softball throw' && participantInfo[index].events.includes('shot put'))
+                                ? 'opacity-30 cursor-not-allowed'
+                                : '',
+                        )}
+                    >
                         <div
-                            className={`${
+                            className={cn(
+                                'w-5 h-5 flex justify-center items-center rounded-md cursor-pointer transition-all',
                                 participantInfo[index].events.includes(event)
                                     ? 'bg-primary border-none shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]'
-                                    : 'bg-background border-2 border-gray-200'
-                            } w-5 h-5 flex justify-center items-center rounded-md cursor-pointer transition-all`}
+                                    : 'bg-background border-2 border-gray-200',
+                                (event === 'shot put' && participantInfo[index].events.includes('softball throw')) ||
+                                    (event === 'softball throw' && participantInfo[index].events.includes('shot put'))
+                                    ? 'pointer-events-none'
+                                    : '',
+                            )}
                             onClick={() => {
                                 setParticipantInfo((prev) => {
                                     const updatedInfo = prev.map((info, idx) => {
@@ -173,15 +189,24 @@ const SignUpForm = ({
                             {participantInfo[index].events.includes(event) && <Check color='white' strokeWidth={3} width={14} height={14} />}
                         </div>
                         <label
-                            className={`${
-                                participantInfo[index].events.includes(event) ? `font-fredoka font-semibold text-black` : `font-fredoka font-normal text-gray-400`
-                            }  margin-top-0 text-md transition-all select-none flex items-center gap-x-1.5`}
+                            className={cn(
+                                'margin-top-0 text-md transition-all select-none flex items-center gap-x-1.5',
+                                participantInfo[index].events.includes(event) ? `font-fredoka font-semibold text-black` : `font-fredoka font-normal text-gray-400`,
+                                (event === 'shot put' && participantInfo[index].events.includes('softball throw')) ||
+                                    (event === 'softball throw' && participantInfo[index].events.includes('shot put'))
+                                    ? 'pointer-events-none'
+                                    : '',
+                            )}
                         >
                             {event}
                             {conversion !== undefined && conversion !== null && (
                                 <Popover>
                                     <PopoverTrigger>
-                                        <HelpCircle width={17} height={17} className='text-gray-500 cursor-pointer' />
+                                        {event === 'shot put' ? (
+                                            <TriangleAlert width={17} height={17} className='text-primary cursor-pointer' />
+                                        ) : (
+                                            <HelpCircle width={17} height={17} className='text-gray-500 cursor-pointer' />
+                                        )}
                                     </PopoverTrigger>
                                     <PopoverContent side='top' className={`font-fredoka font-normal w-full h-full p-2 bg-background text-gray-500 text-sm`}>
                                         {conversion}

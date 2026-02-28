@@ -71,9 +71,19 @@ const SignupContent = () => {
                         </ul>
                     )}
                 </div>
-                <p className='text-base'>
-                    The event will take place on <time dateTime='2026-03-15'>March 15th, 2026</time> at 8:00 AM at the <b>DPHS Track</b>.
-                </p>
+                {signUpView === 'youth' ? (
+                    <p className='text-[17px]'>
+                        Registration will take place on <time dateTime='2026-03-15'>March 15th, 2026</time> at 8:00 AM at the <b>DPHS Track</b>. See the <Link href='/#order-of-events' className='font-semibold text-primary underline hover:text-primary-light transition-colors'>Order of Events</Link> for more details.
+                    </p>
+                ) : signUpView === 'community' ? (
+                    <p className='text-[17px]'>
+                        Registration will take place on <time dateTime='2026-03-15'>March 15th, 2026</time> at 7:30 AM at the <b>DPHS Track</b>. See the <Link href='/#order-of-events' className='font-semibold text-primary underline hover:text-primary-light transition-colors'>Order of Events</Link> for more details.
+                    </p>
+                ) : (
+                    <p className='text-[17px]'>
+                        We need volunteers to arrive on <time dateTime='2026-03-15'>March 15th, 2026</time> by 7:30 AM at the <b>DPHS Track</b>. See the <Link href='/#order-of-events' className='font-semibold text-primary underline hover:text-primary-light transition-colors'>Order of Events</Link> for more details on timing.
+                    </p>
+                )}
             </div>
             <div className='w-full rounded-full flex mt-4 bg-background shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] p-1'>
                 {(['youth', 'community', 'volunteer'] as SignUpView[]).map((tab) => (

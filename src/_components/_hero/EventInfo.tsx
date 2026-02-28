@@ -75,11 +75,14 @@ const EventInfo = () => {
                                 height={397}
                                 className='w-full my-3 h-auto rounded-[40px] shadow-[0_3px_10px_rgb(0,0,0,0.2)]'
                             />
-                            <p className='text-sm mid-mobile:text-base tablet:text-lg text-gray-700'>
+                            <p className='text-sm mid-mobile:text-base tablet:text-lg text-gray-700' id='order-of-events'>
                                 This year, we will be bringing back the community 1 mile race! <b>Anyone</b> is welcome to participate in this event, and we encourage everyone to come
                                 out and race! We are also looking for volunteers, so please click the link below to help us run the event.
                             </p>
-                            <p className='text-sm mid-mobile:text-base tablet:text-lg text-gray-700'>The order of events on the day is as follows:</p>
+                            <p className='text-sm mid-mobile:text-base tablet:text-lg text-gray-700'>
+                                The order of events on the day is as follows (all times subject to change). Field events &ndash; the softball throw, long jump, and shot put &ndash; will
+                                be run concurrently with the track events:
+                            </p>
                             <OrderOfEvents />
                         </div>
                     </>
@@ -120,14 +123,13 @@ const OrderOfEvents = () => {
     const events: { time: string; description: string }[] = [
         { time: '7:15 AM', description: 'Registration opens' },
         { time: '7:45 AM', description: 'Warmup for community 1-mile race' },
-        { time: '8:00 AM', description: 'Community 1 Mile' },
+        { time: '8:00 AM', description: 'Community 1-mile' },
+        { time: '8:00 AM', description: 'Youth athletes check in' },
         { time: '8:15 AM', description: 'Youth athletes warm up' },
-        { time: '8:30 AM', description: '1st Event - 100 meters' },
-        { time: '8:50 AM', description: '2nd Event - 400 meters' },
-        { time: '9:10 AM', description: '3rd Event - 800 meters' },
-        { time: '9:25 AM', description: '4th Event - 1600 meters' },
-        { time: '9:35 AM', description: '5th Event - softball throw' },
-        { time: '9:55 AM', description: '6th Event - long jump' },
+        { time: '8:30 AM', description: '1st Event - 1600 meters' },
+        { time: '8:45 AM', description: '2nd Event - 400 meters' },
+        { time: '9:00 AM', description: '3rd Event - 100 meters' },
+        { time: '9:30 AM', description: '4th Event - 4x100 meter relay' },
         { time: '10:15 AM', description: 'Event Concluded' },
     ];
 
@@ -139,9 +141,9 @@ const OrderOfEvents = () => {
     // long jump: 21
 
     return (
-        <div className='w-full flex flex-col border border-gray-700 rounded-lg text-[13px] mid-mobile:text-[15px] tablet:text-[17px] mid-tablet:text-lg'>
+        <div className='w-full flex flex-col mt-2 border border-gray-700 rounded-lg text-[13px] mid-mobile:text-[15px] tablet:text-[17px] mid-tablet:text-lg'>
             {events.map((event, i) => (
-                <div key={event.time} className='grid grid-cols-2 place-items-center'>
+                <div key={event.time + event.description} className='grid grid-cols-2 place-items-center'>
                     <p className={`${i !== events.length - 1 ? 'border-b' : ''} border-r border-gray-700 text-gray-700 w-full p-2 h-full grid place-items-center`}>{event.time}</p>
                     <p className={`${i !== events.length - 1 ? 'border-b' : ''} border-l border-gray-700 text-gray-700 w-full p-2 h-full grid place-items-center`}>
                         {event.description}

@@ -47,7 +47,8 @@ const SubmitModal = ({
                                     <span>
                                         REMINDER &ndash; the event will take place on <b>March 15th, 2026</b>.
                                     </span>
-                                    {signUpView !== 'volunteer' && <span> Please arrive by 8:00 AM to check in (opens at 7:15 AM).</span>}
+                                    {signUpView === 'youth' && <span> Please arrive before 8:15 AM to check in (opens at 7:15 AM).</span>}
+                                    {signUpView === 'community' && <span> Please arrive before 7:45 AM to check in (opens at 7:15 AM).</span>}
                                 </p>
                                 <div className='flex flex-col gap-2 px-3'>
                                     <span className='flex gap-2 items-center'>
@@ -68,7 +69,7 @@ const SubmitModal = ({
                                         <label className={`font-fredoka font-normal text-gray-600`}>
                                             {signUpView === 'volunteer' ? (
                                                 <span>
-                                                    I understand that I am needed from <b>7:45 AM to 10:30 AM</b> on <b>March 15th, 2026</b> to help with the event.
+                                                    I understand that I am needed from <b>7:30 AM to roughly 10:30 AM</b> on <b>March 15th, 2026</b> to help with the event.
                                                 </span>
                                             ) : signUpView === 'youth' ? (
                                                 <span>
