@@ -65,7 +65,8 @@ const SignupContent = () => {
                         </ul>
                     ) : (
                         <ul className='list-disc flex flex-col gap-2 text-[17px]'>
-                            <li>Please enter the following information to sign up as a volunteer.</li>
+                            <li>Volunteer jobs include timing, teaching kids how to compete, pacing kids in their races, raking long jump pits, tracking results, and more.</li>
+                            <li>Jobs will be assigned in the days leading up to the event and on the day of the event.</li>
                             <li>Volunteering is free and greatly appreciated!</li>
                             <li>We will provide community service forms for DPHS students wishing to earn hours (you can earn 3-4 hours!).</li>
                         </ul>
