@@ -324,7 +324,6 @@ const ResultsContent = () => {
 
     useEffect(() => {
         if (youthAthletes.current.length > 0 || communityAthletes.current.length > 0) {
-            adjustSearchParams(raceType, sortBy, year, eventView);
             sortCommunityResults();
             sortYouthResults();
         }
