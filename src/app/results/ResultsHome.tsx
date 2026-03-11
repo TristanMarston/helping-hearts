@@ -64,10 +64,9 @@ const ResultsContent = () => {
     const router = useRouter();
     const isDatePast = isAfter(new Date(), new Date('2026-03-15T08:00:00'));
 
-    const [raceType, setRaceType] = useState<'youth' | 'community'>('youth');
-    const [previousRaceType, setPreviousRaceType] = useState<'youth' | 'community'>('youth');
-    const [sortBy, setSortBy] = useState<'performance' | 'age'>('performance');
-    const [year, setYear] = useState(isDatePast ? '2026' : '2025');
+    const [raceType, setRaceType] = useState<'youth' | 'community'>((searchParams.get('race') as 'youth' | 'community') || 'youth');
+    const [sortBy, setSortBy] = useState<'performance' | 'age'>((searchParams.get('sort') as 'performance' | 'age') || 'performance');
+    const [year, setYear] = useState(searchParams.get('year') || (isDatePast ? '2026' : '2025'));
     const [query, setQuery] = useState('');
 
     const youthAthletes = useRef<YouthAthlete[]>([]);
@@ -93,7 +92,9 @@ const ResultsContent = () => {
             return params.toString();
         };
         const newQueryString = createQueryString(['race', 'sort', 'year', 'event'], [race, sort, year, event.replaceAll('all events', 'all')]);
-        router.push(`?${newQueryString}`);
+        if (newQueryString !== searchParams.toString()) {
+            router.push(`?${newQueryString}`);
+        }
     };
 
     const sortYouthResults = useCallback(
@@ -160,7 +161,7 @@ const ResultsContent = () => {
                                 if (ageDifference !== 0) return ageDifference;
                                 return scoreA - scoreB;
                             } else {
-                                const performanceDifference = scoreA - scoreB;
+                                const performanceDifference = a.unit === 'seconds' ? scoreA - scoreB : scoreB - scoreA;
                                 if (performanceDifference !== 0) return performanceDifference;
                                 return new Date(a.dob).getTime() - new Date(b.dob).getTime();
                             }
@@ -221,62 +222,74 @@ const ResultsContent = () => {
 
     const getYouthResults = async () => {
         console.log('[ResultsContent] calling getPublicResults("youth")');
-        const res = await getPublicResults('youth');
-        console.log('[ResultsContent] getPublicResults("youth") responded:', res);
-        if (res.success) {
-            setResponse('success');
-            const formattedAthletes: YouthAthlete[] = (res.data || []).map((athlete: any) => ({
-                id: athlete.id,
-                name: athlete.name,
-                year: athlete.year,
-                dob: athlete.dob,
-                events: athlete.events.map((result: any) => ({
-                    id: result.id,
-                    name: result.name,
+        try {
+            const res = await getPublicResults('youth');
+            console.log('[ResultsContent] getPublicResults("youth") responded:', res);
+            if (res.success) {
+                setResponse('success');
+                const formattedAthletes: YouthAthlete[] = (res.data || []).map((athlete: any) => ({
+                    id: athlete.id,
+                    name: athlete.name,
+                    year: athlete.year,
                     dob: athlete.dob,
-                    performance: result.performance,
-                    unit: result.unit,
-                    year: result.year,
-                    athleteId: result.athleteId,
-                    athleteName: athlete.name,
-                })),
-            }));
+                    events: athlete.events.map((result: any) => ({
+                        id: result.id,
+                        name: result.name,
+                        dob: athlete.dob,
+                        performance: result.performance,
+                        unit: result.unit,
+                        year: result.year,
+                        athleteId: result.athleteId,
+                        athleteName: athlete.name,
+                    })),
+                }));
 
-            return formattedAthletes;
-        } else {
+                return formattedAthletes;
+            } else {
+                setResponse('failed');
+                console.error('[ResultsContent] getPublicResults("youth") failed:', res.message);
+                return null;
+            }
+        } catch (error) {
+            console.error('[ResultsContent] getPublicResults("youth") caught exception:', error);
             setResponse('failed');
-            console.error(res);
             return null;
         }
     };
 
     const getCommunityResults = async (): Promise<CommunityAthlete[] | null> => {
         console.log('[ResultsContent] calling getPublicResults("community")');
-        const res = await getPublicResults('community');
-        console.log('[ResultsContent] getPublicResults("community") responded:', res);
-        if (res.success) {
-            setResponse('success');
-            const formattedAthletes: CommunityAthlete[] = (res.data || []).map((athlete: any) => ({
-                id: athlete.id,
-                name: athlete.name,
-                year: athlete.year,
-                dob: athlete.dob,
-                race: {
-                    name: athlete.race.name,
-                    year: athlete.race.year,
-                    id: athlete.race.id,
-                    athleteId: athlete.id,
-                    athleteName: athlete.name,
-                    performance: athlete.race.performance,
-                    unit: athlete.race.unit,
+        try {
+            const res = await getPublicResults('community');
+            console.log('[ResultsContent] getPublicResults("community") responded:', res);
+            if (res.success) {
+                setResponse('success');
+                const formattedAthletes: CommunityAthlete[] = (res.data || []).map((athlete: any) => ({
+                    id: athlete.id,
+                    name: athlete.name,
+                    year: athlete.year,
                     dob: athlete.dob,
-                },
-            }));
+                    race: {
+                        name: athlete.race.name,
+                        year: athlete.race.year,
+                        id: athlete.race.id,
+                        athleteId: athlete.id,
+                        athleteName: athlete.name,
+                        performance: athlete.race.performance,
+                        unit: athlete.race.unit,
+                        dob: athlete.dob,
+                    },
+                }));
 
-            return formattedAthletes;
-        } else {
+                return formattedAthletes;
+            } else {
+                setResponse('failed');
+                console.error('[ResultsContent] getPublicResults("community") failed:', res.message);
+                return null;
+            }
+        } catch (error) {
+            console.error('[ResultsContent] getPublicResults("community") caught exception:', error);
             setResponse('failed');
-            console.error(res);
             return null;
         }
     };
@@ -310,18 +323,14 @@ const ResultsContent = () => {
     }, [query, sortedYouthResults, sortedCommunityResults]);
 
     useEffect(() => {
-        adjustSearchParams(raceType, sortBy, year, eventView);
-        sortCommunityResults();
-        sortYouthResults();
-    }, [sortBy, year]);
+        if (youthAthletes.current.length > 0 || communityAthletes.current.length > 0) {
+            adjustSearchParams(raceType, sortBy, year, eventView);
+            sortCommunityResults();
+            sortYouthResults();
+        }
+    }, [sortBy, year, raceType, eventView]);
 
     useEffect(() => {
-        adjustSearchParams(raceType, sortBy, year, eventView.replaceAll(' meters', 'm').replaceAll(' events', ''));
-    }, [eventView]);
-
-    useEffect(() => {
-        // Only fetch if we don't have data in the ref yet, or if raceType changes later.
-        // fetchInitialData handles the first load.
         if (youthAthletes.current.length === 0 && communityAthletes.current.length === 0) return;
 
         const fetchResults = async () => {
@@ -351,7 +360,6 @@ const ResultsContent = () => {
             let race = searchParams.get('race');
             if (race === 'youth' || race === 'community') {
                 setRaceType(race);
-                setPreviousRaceType(race);
             } else race = 'youth';
 
             let sort = searchParams.get('sort');
@@ -510,7 +518,7 @@ const ResultsContent = () => {
 
                         <div
                             className={cn(
-                                'gap-2 mt-4 rounded-[18px] shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]',
+                                'gap-2 p-3 mt-4 rounded-[18px] shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]',
                                 response === 'success' && ((raceType === 'community' && filteredCommunityResults) || (raceType === 'youth' && filteredYouthResults))
                                     ? raceType === 'community' ||
                                       eventView !== 'all events' ||
@@ -527,13 +535,27 @@ const ResultsContent = () => {
                         >
                             {response === 'success' ? (
                                 raceType === 'community' && filteredCommunityResults ? (
-                                    <></>
+                                    filteredCommunityResults[year as keyof CommunityResults].reduce((acc, result) => acc + (result.performance ? 1 : 0), 0) > 0 ? (
+                                        <>
+                                            <div className='px-2 py-1 phone:text-lg uppercase font-bold border-b-primary border-b-2 text-primary w-full'>1 MILE RACE</div>
+                                            {filteredCommunityResults &&
+                                                filteredCommunityResults[year as keyof CommunityResults].map((result, index) => (
+                                                    <CommunityAthleteCard key={result.athleteId} index={index} {...result} />
+                                                ))}
+                                        </>
+                                    ) : (
+                                        <div className='px-2 py-1 text-gray-600'>No results have been posted yet for {year}. Please check later!</div>
+                                    )
                                 ) : filteredYouthResults ? (
-                                    events
-                                        .filter((event) => (eventView === 'all events' ? true : event === eventView))
-                                        .map(
-                                            (event) =>
-                                                filteredYouthResults[year as keyof YouthResults][getEventKey(event) as EventKeys].length > 0 && (
+                                    Object.keys(filteredYouthResults[year as keyof YouthResults]).reduce(
+                                        (acc, event) =>
+                                            acc + filteredYouthResults[year as keyof YouthResults][event as EventKeys].filter((result) => result.performance !== null).length,
+                                        0,
+                                    ) > 0 ? (
+                                        events
+                                            .filter((event) => (eventView === 'all events' ? true : event === eventView))
+                                            .map((event) =>
+                                                filteredYouthResults[year as keyof YouthResults][getEventKey(event) as EventKeys].length > 0 ? (
                                                     <div key={event} className='w-full flex flex-col gap-1'>
                                                         <div className='px-2 py-1 phone:text-lg uppercase font-bold border-b-primary border-b-2 text-primary w-full'>{event}</div>
                                                         {filteredYouthResults[year as keyof YouthResults][getEventKey(event) as EventKeys]
@@ -542,8 +564,20 @@ const ResultsContent = () => {
                                                                 <YouthAthleteCard key={result.id} index={index} {...result} />
                                                             ))}
                                                     </div>
+                                                ) : (
+                                                    eventView !== 'all events' && (
+                                                        <div className='w-full flex flex-col gap-1'>
+                                                            <div className='px-2 py-1 phone:text-lg uppercase font-bold border-b-primary border-b-2 text-primary w-full'>
+                                                                {eventView}
+                                                            </div>
+                                                            <div className='px-2 py-1 text-gray-600'>No results found</div>
+                                                        </div>
+                                                    )
                                                 ),
-                                        )
+                                            )
+                                    ) : (
+                                        <div className='px-2 py-1 text-gray-600'>No results have been posted yet for {year}. Please check later!</div>
+                                    )
                                 ) : (
                                     <></>
                                 )
@@ -628,66 +662,24 @@ const ResultsContent = () => {
     );
 };
 
-// const CommunityAthleteCard = ({ firstName, lastName, performance, age, index, position }: CommunityResult & { index: number }) => {
-//     let score = Number(performance);
-//     let performanceString = performance;
-//     performanceString = `${Math.floor(score / 60)}:${String(score % 60).padStart(2, '0')}`;
+const calculateAge = (birthDate: Date) => {
+    const today = new Date();
+    const birthDateObj = new Date(birthDate);
 
-//     return (
-//         <div
-//             className={`${
-//                 index % 2 === 0 ? 'bg-background' : 'bg-background-secondary'
-//             } grid grid-cols-[15%_3%_59%_3%_20%] mid-phone-wide:grid-cols-[10%_3%_69%_3%_15%] tablet:grid-cols-[15%_3%_59%_3%_20%] mid-tablet-wide:grid-cols-[10%_3%_69%_3%_15%] p-2 rounded-lg text-sm hover:scale-[1.02] transition-all`}
-//         >
-//             <span
-//                 className={`${
-//                     index % 2 === 0 ? 'bg-primary' : 'bg-primary-light'
-//                 } h-full shadow-lg rounded-lg text-white text-base mid-phone-wide:text-lg tablet:text-base mid-tablet-wide:text-lg w-full flex items-center justify-center`}
-//             >
-//                 {position}
-//             </span>
-//             <span></span>
-//             <span className='h-full w-full flex flex-col gap-0.5 justify-start'>
-//                 <span className='font-semibold text-base mid-phone-wide:text-[17px] tablet:text-base mid-tablet-wide:text-[17px] overflow-hidden text-nowrap text-ellipsis'>
-//                     {firstName} {lastName}
-//                 </span>
-//                 <span className='text-gray-600 text-xs mid-phone-wide:text-sm tablet:text-xs mid-tablet-wide:text-sm'>Age {age}</span>
-//             </span>
-//             <span></span>
-//             <span
-//                 className={`${
-//                     index % 2 === 0 ? 'bg-primary' : 'bg-primary-light'
-//                 } h-full shadow-lg w-full text-base tablet:text-sm mid-tablet-wide:text-[15px] two-column:text-base rounded-lg text-white px-2 py-1 grid place-items-center`}
-//             >
-//                 {performanceString}
-//             </span>
-//         </div>
-//     );
-// };
+    let age = today.getFullYear() - birthDateObj.getFullYear();
+    const monthDifference = today.getMonth() - birthDateObj.getMonth();
 
-const YouthAthleteCard = ({ name, performance, unit, dob, index, position }: Result & { index: number }) => {
-    let score = Number(performance);
-    let performanceString = performance;
-    if (unit === 'seconds') performanceString = `${Math.floor(score / 60)}:${String(score % 60).padStart(2, '0')}`;
-    if (unit === 'inches') performanceString = `${Math.floor(score / 12)}' ${Math.round(score % 12)}"`;
-    if (unit === 'meters') {
-        let inches = score * 39.3701;
-        performanceString = `${Math.floor(inches / 12)}' ${Math.floor(inches % 12)}"`;
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDateObj.getDate())) {
+        age--;
     }
 
-    const calculateAge = (birthDate: Date) => {
-        const today = new Date();
-        const birthDateObj = new Date(birthDate);
+    return age;
+};
 
-        let age = today.getFullYear() - birthDateObj.getFullYear();
-        const monthDifference = today.getMonth() - birthDateObj.getMonth();
-
-        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDateObj.getDate())) {
-            age--;
-        }
-
-        return age;
-    };
+const CommunityAthleteCard = ({ name, athleteName, performance, dob, index, position }: Result & { index: number }) => {
+    let score = Number(performance);
+    let performanceString = performance;
+    performanceString = `${Math.floor(score / 60)}:${String(score % 60).padStart(2, '0')}`;
 
     return (
         <div
@@ -704,7 +696,51 @@ const YouthAthleteCard = ({ name, performance, unit, dob, index, position }: Res
             </span>
             <span></span>
             <span className='h-full w-full flex flex-col gap-0.5 justify-start'>
-                <span className='font-semibold text-base mid-phone-wide:text-[17px] tablet:text-base mid-tablet-wide:text-[17px] overflow-hidden text-nowrap text-ellipsis'>{name}</span>
+                <span className='font-semibold text-base mid-phone-wide:text-[17px] tablet:text-base mid-tablet-wide:text-[17px] overflow-hidden text-nowrap text-ellipsis'>
+                    {athleteName}
+                </span>
+                <span className='text-gray-600 text-xs mid-phone-wide:text-sm tablet:text-xs mid-tablet-wide:text-sm'>Age {calculateAge(dob)}</span>
+            </span>
+            <span></span>
+            <span
+                className={`${
+                    index % 2 === 0 ? 'bg-primary' : 'bg-primary-light'
+                } h-full shadow-lg w-full text-base tablet:text-sm mid-tablet-wide:text-[15px] two-column:text-base rounded-lg text-white px-2 py-1 grid place-items-center`}
+            >
+                {performanceString}
+            </span>
+        </div>
+    );
+};
+
+const YouthAthleteCard = ({ name, athleteName, performance, unit, dob, index, position }: Result & { index: number }) => {
+    let score = Number(performance);
+    let performanceString = performance;
+    if (unit === 'seconds') performanceString = `${Math.floor(score / 60)}:${String(score % 60).padStart(2, '0')}`;
+    if (unit === 'inches') performanceString = `${Math.floor(score / 12)}' ${Math.round(score % 12)}"`;
+    if (unit === 'meters') {
+        let inches = score * 39.3701;
+        performanceString = `${Math.floor(inches / 12)}' ${Math.floor(inches % 12)}"`;
+    }
+
+    return (
+        <div
+            className={`${
+                index % 2 === 0 ? 'bg-background' : 'bg-background-secondary'
+            } grid grid-cols-[15%_3%_59%_3%_20%] mid-phone-wide:grid-cols-[10%_3%_69%_3%_15%] tablet:grid-cols-[15%_3%_59%_3%_20%] mid-tablet-wide:grid-cols-[10%_3%_69%_3%_15%] p-2 rounded-lg text-sm hover:scale-[1.02] transition-all`}
+        >
+            <span
+                className={`${
+                    index % 2 === 0 ? 'bg-primary' : 'bg-primary-light'
+                } h-full shadow-lg rounded-lg text-white text-base mid-phone-wide:text-lg tablet:text-base mid-tablet-wide:text-lg w-full flex items-center justify-center`}
+            >
+                {position}
+            </span>
+            <span></span>
+            <span className='h-full w-full flex flex-col gap-0.5 justify-start'>
+                <span className='font-semibold text-base mid-phone-wide:text-[17px] tablet:text-base mid-tablet-wide:text-[17px] overflow-hidden text-nowrap text-ellipsis'>
+                    {athleteName}
+                </span>
                 <span className='text-gray-600 text-xs mid-phone-wide:text-sm tablet:text-xs mid-tablet-wide:text-sm'>Age {calculateAge(dob)}</span>
             </span>
             <span></span>
