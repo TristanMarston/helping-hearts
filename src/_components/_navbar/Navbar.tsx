@@ -2,11 +2,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import MenuToggle from './MenuToggle';
 import { NavLink } from '@/app/page';
 import MobileMenu from './MobileMenu';
 import { Goal, HandHeart, TrendingUp } from 'lucide-react';
+import { useOnClickOutside } from '@/app/hooks/useOnClickOutside';
 
 const links: NavLink[] = [
     {
@@ -51,6 +52,9 @@ const links: NavLink[] = [
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const mobileButtonRef = useRef<HTMLButtonElement>(null);
+    const mobileMenuRef = useRef<HTMLDivElement>(null);
+    useOnClickOutside(mobileMenuRef, [mobileButtonRef], () => setMenuOpen(false));
 
     return (
         <>
@@ -86,11 +90,11 @@ const Navbar = () => {
                         >
                             Sign Up
                         </Link>
-                        <MenuToggle toggle={() => setMenuOpen((prev) => !prev)} isOpen={menuOpen} color={menuOpen ? '#ed3a5f' : '#ed3a5f'} />
+                        <MenuToggle ref={mobileButtonRef} toggle={() => setMenuOpen((prev) => !prev)} isOpen={menuOpen} color={menuOpen ? '#ed3a5f' : '#ed3a5f'} />
                     </div>
                 </nav>
             </section>
-            <MobileMenu isOpen={menuOpen} setIsOpen={setMenuOpen} links={links} />
+            <MobileMenu ref={mobileMenuRef} isOpen={menuOpen} setIsOpen={setMenuOpen} links={links} />
         </>
     );
 };

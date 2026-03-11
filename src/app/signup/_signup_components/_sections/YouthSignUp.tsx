@@ -303,7 +303,7 @@ const YouthSignUp = () => {
         if (res.success) {
             toast.success('Successfully signed up!', {
                 id: toastID,
-                duration: 4000,
+                duration: 10000,
             });
 
             setParticipantInfo([
@@ -320,7 +320,7 @@ const YouthSignUp = () => {
         } else {
             toast.error(`Couldn't sign up. Please try again.`, {
                 id: toastID,
-                duration: 4000,
+                duration: 10000,
             });
         }
     }, [participantInfo]);

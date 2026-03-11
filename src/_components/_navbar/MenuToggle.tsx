@@ -4,9 +4,10 @@ const Path = ({ color, isOpen, ...props }: { color: string; isOpen: boolean; [ke
     <motion.path fill='transparent' strokeWidth='3' stroke={color} animate={isOpen ? 'open' : 'closed'} strokeLinecap='round' {...props} />
 );
 
-const MenuToggle = ({ toggle, isOpen, color }: { toggle: () => void; isOpen: boolean; color: string }) => (
+const MenuToggle = ({ toggle, ref, isOpen, color }: { toggle: () => void; ref: React.RefObject<HTMLButtonElement | null>; isOpen: boolean; color: string }) => (
     <button
         onClick={toggle}
+        ref={ref}
         className={`${
             isOpen ? 'bg-secondary shadow-[0_4px_30px_rgba(0,0,0,.4)] overflow-y-hidden ' : 'bg-transparent shadow-none '
         } z-[60] p-3 rounded-full grid place-items-center transition-colors tablet:hidden sticky cursor-pointer`}

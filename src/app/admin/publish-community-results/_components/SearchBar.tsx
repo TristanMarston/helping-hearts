@@ -86,7 +86,6 @@ const SearchBar = ({
                                         setChosenAthlete((prev) => {
                                             const prevAthletes = [...prev];
                                             prevAthletes[index] = { firstName, lastName };
-                                            console.log(prevAthletes);
                                             return prevAthletes;
                                         });
                                         const newQuery = `${firstName} ${lastName}`;

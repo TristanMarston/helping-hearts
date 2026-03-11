@@ -68,7 +68,6 @@ const Footer = (props: Props) => {
         });
 
         const res = await sendMessage(sendObject);
-        console.log(res);
         if (res.success) {
             toast.success('Successfully sent message!', {
                 id: toastID,

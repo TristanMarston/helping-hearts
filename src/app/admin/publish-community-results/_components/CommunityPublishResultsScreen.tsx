@@ -60,7 +60,6 @@ const PublishResultsScreen = () => {
             });
         }
 
-        console.log(sendData);
     };
 
     const fetchCollection = async () => {
@@ -110,7 +109,6 @@ const PublishResultsScreen = () => {
                                                 setAthleteData((prev) => {
                                                     const newAthleteData = [...prev];
                                                     newAthleteData[index] = { firstName, lastName, athleteID: id, score: '' };
-                                                    console.log(newAthleteData);
                                                     return newAthleteData;
                                                 });
                                             }}

@@ -2,6 +2,8 @@
 
 import { prisma } from '@/lib/prisma';
 
+console.log('file loaded');
+
 export async function submitYouthParticipants(participants: any[]) {
     try {
         for (const p of participants) {

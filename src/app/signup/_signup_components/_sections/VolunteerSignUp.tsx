@@ -160,14 +160,14 @@ const CommunitySignUp = () => {
         if (res.success) {
             toast.success('Successfully signed up!', {
                 id: toastID,
-                duration: 4000,
+                duration: 10000,
             });
 
             setVolunteerInfo({ firstName: '', lastName: '', email: '', birthYear: '', birthMonth: '', birthDay: '', dphsStudent: false });
         } else {
             toast.error(res.message, {
                 id: toastID,
-                duration: 4000,
+                duration: 10000,
             });
         }
     }, [volunteerInfo]);

@@ -18,7 +18,6 @@ const EditCollection = ({ collection }: { collection: string }) => {
 
     const fetchCollection = async () => {
         const res = await getCollection(collection);
-        console.log(res);
         if (res.success) {
             setFetchState('success');
             setResponse({ data: res.data || [], schema: res.schema || [] });

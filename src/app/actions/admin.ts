@@ -9,7 +9,6 @@ export async function getCollection(collection: string) {
 
         if (collection === 'dpi-youth-participants') {
             const athletes = await prisma.youthAthlete.findMany({ include: { events: true } });
-            console.log(athletes);
             data = athletes.map((a: any) => {
                 const parts = a.name.split(' ');
                 const firstName = parts[0] || '';

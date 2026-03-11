@@ -44,7 +44,6 @@ const SearchBar = ({
 
     useEffect(() => {
         if (chosenAthlete[index]) {
-            console.log('chosenAthlete', chosenAthlete);
             setQuery(`${chosenAthlete[index].firstName} ${chosenAthlete[index].lastName}`);
         }
 
@@ -89,7 +88,6 @@ const SearchBar = ({
                                         setChosenAthlete((prev) => {
                                             const prevAthletes = [...prev];
                                             prevAthletes[index] = { firstName, lastName };
-                                            console.log(prevAthletes);
                                             return prevAthletes;
                                         });
                                         const newQuery = `${firstName} ${lastName}`;

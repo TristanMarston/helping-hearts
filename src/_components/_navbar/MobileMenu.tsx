@@ -5,7 +5,7 @@ import { ChevronDown } from 'lucide-react';
 import { NavLink } from '@/app/page';
 import { cn } from '@/lib/utils';
 
-const MobileMenu = ({ isOpen, setIsOpen, links }: { isOpen: boolean; setIsOpen: React.Dispatch<React.SetStateAction<boolean>>; links: NavLink[] }) => {
+const MobileMenu = ({ isOpen, ref, setIsOpen, links }: { isOpen: boolean; ref: React.RefObject<HTMLDivElement | null>; setIsOpen: React.Dispatch<React.SetStateAction<boolean>>; links: NavLink[] }) => {
     const [currentDropdown, setCurrentDropdown] = useState(-1);
 
     return (
@@ -17,6 +17,7 @@ const MobileMenu = ({ isOpen, setIsOpen, links }: { isOpen: boolean; setIsOpen: 
                         animate={isOpen ? 'open' : 'closed'}
                         exit='closed'
                         initial='closed'
+                        ref={ref}
                         className='flex navbar-md:hidden overflow-y-auto flex-col gap-4 bg-background-very-light rounded-[18px] shadow-[0px_6px_9px_-1px_rgba(224,20,62,0.1),0px_3px_0px_0px_rgba(224,20,62,0.02),0px_0px_0px_3px_rgba(224,20,62,0.08)] p-6 w-full'
                     >
                         {links.map(({ title, href, isDropdown, dropdownOptions }, index) => (
