@@ -1,69 +1,66 @@
-import { APIResponse } from './EditCollection';
+'use client';
+
 import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronRight, Search } from 'lucide-react';
 import { motion } from 'motion/react';
 import toast from 'react-hot-toast';
 import { markPaid } from '@/app/actions/admin';
+import { Collection } from './EditCollection';
+import { parseUTCToLocal } from '@/lib/date-utils';
 
-const FormattedView = ({ response, collection }: { response: APIResponse; collection: string }) => {
-    const { data, schema } = response;
+const FormattedView = ({ data, schema, collection }: { data: any[]; schema: any[]; collection: Collection }) => {
     const [filteredData, setFilteredData] = useState(data);
     const [query, setQuery] = useState('');
 
     useEffect(() => {
-        if (schema.filter((key) => key.key === 'firstName' || key.key === 'lastName').length === 2) {
+        if (schema.filter((key) => key.key === 'name').length === 1) {
             if (query.trim() === '') {
                 setFilteredData(data);
             } else {
-                setFilteredData(data.filter((athlete) => `${athlete.firstName} ${athlete.lastName}`.toLowerCase().includes(query.toLowerCase())));
+                setFilteredData(data.filter((athlete: any) => athlete.name.toLowerCase().includes(query.toLowerCase())));
             }
         }
     }, [query, data]);
 
     const markAsPaid = async (type: 'paid' | 'island foxes', id: string) => {
-        if (collection !== 'dpi-youth-participants' && collection !== 'dpi-community-participants') return;
-
-        const toastID = toast.loading('Marking Payment...', {
-            className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
-            position: 'top-center',
-        });
-
-        if (id === '') {
-            toast.error('No ID Passed; Reload Page.', {
-                id: toastID,
-                duration: 4000,
-            });
-
-            return;
-        }
-
-        const sendData = {
-            paymentStatus: type,
-        };
-
-        const res = await markPaid(collection, id, type);
-        if (res.success) {
-            toast.success('Successfully Marked Payment.', {
-                id: toastID,
-                duration: 4000,
-            });
-        } else {
-            toast.error('Could not mark payment. Reload page.', {
-                id: toastID,
-                duration: 4000,
-            });
-        }
+        // if (collection !== 'dpi-youth-participants' && collection !== 'dpi-community-participants') return;
+        // const toastID = toast.loading('Marking Payment...', {
+        //     className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
+        //     position: 'top-center',
+        // });
+        // if (id === '') {
+        //     toast.error('No ID Passed; Reload Page.', {
+        //         id: toastID,
+        //         duration: 4000,
+        //     });
+        //     return;
+        // }
+        // const sendData = {
+        //     paymentStatus: type,
+        // };
+        // const res = await markPaid(collection, id, type);
+        // if (res.success) {
+        //     toast.success('Successfully Marked Payment.', {
+        //         id: toastID,
+        //         duration: 4000,
+        //     });
+        // } else {
+        //     toast.error('Could not mark payment. Reload page.', {
+        //         id: toastID,
+        //         duration: 4000,
+        //     });
+        // }
     };
 
     return (
-        <div className={collection === 'dpi-youth-participants' || collection === 'dpi-community-participants' ? '' : 'mt-2'}>
-            {(collection === 'dpi-youth-participants' || collection === 'dpi-community-participants') && (
+        <div className='mt-2'>
+            {(collection === 'youth-athletes' || collection === 'community-athletes' || collection === 'volunteers') && (
                 <span className={`font-fredoka font-normal flex relative mt-4`}>
                     <input
                         placeholder={'Name'}
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        className={`placeholder:text-gray-500 mb-4 outline-none w-full bg-background text-secondary pl-10 pr-2 py-2 rounded-xl border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                        className={`placeholder:text-gray-500 mb-4 outline-none w-full bg-background text-secondary pl-10 pr-2 py-2 rounded-[14px] border border-gray-100 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                     />
                     <Search className='absolute left-3 top-3 opacity-80 w-5 h-5' />
                 </span>
@@ -72,9 +69,9 @@ const FormattedView = ({ response, collection }: { response: APIResponse; collec
                 {filteredData.map((obj, index) => (
                     <div
                         key={obj._id || index}
-                        className={`font-fredoka font-normal relative w-full flex flex-col gap-0.5 text-sm p-3 mobile:text-base mobile:p-4 mid-phone-wide:text-lg border rounded-lg shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
+                        className={`font-fredoka font-normal relative w-full flex flex-col gap-0.5 text-sm p-3 mobile:text-base mobile:p-4 mid-phone-wide:text-lg border border-gray-100 rounded-[18px] shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]`}
                     >
-                        {(collection === 'dpi-youth-participants' || collection === 'dpi-community-participants') && (
+                        {/* {(collection === 'dpi-youth-participants' || collection === 'dpi-community-participants') && (
                             <div className='absolute flex gap-2 right-4 top-4'>
                                 <div
                                     onClick={() => markAsPaid('paid', obj._id)}
@@ -89,17 +86,17 @@ const FormattedView = ({ response, collection }: { response: APIResponse; collec
                                     ISLAND FOXES
                                 </div>
                             </div>
-                        )}
-                        {obj._id && (
+                        )} */}
+                        {obj.id && (
                             <div>
                                 <span className={'font-fredoka font-medium'}>id: </span>
-                                <span className='text-primary'>{obj._id}</span>
+                                <span className='text-primary'>{obj.id}</span>
                             </div>
                         )}
                         {schema.map(
                             ({ key, type, required }) =>
                                 ((obj[key] !== undefined && obj[key] !== null) || required) &&
-                                (type === 'object' || type === 'array' ? (
+                                (typeof type === 'object' ? (
                                     <NestedObject key={key} objKey={key} type={type} required={required} obj={obj} />
                                 ) : (
                                     <RegularObject key={key} objKey={key} type={type} required={required} obj={obj} />
@@ -157,24 +154,37 @@ const RegularObject = ({ objKey, type, required, obj }: { objKey: string; type: 
         <></>
     ) : (
         <div>
-            <span className={'font-fredoka font-medium'}>{objKey}: </span>
-            <span className={`${type === 'string' ? 'text-green-600' : type === 'number' ? 'text-purple-500' : type === 'boolean' ? 'text-orange-400' : 'text-black'}`}>
+            <span className={'font-fredoka font-medium text-black'}>{objKey}: </span>
+            <span
+                className={`${type === 'string' ? 'text-green-600' : type === 'number' ? 'text-purple-500' : type === 'boolean' ? 'text-orange-400' : type === 'date' ? 'text-teal-600' : 'text-black'}`}
+            >
                 {type === 'string' && `"`}
-                {value}
+                {type === 'date'
+                    ? parseUTCToLocal(new Date(value)).toLocaleString('en-US', {
+                          year: '2-digit',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                          hour12: true,
+                      })
+                    : value}
                 {type === 'string' && `"`}
             </span>
         </div>
     );
 };
 
-const NestedObject = ({ objKey, type, required, obj }: { objKey: string; type: string; required: boolean; obj: any }) => {
+const NestedObject = ({ objKey, type: schema, required, obj }: { objKey: string; type: any[]; required: boolean; obj: any }) => {
     const [open, setOpen] = useState(false);
-    const value = obj[objKey];
+    const values = obj[objKey];
+    const [openObjects, setOpenObjects] = useState<boolean[]>(values.map(() => false));
 
     return (
         <div className={`${open ? 'items-start' : 'items-center'} flex gap-2`}>
             <span className={'font-fredoka font-medium'}>{objKey}: </span>
-            {type === 'array' && (
+            {Array.isArray(schema) && (
                 <span className='flex flex-col text-teal-600'>
                     <div className='flex items-center gap-2'>
                         <motion.span
@@ -194,10 +204,39 @@ const NestedObject = ({ objKey, type, required, obj }: { objKey: string; type: s
                         )}
                     </div>
                     {open && (
-                        <div className='flex flex-col ml-10 mobile:ml-[52px]'>
-                            {value.map((val: string, index: number) => (
-                                <span key={val + index} className='text-green-600'>
-                                    "{val}"{index !== value.length - 1 ? ',' : ''}
+                        <div className='flex flex-col ml-5 mobile:ml-8'>
+                            {values.map((val: string, index: number) => (
+                                <span key={val + index} className='text-green-600 flex gap-2 items-start'>
+                                    <motion.span
+                                        initial={{ rotate: 0 }}
+                                        animate={{ rotate: openObjects[index] ? 90 : 0 }}
+                                        onClick={() =>
+                                            setOpenObjects((prev) => {
+                                                const open = [...prev];
+                                                open[index] = !open[index];
+                                                return open;
+                                            })
+                                        }
+                                        className='flex h-full items-start cursor-pointer pt-1'
+                                    >
+                                        <ChevronRight className='w-4 h-4 mobile:w-5 mobile:h-5 mid-phone-wide:w-6 mid-phone-wide:h-6' />
+                                    </motion.span>
+                                    <span>
+                                        {openObjects[index] ? <span>{`{`}</span> : <span>{`{...}`}</span>}
+                                        <div className='ml-[28px]'>
+                                            {openObjects[index] &&
+                                                schema.map(
+                                                    ({ key, type, required }) =>
+                                                        ((val[key] !== undefined && val[key] !== null) || required) &&
+                                                        (type === 'object' || type === 'array' ? (
+                                                            <NestedObject key={key} objKey={key} type={type} required={required} obj={val} />
+                                                        ) : (
+                                                            <RegularObject key={key} objKey={key} type={type} required={required} obj={val} />
+                                                        )),
+                                                )}
+                                        </div>
+                                        {openObjects[index] && <span>{`}`}</span>}
+                                    </span>
                                 </span>
                             ))}
                         </div>

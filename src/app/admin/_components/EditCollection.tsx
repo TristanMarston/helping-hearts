@@ -7,20 +7,17 @@ import toast from 'react-hot-toast';
 import ActionBar from './ActionBar';
 import FormattedView from './FormattedView';
 
-export type APIResponse = {
-    data: any[];
-    schema: any[];
-};
+export type Collection = 'youth-athletes' | 'community-athletes' | 'volunteers' | 'messages';
 
-const EditCollection = ({ collection }: { collection: string }) => {
+const EditCollection = ({ collection, schema }: { collection: Collection; schema: any[] }) => {
     const [fetchState, setFetchState] = useState<'loading' | 'failed' | 'success'>('loading');
-    const [response, setResponse] = useState<APIResponse>({ data: [], schema: [] });
+    const [response, setResponse] = useState<any[]>([]);
 
     const fetchCollection = async () => {
         const res = await getCollection(collection);
-        if (res.success) {
+        if (res.success && res.data) {
             setFetchState('success');
-            setResponse({ data: res.data || [], schema: res.schema || [] });
+            setResponse([...res.data]);
         } else setFetchState('failed');
     };
 
@@ -46,8 +43,21 @@ const EditCollection = ({ collection }: { collection: string }) => {
                                 {collection.toLowerCase().replaceAll('-', ' ').replaceAll('dpi', '').replaceAll('helping hearts', '').trim()}
                             </h1>
                         </section>
-                        <ActionBar collection={collection} response={response} setResponse={setResponse} />
-                        <FormattedView response={response} collection={collection} />
+                        <ActionBar collection={collection} data={response} schema={schema} setData={setResponse} />
+                        {collection === 'youth-athletes' && (
+                            <div className='mt-2'>
+                                <h2 className={`font-fredoka font-extrabold text-black leading-none text-left text-2xl uppercase`}>event breakdown</h2>
+                                <div className='font-fredoka'>
+                                    {['1600 meters', '400 meters', '100 meters', '4x100 meter relay', 'shot put', 'softball throw', 'long jump'].map((event) => (
+                                        <div key={event}>
+                                            <span className='font-semibold'>{event}:</span>{' '}
+                                            {response.reduce((acc, athlete) => acc + athlete.events.filter((e: any) => e.name === event).length, 0)}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        <FormattedView data={response} schema={schema} collection={collection} />
                     </div>
                 )
             )}

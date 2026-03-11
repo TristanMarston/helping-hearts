@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { APIResponse } from './EditCollection';
 import { Copy, Hash, Home, Loader, RotateCcw, SquareArrowOutUpRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { getCollection } from '@/app/actions/admin';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { Collection } from './EditCollection';
 
-const ActionBar = ({ collection, response, setResponse }: { collection: string; response: APIResponse; setResponse: React.Dispatch<React.SetStateAction<APIResponse>> }) => {
+const ActionBar = ({ collection, data, schema, setData }: { collection: Collection; data: any[]; schema: any[]; setData: React.Dispatch<React.SetStateAction<any[]>> }) => {
     const [refreshed, setRefreshed] = useState<{ hovered: boolean; refreshing: boolean }>({ hovered: false, refreshing: false });
     const [exportDropdown, setExportDropdown] = useState(false);
     const [isTouchScreen, setIsTouchScreen] = useState(false);
@@ -49,7 +49,7 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
 
         const res = await getCollection(collection);
         if (res.success) {
-            setResponse({ data: res.data || [], schema: res.schema || [] });
+            setData(res.data || []);
             setRefreshed((prev) => {
                 return {
                     ...prev,
@@ -114,7 +114,7 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
                                     className={`font-fredoka font-semibold absolute w-full action-bar-expand:w-52 z-50 text-primary tracking-wider top-full mt-2 text-sm rounded-2xl shadow-[0_4px_30px_rgba(0,0,0,.2)] text-center`}
                                 >
                                     <div
-                                        onClick={() => copyToClipboard(JSON.stringify(response.data))}
+                                        onClick={() => copyToClipboard(JSON.stringify(data))}
                                         className='flex items-center hover:brightness-110 bg-background-very-light transition-all gap-2 px-5 py-3 cursor-pointer rounded-2xl'
                                     >
                                         <Copy strokeWidth={2.5} />
@@ -126,7 +126,7 @@ const ActionBar = ({ collection, response, setResponse }: { collection: string; 
                     </span>
                     <div className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.25)] tracking-wider action-bar-expand:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full'>
                         {/* <Hash className='w-5 h-5' strokeWidth={2.5} /> */}
-                        {response.data.length} item{response.data.length === 1 ? '' : 's'}
+                        {data.length} item{data.length === 1 ? '' : 's'}
                     </div>
                 </div>
                 <div className='flex items-center justify-center relative w-full action-bar-expand:w-auto'>
