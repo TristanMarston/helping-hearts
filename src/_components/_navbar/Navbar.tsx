@@ -46,7 +46,7 @@ const links: NavLink[] = [
             </>
         ),
     },
-    // { title: 'Results', href: '/results', isDropdown: false },
+    { title: 'Results', href: '/results', isDropdown: false },
     { title: 'Contact Us', href: '#contact-us', isDropdown: false },
 ];
 
@@ -66,12 +66,12 @@ const Navbar = () => {
                     </Link>
                     {/* laptop/desktop view */}
                     <div className='gap-6 mr-2.5 flex items-center'>
-                        {/* <Link
+                        <Link
                             href='/results'
                             className='font-fredoka font-medium hidden navbar-md:flex text-primary-dark hover:text-primary-light cursor-pointer transition-all ease-in-out duration-300 items-center justify-center tracking-wide'
                         >
                             Results
-                        </Link> */}
+                        </Link>
                         <button
                             onClick={(e) => {
                                 e.preventDefault();
