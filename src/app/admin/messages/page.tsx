@@ -5,12 +5,10 @@ import { Toaster } from 'react-hot-toast';
 import EditCollection from '../_components/EditCollection';
 
 const schema = [
-    { key: 'name', type: 'string', required: true },
-    { key: 'grade', type: 'string', required: true },
-    { key: 'year', type: 'number', required: true },
-    { key: 'dob', type: 'date', required: true },
-    { key: 'paid', type: 'string', required: true },
-    { key: 'events', type: 'array', required: true },
+    { key: 'name', type: 'string', required: false },
+    { key: 'email', type: 'string', required: true },
+    { key: 'subject', type: 'string', required: false },
+    { key: 'message', type: 'string', required: true },
 ];
 
 const page = () => {
@@ -19,7 +17,7 @@ const page = () => {
             <Toaster />
             <div className='w-full h-fit flex flex-col items-center px-5'>
                 <Navbar />
-                <EditCollection collection='youth-athletes' schema={schema} />
+                <EditCollection collection='messages' schema={schema} />
             </div>
         </>
     );

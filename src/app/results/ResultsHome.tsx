@@ -221,10 +221,8 @@ const ResultsContent = () => {
     );
 
     const getYouthResults = async () => {
-        console.log('[ResultsContent] calling getPublicResults("youth")');
         try {
             const res = await getPublicResults('youth');
-            console.log('[ResultsContent] getPublicResults("youth") responded:', res);
             if (res.success) {
                 setResponse('success');
                 const formattedAthletes: YouthAthlete[] = (res.data || []).map((athlete: any) => ({
@@ -258,10 +256,8 @@ const ResultsContent = () => {
     };
 
     const getCommunityResults = async (): Promise<CommunityAthlete[] | null> => {
-        console.log('[ResultsContent] calling getPublicResults("community")');
         try {
             const res = await getPublicResults('community');
-            console.log('[ResultsContent] getPublicResults("community") responded:', res);
             if (res.success) {
                 setResponse('success');
                 const formattedAthletes: CommunityAthlete[] = (res.data || []).map((athlete: any) => ({
@@ -333,7 +329,6 @@ const ResultsContent = () => {
         if (youthAthletes.current.length === 0 && communityAthletes.current.length === 0) return;
 
         const fetchResults = async () => {
-            console.log('[ResultsContent] raceType changed effect, fetching for:', raceType);
             setResponse('loading');
             if (raceType === 'youth') {
                 const res = await getYouthResults();
@@ -355,7 +350,6 @@ const ResultsContent = () => {
 
     useEffect(() => {
         const fetchInitialData = async () => {
-            console.log('fetch useeffect');
             let race = searchParams.get('race');
             if (race === 'youth' || race === 'community') {
                 setRaceType(race);

@@ -6,14 +6,12 @@ const connectionString = (process.env.NODE_ENV === 'development' ? process.env.D
 
 // const pool = new Pool({ connectionString });
 // const adapter = new PrismaPg(pool);
-console.log('[Prisma Init] using connection string:', connectionString?.split('@')[1] || 'undefined');
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
 export const prisma =
     globalForPrisma.prisma ||
     (() => {
-        console.log('[Prisma Init] creating new PrismaClient instance');
         const pool = new Pool({
             connectionString,
             max: 1,

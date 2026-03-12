@@ -19,16 +19,17 @@ const schema = [
     { key: 'email', type: 'string', required: true },
     { key: 'year', type: 'number', required: true },
     { key: 'dob', type: 'date', required: true },
-    // {
-    //     key: 'race',
-    //     type: [
-    //         { key: 'name', type: 'string', required: true },
-    //         { key: 'performance', type: 'string', required: true },
-    //         { key: 'unit', type: 'string', required: true },
-    //         { key: 'year', type: 'number', required: true },
-    //     ],
-    //     required: true,
-    // },
+    { key: 'paid', type: 'string', required: true },
+    {
+        key: 'race',
+        type: [
+            { key: 'name', type: 'string', required: true },
+            { key: 'performance', type: 'string', required: true },
+            { key: 'unit', type: 'string', required: true },
+            { key: 'year', type: 'number', required: true },
+        ],
+        required: true,
+    },
 ];
 
 const page = () => {

@@ -85,11 +85,11 @@ const ActionBar = ({ collection, data, schema, setData }: { collection: Collecti
 
     return (
         <section className={`font-fredoka font-semibold w-full`}>
-            <div className='w-full action-bar-expand:bg-background-secondary action-bar-expand:rounded-full action-bar-expand:shadow-[0_4px_30px_rgba(0,0,0,.4)] flex items-center justify-center action-bar-expand:justify-between action-bar-expand:py-3 action-bar-expand:px-4 gap-3 action-bar-expand:gap-0 flex-wrap'>
+            <div className='w-full action-bar-expand:bg-background-secondary action-bar-expand:rounded-full action-bar-expand:shadow-[0_4px_30px_rgba(0,0,0,.3)] flex items-center justify-center action-bar-expand:justify-between action-bar-expand:py-3 action-bar-expand:px-4 gap-3 action-bar-expand:gap-0 flex-wrap'>
                 <div className='flex items-center justify-start gap-4 action-bar-expand:gap-3 w-full action-bar-expand:w-auto flex-wrap action-bar-expand:flex-nowrap'>
                     <Link
                         href='/admin'
-                        className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.25)] tracking-wider action-bar-expand:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full cursor-pointer transition-all hover:brightness-110'
+                        className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.15)] tracking-wider action-bar-expand:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full cursor-pointer transition-all hover:brightness-110'
                     >
                         <Home className='w-5 h-5' strokeWidth={2.5} />
                         DASHBOARD
@@ -100,7 +100,7 @@ const ActionBar = ({ collection, data, schema, setData }: { collection: Collecti
                         onMouseLeave={() => !isTouchScreen && setExportDropdown(false)}
                         onClick={() => isTouchScreen && setExportDropdown((prev) => !prev)}
                     >
-                        <button className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.25)] tracking-wider action-bar-expand:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full transition-all hover:brightness-110'>
+                        <button className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.15)] tracking-wider action-bar-expand:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full transition-all hover:brightness-110'>
                             <SquareArrowOutUpRight className='w-4 h-4 action-bar-expand:w-5 action-bar-expand:h-5' strokeWidth={2.5} />
                             EXPORT DATA
                         </button>
@@ -124,7 +124,7 @@ const ActionBar = ({ collection, data, schema, setData }: { collection: Collecti
                             )}
                         </AnimatePresence>
                     </span>
-                    <div className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.25)] tracking-wider action-bar-expand:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full'>
+                    <div className='bg-background-very-light font-bold text-primary rounded-full shadow-[0_4px_30px_rgba(0,0,0,.15)] tracking-wider action-bar-expand:w-fit px-4 py-2 uppercase flex items-center justify-center gap-2 w-full'>
                         {/* <Hash className='w-5 h-5' strokeWidth={2.5} /> */}
                         {data.length} item{data.length === 1 ? '' : 's'}
                     </div>

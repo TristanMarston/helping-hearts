@@ -6,6 +6,12 @@ datasource db {
     provider = "postgresql"
 }
 
+enum PaymentOption {
+    unpaid
+    paid
+    island_foxes
+}
+
 model YouthAthlete {
     id            String  @id @default(uuid())
     name          String
@@ -13,6 +19,7 @@ model YouthAthlete {
     events        Event[]
     dob           DateTime
     year          Int      @default(2026)
+    paid          PaymentOption  @default(unpaid)
     
     createdAt     DateTime @default(now())
     updatedAt     DateTime @updatedAt
@@ -26,6 +33,7 @@ model CommunityAthlete {
     year          Int      @default(2026)
     raceId        String?  @unique
     race          Event?   @relation(fields: [raceId], references: [id], onDelete: Cascade)
+    paid          PaymentOption  @default(unpaid)
     
     createdAt     DateTime @default(now())
     updatedAt     DateTime @updatedAt
@@ -69,9 +77,9 @@ model Volunteer {
 
 model Message {
     id          String  @id @default(uuid())
-    name        String
+    name        String?
     email       String
-    subject     String
+    subject     String?
     message     String
 
     createdAt   DateTime @default(now())

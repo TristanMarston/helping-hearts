@@ -6,11 +6,9 @@ import EditCollection from '../_components/EditCollection';
 
 const schema = [
     { key: 'name', type: 'string', required: true },
-    { key: 'grade', type: 'string', required: true },
-    { key: 'year', type: 'number', required: true },
+    { key: 'email', type: 'string', required: true },
+    { key: 'dphsStudent', type: 'boolean', required: true },
     { key: 'dob', type: 'date', required: true },
-    { key: 'paid', type: 'string', required: true },
-    { key: 'events', type: 'array', required: true },
 ];
 
 const page = () => {
@@ -19,7 +17,7 @@ const page = () => {
             <Toaster />
             <div className='w-full h-fit flex flex-col items-center px-5'>
                 <Navbar />
-                <EditCollection collection='youth-athletes' schema={schema} />
+                <EditCollection collection='volunteers' schema={schema} />
             </div>
         </>
     );

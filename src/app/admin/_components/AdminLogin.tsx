@@ -1,7 +1,8 @@
 'use client';
 
 import { loginAdmin } from '@/app/actions/admin';
-import { Eye, EyeOff } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
@@ -10,27 +11,22 @@ import toast from 'react-hot-toast';
 const AdminLogin = () => {
     const [formData, setFormData] = useState<{ username: string; password: string }>({ username: '', password: '' });
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const toastID = toast.loading('Signing in...', {
-            className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
-            position: 'top-center',
-        });
+        setLoading(true);
 
         const res = await loginAdmin({ username: formData.username, password: formData.password });
         if (res.success) {
-            toast.success('Successfully signed in!', {
-                id: toastID,
-                duration: 4000,
-            });
             router.push('/admin');
+            setLoading(false);
         } else {
             toast.error(res.message, {
-                id: toastID,
                 duration: 4000,
             });
+            setLoading(false);
         }
     };
 
@@ -52,12 +48,12 @@ const AdminLogin = () => {
                 <h1 className={`font-sour-gummy font-extrabold text-black text-3xl wide:text-4xl mid-tablet:text-5xl mb-4`}>Administration Console</h1>
                 <form
                     onSubmit={handleSubmit}
-                    className='w-full rounded-2xl bg-background p-4 wide:p-6 shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)] h-full flex flex-col items-center gap-4'
+                    className='w-full rounded-2xl bg-background p-4 wide:p-6 shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)] h-full flex flex-col items-center gap-3'
                 >
                     <span className='relative w-full'>
                         <input
                             type='text'
-                            className={`font-fredoka font-normal px-4 pt-3 pb-2 wide:pb-3 wide:h-13 w-full h-11 text-lg bg-background appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] focus:outline-none focus:ring-0 focus:border-primary-light peer`}
+                            className={`font-fredoka font-normal px-4 pt-3 pb-2 w-full h-11 text-lg bg-background appearance-none rounded-[10px] border border-gray-100 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] focus:outline-none focus:ring-0 focus:border-primary-light peer`}
                             autoComplete='off'
                             onChange={(e) => handleInputChange(e, 'username')}
                             value={formData.username}
@@ -72,7 +68,10 @@ const AdminLogin = () => {
                     <span className='relative w-full'>
                         <input
                             type={passwordVisible ? 'text' : 'password'}
-                            className={`font-fredoka font-normal px-4 pt-3 pb-2 wide:pb-3 wide:h-13 w-full h-11 text-lg bg-background appearance-none rounded-md border shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] focus:outline-none focus:ring-0 focus:border-primary-light peer`}
+                            className={cn(
+                                'font-fredoka font-normal px-4 pt-3 pb-2 w-full h-11 text-lg bg-background appearance-none rounded-[10px] border border-gray-100 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] focus:outline-none focus:ring-0 focus:border-primary-light peer',
+                                passwordVisible ? 'font-fredoka' : 'tracking-wider font-nunito',
+                            )}
                             autoComplete='off'
                             onChange={(e) => handleInputChange(e, 'password')}
                             value={formData.password}
@@ -91,9 +90,10 @@ const AdminLogin = () => {
                     </span>
                     <button
                         type='submit'
-                        className={`font-fredoka font-semibold bg-primary py-2 px-3 wide:py-2.5 wide:text-lg tracking-wider text-white w-full text-center rounded-xl shadow-lg cursor-pointer transition-all hover:brightness-110`}
+                        disabled={loading}
+                        className={`disabled:opacity-50 disabled:cursor-not-allowed font-fredoka w-full flex justify-center mt-3 cursor-pointer font-semibold bg-primary text-white text-xl shadow-md shadow-primary-dark rounded-[18px] py-2 px-3 hover:brightness-[1.1] transition-all`}
                     >
-                        Submit
+                        {loading ? <Loader2 className='animate-spin text-background' size={28} /> : 'Submit'}
                     </button>
                 </form>
             </div>
