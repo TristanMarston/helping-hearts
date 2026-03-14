@@ -123,3 +123,25 @@ export async function loginAdmin(credentials: any) {
         return { success: false, message: 'Error logging in' };
     }
 }
+
+export async function assignYouthBibNumbers() {
+    try {
+        const athletes = await prisma.youthAthlete.findMany({ where: { year: 2026 } });
+        athletes.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()).forEach(async (athlete, index) => {
+            let bib = index + 1;
+            while (true) {
+                const existing = await prisma.youthAthlete.findUnique({ where: { bibNumber: bib } });
+                if (!existing) break;
+                bib++;
+            }
+            await prisma.youthAthlete.update({
+                where: { id: athlete.id },
+                data: { bibNumber: bib },
+            });
+        });
+        return { success: true };
+    } catch (e: any) {
+        console.error(e);
+        return { success: false, message: 'Could not assign youth bib numbers' };
+    }
+}

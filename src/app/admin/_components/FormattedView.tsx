@@ -159,7 +159,7 @@ const RegularObject = ({ objKey, type, required, obj }: { objKey: string; type: 
         <div>
             <span className={'font-fredoka font-medium text-black'}>{objKey}: </span>
             <span
-                className={`${type === 'string' ? 'text-green-600' : type === 'number' ? 'text-purple-500' : type === 'boolean' ? 'text-orange-400' : type === 'date' ? 'text-teal-600' : 'text-black'}`}
+                className={`${!value ? 'text-gray-400' : type === 'string' ? 'text-green-600' : type === 'number' ? 'text-purple-500' : type === 'boolean' ? 'text-orange-400' : type === 'date' ? 'text-teal-600' : 'text-black'}`}
             >
                 {type === 'string' && `"`}
                 {type === 'date'
@@ -174,7 +174,9 @@ const RegularObject = ({ objKey, type, required, obj }: { objKey: string; type: 
                       })
                     : typeof value === 'string'
                       ? value.replaceAll('_', ' ')
-                      : value.toString()}
+                      : value
+                        ? value.toString()
+                        : 'null'}
                 {type === 'string' && `"`}
             </span>
         </div>

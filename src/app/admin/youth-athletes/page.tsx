@@ -10,6 +10,7 @@ const schema = [
     { key: 'year', type: 'number', required: true },
     { key: 'dob', type: 'date', required: true },
     { key: 'paid', type: 'string', required: true },
+    { key: 'bibNumber', type: 'number', required: true },
     { key: 'events', type: 'array', required: true },
 ];
 

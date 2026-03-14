@@ -1,12 +1,11 @@
 'use client';
 
-import { syncSpreadsheets } from '@/app/actions/admin';
+import { assignYouthBibNumbers, syncSpreadsheets } from '@/app/actions/admin';
 
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 
 const AdminDashboard = () => {
-
     // const syncSpreadsheet = async () => {
     //     const toastID = toast.loading('Syncing Spreadsheets...', {
     //         className: `font-fredoka font-semibold !rounded-[14px] !px-4 !bg-background !text-black text-xl`,
@@ -31,6 +30,14 @@ const AdminDashboard = () => {
         <div className='w-full flex justify-center mt-16 mid-mobile:mt-20'>
             <div className='w-full max-w-[1000px] flex flex-col mx-6 my-8'>
                 <h1 className={`font-sour-gummy font-extrabold text-black leading-[1.1] text-4xl min-[400px]:text-[42px] min-[715px]:text-5xl mb-2`}>Administration Dashboard</h1>
+                {/* <button
+                    onClick={async () => {
+                        const res = await assignYouthBibNumbers();
+                        console.log(res);
+                    }}
+                >
+                    assign bib numbers
+                </button> */}
                 <section className='flex flex-col gap-4 mt-2'>
                     {/* <div
                         onClick={syncSpreadsheet}
