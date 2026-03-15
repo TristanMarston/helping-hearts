@@ -1,6 +1,7 @@
 import Navbar from '@/_components/_navbar/Navbar';
 import { Toaster } from 'react-hot-toast';
-import PublishResultsScreen from './_components/YouthPublishResultsScreen';
+import Heats from '../_components/400100Heats';
+
 
 const page = () => {
     return (
@@ -8,7 +9,7 @@ const page = () => {
             <Toaster />
             <div className='w-full h-full flex flex-col items-center px-5'>
                 <Navbar />
-                {/* <PublishResultsScreen /> */}
+                <Heats which='400' />
             </div>
         </>
     );

@@ -1,7 +1,5 @@
 'use client';
 
-import { assignYouthBibNumbers, syncSpreadsheets } from '@/app/actions/admin';
-
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 
@@ -30,14 +28,6 @@ const AdminDashboard = () => {
         <div className='w-full flex justify-center mt-16 mid-mobile:mt-20'>
             <div className='w-full max-w-[1000px] flex flex-col mx-6 my-8'>
                 <h1 className={`font-sour-gummy font-extrabold text-black leading-[1.1] text-4xl min-[400px]:text-[42px] min-[715px]:text-5xl mb-2`}>Administration Dashboard</h1>
-                {/* <button
-                    onClick={async () => {
-                        const res = await assignYouthBibNumbers();
-                        console.log(res);
-                    }}
-                >
-                    assign bib numbers
-                </button> */}
                 <section className='flex flex-col gap-4 mt-2'>
                     {/* <div
                         onClick={syncSpreadsheet}
@@ -60,6 +50,76 @@ const AdminDashboard = () => {
                         <h4 className={`font-fredoka font-semibold text-primary capitalize text-lg`}>Publish Community Results</h4>
                         <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
                     </Link> */}
+                    <Link
+                        href={`/admin/1600m-results`}
+                        className='w-full gap-12 rounded-[18px] bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'
+                    >
+                        <h4 className={`font-fredoka font-semibold text-primary capitalize text-xl`}>1600m Results</h4>
+                        <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
+                    </Link>
+                    <Link
+                        href={`/admin/400m-results`}
+                        className='w-full gap-12 rounded-[18px] bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'
+                    >
+                        <h4 className={`font-fredoka font-semibold text-primary capitalize text-xl`}>400m Results</h4>
+                        <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
+                    </Link>
+                    <Link
+                        href={`/admin/100m-results`}
+                        className='w-full gap-12 rounded-[18px] bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'
+                    >
+                        <h4 className={`font-fredoka font-semibold text-primary capitalize text-xl`}>100m Results</h4>
+                        <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
+                    </Link>
+                    <Link
+                        href={`/admin/4x100m-results`}
+                        className='w-full gap-12 rounded-[18px] bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'
+                    >
+                        <h4 className={`font-fredoka font-semibold text-primary capitalize text-xl`}>4x100m Results</h4>
+                        <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
+                    </Link>
+
+
+
+                    <hr className='text-gray-400 mt-3 mb-2' />
+
+
+
+                    <Link
+                        href={`/admin/1600m-heats`}
+                        className='w-full gap-12 rounded-[18px] bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'
+                    >
+                        <h4 className={`font-fredoka font-semibold text-primary capitalize text-xl`}>1600m Heats</h4>
+                        <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
+                    </Link>
+                    <Link
+                        href={`/admin/400m-heats`}
+                        className='w-full gap-12 rounded-[18px] bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'
+                    >
+                        <h4 className={`font-fredoka font-semibold text-primary capitalize text-xl`}>400m Heats</h4>
+                        <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
+                    </Link>
+                    <Link
+                        href={`/admin/100m-heats`}
+                        className='w-full gap-12 rounded-[18px] bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'
+                    >
+                        <h4 className={`font-fredoka font-semibold text-primary capitalize text-xl`}>100m Heats</h4>
+                        <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
+                    </Link>
+                    <Link
+                        href={`/admin/4x100m-heats`}
+                        className='w-full gap-12 rounded-[18px] bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'
+                    >
+                        <h4 className={`font-fredoka font-semibold text-primary capitalize text-xl`}>4x100m Heats</h4>
+                        <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
+                    </Link>
+
+
+
+                    <hr className='text-gray-400 mt-3 mb-2' />
+
+
+                    
                     <Link
                         href={`/admin/youth-athletes`}
                         className='w-full gap-12 rounded-[18px] bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'

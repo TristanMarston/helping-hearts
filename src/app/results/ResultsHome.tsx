@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { isAfter } from 'date-fns';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
+import { get4x100Results } from '../actions/heats';
+import { RelayTeam } from '@prisma/client';
 
 type Result = {
     id: string;
@@ -62,7 +64,7 @@ const getEventKey = (event: string) => {
 const ResultsContent = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
-    const isDatePast = isAfter(new Date(), new Date('2026-03-15T08:00:00'));
+    const isDatePast = isAfter(new Date(), new Date('2026-03-15T05:00:00'));
 
     const [raceType, setRaceType] = useState<'youth' | 'community'>((searchParams.get('race') as 'youth' | 'community') || 'youth');
     const [sortBy, setSortBy] = useState<'performance' | 'age'>((searchParams.get('sort') as 'performance' | 'age') || 'performance');
@@ -98,7 +100,7 @@ const ResultsContent = () => {
     };
 
     const sortYouthResults = useCallback(
-        (passedAthletes?: YouthAthlete[]) => {
+        (passedAthletes?: YouthAthlete[], relayResults?: RelayTeam[]) => {
             let athletes = [...youthAthletes.current];
             if (passedAthletes && passedAthletes.length > youthAthletes.current.length) {
                 athletes = [...passedAthletes];
@@ -169,6 +171,25 @@ const ResultsContent = () => {
                         .map((item, index) => ({ ...item, position: index + 1 }));
                 }),
             );
+
+            if (relayResults) {
+                const relayFilteredResults: Result[] = relayResults
+                    .filter((team) => team.performance)
+                    .sort((a, b) => parseFloat(a.performance) - parseFloat(b.performance))
+                    .map((team, index) => ({
+                        id: team.id,
+                        athleteId: '',
+                        athleteName: team.name,
+                        name: '4x100 meter relay',
+                        performance: team.performance,
+                        unit: team.unit,
+                        dob: new Date(),
+                        year: 2026,
+                        position: index + 1,
+                    }));
+
+                filteredResults['2026']['4x100m'] = [...relayFilteredResults];
+            }
 
             setFilteredYouthResults(filteredResults);
             setSortedYouthResults(filteredResults);
@@ -332,9 +353,10 @@ const ResultsContent = () => {
             setResponse('loading');
             if (raceType === 'youth') {
                 const res = await getYouthResults();
+                const relayResults = await get4x100Results();
                 if (res) {
                     youthAthletes.current = res;
-                    sortYouthResults();
+                    sortYouthResults(undefined, relayResults.results);
                 }
             } else if (raceType === 'community') {
                 const res = await getCommunityResults();
@@ -367,9 +389,10 @@ const ResultsContent = () => {
 
             if (race === 'youth') {
                 const results = await getYouthResults();
+                const relayResults = await get4x100Results();
                 if (results) {
                     youthAthletes.current = [...results];
-                    sortYouthResults([...results]);
+                    sortYouthResults([...results], relayResults.results);
                 }
             } else if (race === 'community') {
                 const results = await getCommunityResults();
@@ -732,9 +755,11 @@ const YouthAthleteCard = ({ name, athleteName, performance, unit, dob, index, po
             <span></span>
             <span className='h-full w-full flex flex-col gap-0.5 justify-start'>
                 <span className='font-semibold text-base mid-phone-wide:text-[17px] tablet:text-base mid-tablet-wide:text-[17px] overflow-hidden text-nowrap text-ellipsis'>
-                    {athleteName}
+                    {athleteName.replaceAll('_', ' ')}
                 </span>
-                <span className='text-gray-600 text-xs mid-phone-wide:text-sm tablet:text-xs mid-tablet-wide:text-sm'>Age {calculateAge(dob)}</span>
+                <span className='text-gray-600 text-xs mid-phone-wide:text-sm tablet:text-xs mid-tablet-wide:text-sm'>
+                    {calculateAge(dob) !== 0 ? `Age ${calculateAge(dob)}` : 'Relay Team'}
+                </span>
             </span>
             <span></span>
             <span

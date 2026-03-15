@@ -1,98 +1,153 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
+  provider = "postgresql"
 }
 
 enum PaymentOption {
-    unpaid
-    paid
-    island_foxes
+  unpaid
+  paid
+  island_foxes
 }
 
 model YouthAthlete {
-    id            String  @id @default(uuid())
-    name          String
-    grade         String
-    events        Event[]
-    dob           DateTime
-    year          Int      @default(2026)
-    paid          PaymentOption  @default(unpaid)
-    bibNumber     Int?     @unique
-    
-    createdAt     DateTime @default(now())
-    updatedAt     DateTime @updatedAt
+  id        String        @id @default(uuid())
+  name      String
+  grade     String
+  events    Event[]
+  dob       DateTime
+  year      Int           @default(2026)
+  paid      PaymentOption @default(unpaid)
+  bibNumber Int?          @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model CommunityAthlete {
-    id            String   @id @default(uuid())
-    name          String
-    email         String
-    dob           DateTime
-    year          Int      @default(2026)
-    raceId        String?  @unique
-    race          Event?   @relation(fields: [raceId], references: [id], onDelete: Cascade)
-    paid          PaymentOption  @default(unpaid)
-    bibNumber     Int?     @unique
-    
-    createdAt     DateTime @default(now())
-    updatedAt     DateTime @updatedAt
+  id        String        @id @default(uuid())
+  name      String
+  email     String
+  dob       DateTime
+  year      Int           @default(2026)
+  raceId    String?       @unique
+  race      Event?        @relation(fields: [raceId], references: [id], onDelete: Cascade)
+  paid      PaymentOption @default(unpaid)
+  bibNumber Int?          @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum EventType {
-    run_1600
-    run_800
-    run_400
-    run_100
-    run_4x100
-    softball_throw
-    shot_put
-    long_jump
+  run_1600
+  run_800
+  run_400
+  run_100
+  run_4x100
+  softball_throw
+  shot_put
+  long_jump
 }
 
 model Event {
-    id                 String            @id @default(uuid())
-    name               String
-    performance        String
-    unit               String
-    year               Int               @default(2026)
-    youthAthleteId     String?
-    youthAthlete       YouthAthlete?     @relation(fields: [youthAthleteId], references: [id], onDelete: Cascade)
-    communityAthlete   CommunityAthlete?
+  id               String            @id @default(uuid())
+  name             String
+  performance      String
+  unit             String
+  year             Int               @default(2026)
+  youthAthleteId   String?
+  youthAthlete     YouthAthlete?     @relation(fields: [youthAthleteId], references: [id], onDelete: Cascade)
+  communityAthlete CommunityAthlete?
 
-    createdAt          DateTime @default(now())
-    updatedAt          DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  heat      Heat?    @relation(fields: [heatId], references: [id])
+  heatId    String?
+  lane      Int?
 }
 
 model Volunteer {
-    id              String  @id @default(uuid())
-    name            String
-    email           String
-    dob             DateTime
-    dphsStudent     Boolean
-    
-    createdAt       DateTime @default(now())
-    updatedAt       DateTime @updatedAt
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  dob         DateTime
+  dphsStudent Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Message {
-    id          String  @id @default(uuid())
-    name        String?
-    email       String
-    subject     String?
-    message     String
+  id      String  @id @default(uuid())
+  name    String?
+  email   String
+  subject String?
+  message String
 
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
-    id          String @id @default(uuid())
-    username    String @unique
-    password    String
+  id       String @id @default(uuid())
+  username String @unique
+  password String
 
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum HeatType {
+  community
+  youth
+}
+
+model Heat {
+  id        String   @id @default(uuid())
+  number    Int
+  eventName String
+  type      HeatType
+
+  events Event[]
+}
+
+enum RelayName {
+  terrific_tigers
+  great_gazelles
+  super_starfishes
+  fast_falcons
+  dancing_dolphins
+  bright_bisons
+  cheerful_cheetahs
+  brave_bears
+  lightning_leopards
+  racing_ravens
+  turbo_tucans
+  rampaging_rhinos
+  golden_geckos
+  rapid_rabbits
+  swift_swans
+}
+
+model RelayTeam {
+  id          String    @id @default(uuid())
+  name        RelayName @unique
+  performance String
+  unit        String
+  year        Int       @default(2026)
+  lane        Int?
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  relayHeat   RelayHeat? @relation(fields: [relayHeatId], references: [id])
+  relayHeatId String?
+}
+
+model RelayHeat {
+  id         String      @id @default(uuid())
+  number     Int
+  relayTeams RelayTeam[]
 }

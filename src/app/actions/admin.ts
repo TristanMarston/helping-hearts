@@ -38,10 +38,15 @@ export async function syncSpreadsheets() {
     return { success: true };
 }
 
-export async function markPaid(collection: string, id: string, status: PaymentOption) {
+export async function markPaidWithBib(collection: string, id: string, status: PaymentOption, bib: number) {
     try {
-        if (collection === 'youth-athletes') await prisma.youthAthlete.update({ where: { id }, data: { paid: status } });
-        else if (collection === 'community-athletes') await prisma.communityAthlete.update({ where: { id }, data: { paid: status } });
+        const bibTakenYouth = await prisma.youthAthlete.findUnique({ where: { bibNumber: bib } });
+        const bibTakenCommunity = await prisma.communityAthlete.findUnique({ where: { bibNumber: bib } });
+        if (bibTakenYouth) return { error: `Bib # already taken by youth athlete ${bibTakenYouth.name}` };
+        if (bibTakenCommunity) return { error: `Bib # already taken by community athlete ${bibTakenCommunity.name}` };
+
+        if (collection === 'youth-athletes') await prisma.youthAthlete.update({ where: { id }, data: { paid: status, bibNumber: bib } });
+        else if (collection === 'community-athletes') await prisma.communityAthlete.update({ where: { id }, data: { paid: status, bibNumber: bib } });
 
         return { success: true };
     } catch (e: any) {
@@ -101,7 +106,6 @@ export async function loginAdmin(credentials: any) {
         }
 
         const isMatch = await bcrypt.compare(password, process.env.ADMIN_PASSWORD);
-        console.log(process.env.ADMIN_PASSWORD);
         if (!isMatch) {
             return { success: false, message: 'Invalid credentials' };
         }
@@ -124,24 +128,45 @@ export async function loginAdmin(credentials: any) {
     }
 }
 
-export async function assignYouthBibNumbers() {
+export async function editAthlete(collection: 'youth-athletes' | 'community-athletes', id: string, bib: number | null, removingEvents: string[] | null, addingEvents: string[] | null) {
     try {
-        const athletes = await prisma.youthAthlete.findMany({ where: { year: 2026 } });
-        athletes.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()).forEach(async (athlete, index) => {
-            let bib = index + 1;
-            while (true) {
-                const existing = await prisma.youthAthlete.findUnique({ where: { bibNumber: bib } });
-                if (!existing) break;
-                bib++;
+        if (collection === 'youth-athletes') {
+            if (!bib && (!removingEvents || removingEvents.length === 0) && (!addingEvents || addingEvents.length === 0)) return { error: 'Nothing to update' };
+            const youthAthlete = await prisma.youthAthlete.findUnique({ where: { id }, include: { events: true } });
+            if (!youthAthlete) return { error: 'No athlete found with that ID.' };
+
+            if (addingEvents && addingEvents.length > 0)
+                for (const eventName of addingEvents) {
+                    await prisma.event.create({
+                        data: {
+                            name: eventName,
+                            performance: '',
+                            unit: '',
+                            youthAthleteId: youthAthlete.id,
+                        },
+                    });
+                }
+
+            if (removingEvents && removingEvents.length > 0) {
+                for (const eventName of removingEvents) {
+                    await prisma.event.deleteMany({ where: { AND: [{ youthAthleteId: youthAthlete.id }, { name: eventName }] } });
+                }
             }
-            await prisma.youthAthlete.update({
-                where: { id: athlete.id },
-                data: { bibNumber: bib },
-            });
-        });
-        return { success: true };
-    } catch (e: any) {
-        console.error(e);
-        return { success: false, message: 'Could not assign youth bib numbers' };
+
+            if (bib) {
+                await prisma.youthAthlete.update({ where: { id }, data: { bibNumber: bib } });
+            }
+
+            return { success: true };
+        } else if (collection === 'community-athletes') {
+            if (!bib) return { error: 'No bib passed' };
+            await prisma.communityAthlete.update({ where: { id }, data: { bibNumber: bib } });
+            return { success: true };
+        }
+
+        return { error: 'Invalid collection' };
+    } catch (error) {
+        console.error('Error editing athlete', error);
+        return { error: 'Error editing athlete' };
     }
 }
