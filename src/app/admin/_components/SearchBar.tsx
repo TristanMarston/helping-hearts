@@ -1,52 +1,42 @@
 import { motion } from 'motion/react';
 import { Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { AthleteData } from './CommunityPublishResultsScreen';
 
 type FilteredResult = {
-    firstName: string;
-    lastName: string;
+    name: string;
     events: string[];
     id: string;
 };
 
 const SearchBar = ({
     response,
+    index,
     chosenAthlete,
     setChosenAthlete,
-    index,
     onSubmit,
 }: {
     response: any[];
-    chosenAthlete: { firstName: string; lastName: string }[];
-    setChosenAthlete: React.Dispatch<React.SetStateAction<{ firstName: string; lastName: string }[]>>;
     index: number;
-    onSubmit: (firstName: string, lastName: string, events: string[], id: string) => void;
+    chosenAthlete: string[];
+    setChosenAthlete: (chosenAthlete: string[]) => void;
+    onSubmit: (name: string, events: string[], id: string) => void;
 }) => {
     const [focused, setFocused] = useState(false);
     const [query, setQuery] = useState<string>('');
-    const initialResults = response.map((item) => ({ firstName: item.firstName, lastName: item.lastName, events: item.events, id: item._id }));
+    const initialResults = response.map((item) => ({ name: item.name, events: item.events, id: item.id }));
     const [filteredResults, setFilteredResults] = useState<FilteredResult[]>([]);
+    const [selectedValue, setSelectedValue] = useState<null | string>(null);
 
     const sortByLastName = (results: FilteredResult[]): FilteredResult[] => {
-        return results.sort((a, b) => a.lastName.localeCompare(b.lastName));
+        return results.sort((a, b) => a.name.localeCompare(b.name));
     };
 
     useEffect(() => {
         if (query.trim() === '') {
             setFilteredResults(sortByLastName(initialResults.splice(0, 10)));
             return;
-        } else
-            setFilteredResults(sortByLastName(initialResults.filter((athlete) => `${athlete.firstName} ${athlete.lastName}`.toLowerCase().includes(query.toLowerCase())).splice(0, 10)));
+        } else setFilteredResults(sortByLastName(initialResults.filter((athlete) => `${athlete.name}`.toLowerCase().includes(query.toLowerCase())).splice(0, 10)));
     }, [query, response]);
-
-    useEffect(() => {
-        if (chosenAthlete[index]) {
-            setQuery(`${chosenAthlete[index].firstName} ${chosenAthlete[index].lastName}`);
-        }
-
-        if (chosenAthlete.length === 0) setQuery('');
-    }, [chosenAthlete]);
 
     return (
         <div
@@ -54,15 +44,23 @@ const SearchBar = ({
                 focused ? 'shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)]' : 'shadow-none'
             } transition-all`}
         >
-            <input
-                placeholder={'Athlete Name'}
-                onFocus={() => setFocused(true)}
-                onBlur={() => setFocused(false)}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className={`placeholder:text-gray-500 outline-none w-full bg-background text-secondary pl-10 pr-2 py-2.5`}
-            />
-            <Search className='absolute left-3 top-3 opacity-80 w-5 h-5' />
+            {selectedValue ? (
+                <span className='text-black'>{selectedValue}</span>
+            ) : (
+                <>
+                    <input
+                        placeholder={'Athlete Name'}
+                        onFocus={() => setFocused(true)}
+                        onBlur={() => setFocused(false)}
+                        value={selectedValue || query}
+                        onChange={(e) => {
+                            if (!selectedValue) setQuery(e.target.value);
+                        }}
+                        className={`placeholder:text-gray-500 outline-none w-full bg-background text-secondary pl-10 pr-2 py-2.5`}
+                    />
+                    <Search className='absolute left-3 top-3 opacity-80 w-5 h-5' />
+                </>
+            )}
             <motion.div
                 initial='collapsed'
                 animate={focused ? 'open' : 'collapsed'}
@@ -80,26 +78,22 @@ const SearchBar = ({
                 <section>
                     {filteredResults.length > 0 ? (
                         <div className='w-full h-fit flex flex-col gap-1'>
-                            {filteredResults.map(({ firstName, lastName, id, events }, i) => (
+                            {filteredResults.map(({ name, id, events }, i) => (
                                 <button
                                     onClick={() => {
-                                        setChosenAthlete((prev) => {
-                                            const prevAthletes = [...prev];
-                                            prevAthletes[index] = { firstName, lastName };
-                                            return prevAthletes;
-                                        });
-                                        const newQuery = `${firstName} ${lastName}`;
-                                        setQuery(() => newQuery);
-                                        onSubmit(firstName, lastName, events, id);
+                                        setChosenAthlete([...chosenAthlete.map((prev, j) => (j === index ? name : prev))]);
+                                        setQuery(name);
+                                        setSelectedValue(name);
+                                        onSubmit(name, events, id);
                                     }}
-                                    key={firstName + lastName}
+                                    key={name}
                                 >
                                     <span
                                         className={`${
                                             i === 0 ? 'pt-2 pb-1' : i === filteredResults.length - 1 ? 'pb-2 pt-1' : 'py-1'
-                                        } px-4 flex justify-start w-full rounded-lg hover:bg-background-lightest capitalize hover:bg-background-light transition-all`}
+                                        } px-4 flex cursor-pointer justify-start w-full rounded-lg hover:bg-background-lightest capitalize hover:bg-background-light transition-all`}
                                     >
-                                        {firstName.trim()} {lastName.trim()}
+                                        {name.trim()}
                                     </span>
                                 </button>
                             ))}

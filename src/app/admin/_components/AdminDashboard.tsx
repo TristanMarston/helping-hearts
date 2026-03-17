@@ -78,6 +78,20 @@ const AdminDashboard = () => {
                         <h4 className={`font-fredoka font-semibold text-primary capitalize text-xl`}>4x100m Results</h4>
                         <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
                     </Link>
+                    <Link
+                        href={`/admin/softball-throw-results`}
+                        className='w-full gap-12 rounded-[18px] bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'
+                    >
+                        <h4 className={`font-fredoka font-semibold text-primary capitalize text-xl`}>Softball Throw Results</h4>
+                        <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
+                    </Link>
+                    <Link
+                        href={`/admin/long-jump-results`}
+                        className='w-full gap-12 rounded-[18px] bg-background-very-light border-2 border-primary shadow-[5px_5px_0px_0px_rgba(237,58,95)] flex flex-col justify-between p-4 transition-all hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] hover:bg-background-light cursor-pointer'
+                    >
+                        <h4 className={`font-fredoka font-semibold text-primary capitalize text-xl`}>Long Jump Results</h4>
+                        <p className={`font-fredoka font-semibold text-base text-primary-light uppercase`}>interface</p>
+                    </Link>
 
 
 

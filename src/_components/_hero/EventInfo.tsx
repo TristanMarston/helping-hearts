@@ -6,8 +6,8 @@ import Link from 'next/link';
 
 const EventInfo = () => {
     const currentDate = new Date();
-    const date: 'before' | 'event-day' | 'after' = currentDate > new Date(2026, 3, 16, 0, 0) ? 'after' : currentDate > new Date(2026, 3, 1, 6, 0) ? 'event-day' : 'before';
-    // const date: 'before' | 'event-day' | 'after' = 'event-day';
+    // const date: 'before' | 'event-day' | 'after' = currentDate > new Date(2026, 3, 16, 0, 0) ? 'after' : currentDate > new Date(2026, 3, 1, 6, 0) ? 'event-day' : 'before';
+    const date: 'before' | 'event-day' | 'after' = 'after';
 
     return (
         <section className='relative w-full'>

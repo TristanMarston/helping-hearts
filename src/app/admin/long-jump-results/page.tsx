@@ -1,6 +1,6 @@
 import Navbar from '@/_components/_navbar/Navbar';
 import { Toaster } from 'react-hot-toast';
-import PublishResultsScreen from './_components/CommunityPublishResultsScreen';
+import Results from '../_components/FieldResults';
 
 const page = () => {
     return (
@@ -8,7 +8,7 @@ const page = () => {
             <Toaster />
             <div className='w-full h-full flex flex-col items-center px-5'>
                 <Navbar />
-                {/* <PublishResultsScreen /> */}
+                <Results which='long-jump' />
             </div>
         </>
     );

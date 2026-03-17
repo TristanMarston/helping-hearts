@@ -94,6 +94,25 @@ export async function submitCommunityResults(results: any[]) {
     }
 }
 
+export async function submitFieldResults(which: 'long-jump' | 'softball-throw', data: { id: string; feet: number; inches: number }[]) {
+    try {
+        if (data.length === 0) return { error: 'No documents to update' };
+        for (const { id, feet, inches } of data) {
+            const performance = (feet * 12 + inches).toString();
+            const unit = 'inches';
+            await prisma.event.updateMany({
+                where: { youthAthleteId: id, name: which === 'long-jump' ? 'long jump' : 'softball throw' },
+                data: { performance, unit },
+            });
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        return { error: 'Failed to submit field results' };
+    }
+}
+
 export async function loginAdmin(credentials: any) {
     const { username, password } = credentials;
     try {

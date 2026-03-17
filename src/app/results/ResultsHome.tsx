@@ -85,6 +85,8 @@ const ResultsContent = () => {
     const [eventView, setEventView] = useState('all events');
     const events = ['100 meters', '400 meters', '800 meters', '1600 meters', '4x100 meter relay', 'softball throw', 'shot put', 'long jump'];
 
+    const rawRelayResults = useRef<RelayTeam[]>([]);
+
     const adjustSearchParams = (race: 'youth' | 'community', sort: 'performance' | 'age', year: string, event: string) => {
         const createQueryString = (names: string[], values: string[]) => {
             const params = new URLSearchParams(searchParams.toString());
@@ -321,7 +323,7 @@ const ResultsContent = () => {
                 const filtered: YouthResults = JSON.parse(JSON.stringify(sortedYouthResults));
                 Object.keys(filtered).forEach((year) =>
                     Object.keys(filtered[year as keyof YouthResults]).forEach((event) => {
-                        filtered[year as keyof YouthResults][event as EventKeys] = filtered[year as keyof YouthResults][event as EventKeys].filter((athlete) =>
+                        filtered[year as keyof YouthResults][getEventKey(event) as EventKeys] = filtered[year as keyof YouthResults][getEventKey(event) as EventKeys].filter((athlete) =>
                             athlete.athleteName.toLowerCase().includes(query.toLowerCase()),
                         );
                     }),
@@ -342,7 +344,7 @@ const ResultsContent = () => {
     useEffect(() => {
         if (youthAthletes.current.length > 0 || communityAthletes.current.length > 0) {
             sortCommunityResults();
-            sortYouthResults();
+            sortYouthResults(undefined, rawRelayResults.current);
         }
     }, [sortBy, year, raceType, eventView]);
 
@@ -354,6 +356,7 @@ const ResultsContent = () => {
             if (raceType === 'youth') {
                 const res = await getYouthResults();
                 const relayResults = await get4x100Results();
+                if (relayResults.success && relayResults.results) rawRelayResults.current = relayResults.results;
                 if (res) {
                     youthAthletes.current = res;
                     sortYouthResults(undefined, relayResults.results);
@@ -382,7 +385,7 @@ const ResultsContent = () => {
                 setSortBy(sort);
             } else sort = 'performance';
 
-            let event = searchParams.get('event')?.replaceAll('00m', '00 meters').replaceAll('all', 'all events');
+            let event = searchParams.get('event')?.replaceAll('00m', '00 meters').replaceAll('+', ' ').replaceAll('all', 'all events');
             if (event === 'all events' || events.includes(event || '')) {
                 setEventView(event || 'all events');
             }
@@ -390,6 +393,7 @@ const ResultsContent = () => {
             if (race === 'youth') {
                 const results = await getYouthResults();
                 const relayResults = await get4x100Results();
+                if (relayResults.success && relayResults.results) rawRelayResults.current = relayResults.results;
                 if (results) {
                     youthAthletes.current = [...results];
                     sortYouthResults([...results], relayResults.results);
@@ -454,6 +458,7 @@ const ResultsContent = () => {
                             <Select
                                 onValueChange={(value) => {
                                     setEventView(value);
+                                    adjustSearchParams(raceType, sortBy, year, value);
                                 }}
                                 defaultValue={searchParams.get('event')?.replaceAll('all', 'all events').replaceAll('00m', '00 meters') || 'all events'}
                             >
@@ -483,6 +488,7 @@ const ResultsContent = () => {
                         <Select
                             onValueChange={(value) => {
                                 setSortBy(value === 'performance' || value === 'age' ? (value as 'performance' | 'age') : 'performance');
+                                adjustSearchParams(raceType, value === 'performance' || value === 'age' ? (value as 'performance' | 'age') : 'performance', year, eventView);
                             }}
                             defaultValue={searchParams.get('sort') || 'performance'}
                         >
@@ -509,6 +515,7 @@ const ResultsContent = () => {
                         <Select
                             onValueChange={(value: string) => {
                                 setYear(value);
+                                adjustSearchParams(raceType, sortBy, value, eventView);
                             }}
                             defaultValue={searchParams.get('year') || 'year'}
                         >
@@ -541,7 +548,7 @@ const ResultsContent = () => {
                                       (raceType === 'youth' &&
                                           filteredYouthResults &&
                                           Object.keys(filteredYouthResults[year as keyof YouthResults]).reduce(
-                                              (acc, event) => (filteredYouthResults[year as keyof YouthResults][event as EventKeys].length > 0 ? acc + 1 : acc),
+                                              (acc, event) => (filteredYouthResults[year as keyof YouthResults][getEventKey(event) as EventKeys].length > 0 ? acc + 1 : acc),
                                               0,
                                           )) === 1
                                         ? 'tablet:grid grid-cols-1'
@@ -565,7 +572,8 @@ const ResultsContent = () => {
                                 ) : filteredYouthResults ? (
                                     Object.keys(filteredYouthResults[year as keyof YouthResults]).reduce(
                                         (acc, event) =>
-                                            acc + filteredYouthResults[year as keyof YouthResults][event as EventKeys].filter((result) => result.performance !== null).length,
+                                            acc +
+                                            filteredYouthResults[year as keyof YouthResults][getEventKey(event) as EventKeys].filter((result) => result.performance !== null).length,
                                         0,
                                     ) > 0 ? (
                                         events
@@ -582,7 +590,7 @@ const ResultsContent = () => {
                                                     </div>
                                                 ) : (
                                                     eventView !== 'all events' && (
-                                                        <div className='w-full flex flex-col gap-1'>
+                                                        <div key={event} className='w-full flex flex-col gap-1'>
                                                             <div className='px-2 py-1 phone:text-lg uppercase font-bold border-b-primary border-b-2 text-primary w-full'>
                                                                 {eventView}
                                                             </div>
