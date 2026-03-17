@@ -83,7 +83,7 @@ const ResultsContent = () => {
     const [response, setResponse] = useState<'loading' | 'success' | 'failed'>('loading');
 
     const [eventView, setEventView] = useState('all events');
-    const events = ['100 meters', '400 meters', '800 meters', '1600 meters', '4x100 meter relay', 'softball throw', 'shot put', 'long jump'];
+    const events = ['100 meters', '400 meters', '800 meters', '1600 meters', '4x100 meter relay', 'softball throw', 'long jump'];
 
     const rawRelayResults = useRef<RelayTeam[]>([]);
 
